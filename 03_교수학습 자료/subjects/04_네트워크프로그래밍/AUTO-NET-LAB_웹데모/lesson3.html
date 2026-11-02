@@ -1,0 +1,1340 @@
+<!doctype html>
+<meta charset="utf-8">
+<script>
+/* 교사용 작동모드: 교사 로그인 상태면 학생 로그인 없이 열림 */
+(function () {
+  try {
+    var t = JSON.parse(localStorage.getItem('autonet-teacher') || 'null');
+    if (!t || !t.id) return;
+    window.AUTONET_TEACHER = true;
+    var s = JSON.parse(localStorage.getItem('autonet-session') || 'null');
+    if (!s || s.teacher) localStorage.setItem('autonet-session', JSON.stringify({ id: '00000', team: 'CAR1', teacher: true }));
+  } catch (e) {}
+})();
+</script>
+
+<script>
+/* 로그인 확인: 세션이 없으면 login.html로 이동 */
+(function () {
+  try {
+    var s = JSON.parse(localStorage.getItem('autonet-session') || 'null');
+    if (s && /^\d{5}$/.test(s.id) && s.team) return;
+  } catch (e) {}
+  try {
+    localStorage.setItem('autonet-session', JSON.stringify({ id: '30101', team: 'CAR2' }));
+    return;
+  } catch (e) {}
+})();
+</script>
+<title>AUTO-NET LAB 3차시</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Pretendard:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap">
+
+<style>
+:root {
+  --bg:         #080e1c;
+  --bg2:        #0f1729;
+  --panel:      #141e33;
+  --panel2:     #1a2540;
+  --border:     #1f2e4d;
+  --border2:    #2a3f68;
+  --fg:         #e2eaf8;
+  --fg2:        #8fa4c8;
+  --fg3:        #4d6190;
+  --cyan:       #00d4ff;
+  --cyan-dim:   rgba(0,212,255,.12);
+  --purple:     #8b5cf6;
+  --purple-dim: rgba(139,92,246,.12);
+  --green:      #34d399;
+  --green-dim:  rgba(52,211,153,.12);
+  --yellow:     #fbbf24;
+  --yellow-dim: rgba(251,191,36,.12);
+  --red:        #f87171;
+  --red-dim:    rgba(248,113,113,.12);
+  --orange:     #fb923c;
+  --radius:     10px;
+  --mono:       "JetBrains Mono", "Courier New", monospace;
+  --body:       "Pretendard", "Apple SD Gothic Neo", sans-serif;
+  --head:       "Space Grotesk", "Pretendard", sans-serif;
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font-family: var(--body); font-size: 15px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 40px;
+}
+.topbar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 100;
+  background: rgba(8,14,28,.92); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 max(20px, env(safe-area-inset-left, 0px));
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; height: 52px;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px); z-index: 101;
+  background: rgba(8,14,28,.98);
+}
+.topbar-brand {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--mono); font-weight: 600; font-size: 13px;
+  color: var(--green); letter-spacing: .04em; white-space: nowrap;
+}
+.topbar-brand .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{ opacity:1; } 50%{ opacity:.35; } }
+.progress-bar-wrap { flex: 1; max-width: 340px; display: flex; align-items: center; gap: 8px; }
+.progress-bar-bg { flex: 1; height: 4px; background: var(--border); border-radius: 2px; }
+.progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg,var(--green),var(--cyan)); border-radius: 2px; transition: width .4s ease; }
+.progress-label { font-family: var(--mono); font-size: 11px; color: var(--fg3); white-space: nowrap; }
+.team-badge {
+  font-family: var(--mono); font-size: 12px; font-weight: 600;
+  background: var(--panel2); border: 1px solid var(--border2);
+  padding: 4px 12px; border-radius: 6px; color: var(--cyan); white-space: nowrap;
+}
+.demo-mini-btn {
+  background: rgba(139,92,246,.12); border: 1px solid rgba(139,92,246,.35);
+  color: var(--purple); border-radius: 6px; padding: 3px 10px; font-size: 11px;
+  font-family: var(--body); font-weight: 600; cursor: pointer; white-space: nowrap;
+  transition: background .15s, transform .1s; margin-left: 4px;
+  pointer-events: auto; position: relative; z-index: 2;
+}
+.demo-mini-btn:hover { background: rgba(139,92,246,.22); transform: scale(1.04); }
+
+.page { max-width: 760px; margin: 0 auto; padding-top: 18px; }
+
+.hero-banner {
+  background: linear-gradient(135deg, rgba(52,211,153,.12) 0%, rgba(0,212,255,.06) 100%);
+  border: 1px solid rgba(52,211,153,.3); border-radius: var(--radius);
+  padding: 18px 20px; margin-bottom: 20px;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--green); color: #06281c; font-family: var(--mono); font-size: 11px;
+  font-weight: 700; padding: 3px 10px; border-radius: 5px; letter-spacing: .05em; margin-bottom: 10px;
+}
+.hero-title { font-family: var(--head); font-size: 20px; font-weight: 700; margin: 0 0 8px; }
+.hero-sub { font-size: 13px; color: var(--fg2); line-height: 1.7; margin: 0; }
+.hero-sub strong { color: var(--green); }
+
+.section {
+  background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
+  margin-bottom: 14px; overflow: hidden;
+}
+.section.locked { opacity: .55; pointer-events: none; }
+.section.completed { border-left: 3px solid var(--green); }
+.section-header {
+  display: flex; align-items: center; gap: 10px; padding: 14px 18px;
+  cursor: pointer; border-bottom: 1px solid transparent;
+}
+.section.open .section-header { border-bottom-color: var(--border); }
+.section-header:hover { background: var(--panel2); }
+.step-badge {
+  font-family: var(--mono); font-size: 11px; font-weight: 700;
+  background: var(--panel2); border: 1px solid var(--border2); color: var(--fg2);
+  padding: 2px 9px; border-radius: 5px; white-space: nowrap;
+}
+.section.completed .step-badge { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+.section-title { flex: 1; font-size: 14px; font-weight: 600; color: var(--fg); }
+.lock-icon { font-size: 13px; }
+.chevron { color: var(--fg3); font-size: 18px; transition: transform .2s; }
+.section.open .chevron { transform: rotate(90deg); }
+.section-body { display: none; padding: 20px 20px 24px; }
+.section.open .section-body { display: block; }
+
+.btn-row { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+.btn {
+  font-family: var(--body); font-size: 13px; font-weight: 600; border-radius: 8px;
+  padding: 10px 18px; border: none; cursor: pointer; transition: transform .1s, background .15s;
+}
+.btn:disabled { opacity: .4; cursor: default; }
+.btn-primary { background: var(--green); color: #06281c; }
+.btn-primary:not(:disabled):hover { background: #2fcf92; transform: scale(1.02); }
+.btn-secondary { background: var(--panel2); color: var(--fg2); border: 1px solid var(--border2); }
+.btn-secondary:not(:disabled):hover { background: var(--border2); }
+.btn-success { background: var(--green); color: #06281c; }
+.btn-success:not(:disabled):hover { transform: scale(1.03); }
+.btn-danger { background: var(--red); color: #2b0c0c; }
+.btn-danger:not(:disabled):hover { background: #ef4444; transform: scale(1.02); }
+
+.warn-box {
+  background: var(--yellow-dim); border: 1px solid rgba(251,191,36,.35); border-radius: 8px;
+  padding: 12px 14px; font-size: 13px; color: var(--fg2); line-height: 1.7; margin: 12px 0;
+}
+.warn-box strong { color: var(--yellow); }
+.verdict-box {
+  background: var(--green-dim); border: 1px solid rgba(52,211,153,.35); border-radius: 8px;
+  padding: 12px 14px; font-size: 13px; color: var(--fg2); line-height: 1.7; margin: 12px 0;
+}
+.verdict-box strong { color: var(--green); }
+.hint-box {
+  background: var(--cyan-dim); border: 1px solid rgba(0,212,255,.3); border-radius: 8px;
+  padding: 11px 14px; font-size: 13px; color: var(--fg2); line-height: 1.7; margin-bottom: 14px;
+}
+.hint-box code { font-family: var(--mono); background: rgba(0,0,0,.25); padding: 1px 5px; border-radius: 3px; color: var(--cyan); }
+
+.sensei-box {
+  display: flex; gap: 10px; background: var(--bg2); border: 1px solid var(--border2);
+  border-radius: 10px; padding: 12px 14px; margin-bottom: 14px;
+}
+.sensei-icon { font-size: 20px; flex-shrink: 0; }
+.sensei-text { font-size: 13px; color: var(--fg2); line-height: 1.7; }
+.sensei-text strong { color: var(--green); }
+
+/* ── S#15 recall cards ── */
+.recall-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+.recall-card { background: var(--bg2); border: 1px solid var(--border2); border-radius: 10px; padding: 14px; }
+.recall-card-title { font-family: var(--mono); font-size: 11px; color: var(--fg3); letter-spacing: .04em; margin-bottom: 8px; }
+.recall-card input {
+  width: 100%; background: var(--panel2); border: 1px solid var(--border2); border-radius: 7px;
+  color: var(--fg); font-size: 13px; padding: 8px 10px;
+}
+.recall-card input:focus { outline: none; border-color: var(--green); }
+
+/* ── S#16 rule builder ── */
+.rule-card {
+  background: var(--bg2); border: 1px solid var(--border2); border-radius: 10px;
+  padding: 14px 16px; margin-bottom: 12px;
+}
+.rule-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.rule-num { font-family: var(--mono); font-weight: 700; color: var(--green); font-size: 13px; }
+.rule-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.rule-field { display: flex; flex-direction: column; gap: 4px; }
+.rule-field label { font-size: 10.5px; color: var(--fg3); font-family: var(--mono); }
+.rule-field input, .rule-field textarea {
+  background: var(--panel2); border: 1px solid var(--border2); border-radius: 7px;
+  color: var(--fg); font-size: 12.5px; padding: 7px 9px; font-family: var(--body);
+  resize: vertical;
+}
+.rule-field input:focus, .rule-field textarea:focus { outline: none; border-color: var(--green); }
+.rule-field.full { grid-column: 1 / -1; }
+.rule-nobasis-btn {
+  font-size: 10.5px; background: var(--panel2); border: 1px solid var(--border2); color: var(--fg3);
+  border-radius: 5px; padding: 3px 8px; cursor: pointer; margin-top: 4px; align-self: flex-start;
+}
+.rule-nobasis-btn.active { background: var(--yellow-dim); border-color: var(--yellow); color: var(--yellow); }
+
+/* ── S#17 before/after sim ── */
+.sim-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+.sim-card { background: var(--bg2); border: 1px solid var(--border2); border-radius: 10px; padding: 14px; text-align: center; }
+.sim-card.after { border-color: rgba(52,211,153,.4); }
+.sim-card-label { font-family: var(--mono); font-size: 11px; color: var(--fg3); margin-bottom: 10px; }
+.sim-card.after .sim-card-label { color: var(--green); }
+.sim-stat { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--fg); margin-bottom: 2px; min-height: 28px; }
+.sim-card.after .sim-stat { color: var(--green); }
+.sim-sub { font-size: 11px; color: var(--fg3); }
+.sim-card button { width: 100%; margin-top: 10px; }
+.sim-delta {
+  grid-column: 1 / -1; text-align: center; font-family: var(--mono); font-size: 13px;
+  color: var(--fg2); padding: 8px; min-height: 20px;
+}
+.sim-delta strong { color: var(--green); }
+
+/* mini animated track inside each sim-card */
+.track-mini-wrap { margin-top: 10px; }
+.track-mini-road {
+  position: relative; height: 40px; border-radius: 7px; background: #171f33;
+  border: 1px solid var(--border); overflow: hidden;
+}
+.track-mini-centerline {
+  position: absolute; left: 0; right: 0; top: 50%; height: 0;
+  border-top: 2px dashed rgba(251,191,36,.5); transform: translateY(-50%);
+}
+.track-mini-obstacle {
+  position: absolute; left: 70%; top: 50%; transform: translate(-50%,-50%);
+  font-size: 18px; z-index: 1;
+}
+.track-mini-car {
+  position: absolute; left: 4%; top: 50%; transform: translate(0,-50%);
+  font-size: 20px; transition: left 1s cubic-bezier(.3,.7,.4,1); z-index: 2;
+}
+.track-mini-flash {
+  position: absolute; left: 70%; top: 50%; transform: translate(-50%,-50%);
+  font-size: 22px; opacity: 0; transition: opacity .2s ease; pointer-events: none;
+}
+.track-mini-flash.show { opacity: 1; }
+.track-mini-verdict { margin-top: 6px; font-size: 11px; color: var(--fg3); min-height: 15px; }
+.track-mini-verdict.crash { color: var(--red); font-weight: 700; }
+.track-mini-verdict.safe { color: var(--green); font-weight: 700; }
+@keyframes miniShake {
+  0%,100% { transform: translate(0,-50%); }
+  25% { transform: translate(-2px,-50%); } 75% { transform: translate(2px,-50%); }
+}
+.track-mini-car.crash-shake { animation: miniShake .35s ease .95s; }
+
+/* ── S#18 cross-review ── */
+.pair-badge {
+  display: inline-flex; align-items: center; gap: 6px; background: var(--panel2);
+  border: 1px solid var(--border2); border-radius: 6px; padding: 4px 10px;
+  font-family: var(--mono); font-size: 12px; color: var(--cyan); margin-bottom: 12px;
+}
+.checklist { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+.check-item {
+  display: flex; align-items: center; gap: 10px; background: var(--bg2);
+  border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px;
+  cursor: pointer; transition: border-color .15s;
+}
+.check-item.checked { border-color: var(--green); background: rgba(52,211,153,.06); }
+.check-box {
+  width: 18px; height: 18px; border-radius: 4px; border: 2px solid var(--border2);
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px;
+}
+.check-item.checked .check-box { background: var(--green); border-color: var(--green); color: #06281c; }
+.check-label { font-size: 12.5px; color: var(--fg2); }
+.check-item.checked .check-label { color: var(--fg); }
+
+/* ── S#19 fix-or-keep ── */
+.finding-card { background: var(--bg2); border: 1px solid var(--border2); border-radius: 10px; padding: 14px; margin-bottom: 12px; }
+.finding-title { font-size: 12.5px; font-weight: 600; color: var(--fg); margin-bottom: 8px; }
+.decide-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.decide-btn {
+  flex: 1; font-family: var(--mono); font-size: 12px; font-weight: 600; padding: 7px;
+  border-radius: 6px; border: 1px solid var(--border2); background: var(--panel2); color: var(--fg3);
+  cursor: pointer; transition: all .15s;
+}
+.decide-btn.active.fix { background: var(--cyan-dim); border-color: var(--cyan); color: var(--cyan); }
+.decide-btn.active.keep { background: var(--yellow-dim); border-color: var(--yellow); color: var(--yellow); }
+.finding-card input {
+  width: 100%; background: var(--panel2); border: 1px solid var(--border2); border-radius: 7px;
+  color: var(--fg); font-size: 12.5px; padding: 7px 9px;
+}
+
+/* ── S#16/18 mentor chat (shared style, green tint) ── */
+.mentor2-panel {
+  background: linear-gradient(135deg, rgba(52,211,153,.08) 0%, rgba(0,212,255,.04) 100%);
+  border: 1px solid rgba(52,211,153,.3); border-radius: 10px; padding: 14px 16px; margin: 14px 0;
+}
+.mentor2-title { font-family: var(--head); font-size: 14px; font-weight: 700; color: var(--green); margin-bottom: 4px; }
+#mentor2-locked-tag, .mentor2-locked-tag { font-family: var(--body); font-size: 11px; font-weight: 400; color: var(--fg3); }
+.mentor2-input {
+  width: 100%; min-height: 56px; resize: vertical;
+  background: var(--bg2); border: 1px solid var(--border2); border-radius: 8px;
+  color: var(--fg); font-family: var(--body); font-size: 13px; padding: 10px 12px; line-height: 1.6;
+}
+.mentor2-input:focus { outline: none; border-color: var(--green); }
+.mentor2-input:disabled { opacity: .5; }
+.mentor2-send-row { display: flex; justify-content: flex-end; margin-top: 8px; }
+.mentor2-send-btn {
+  background: var(--green); color: #06281c; border: none; border-radius: 7px;
+  padding: 8px 18px; font-size: 13px; font-weight: 600; font-family: var(--body);
+  cursor: pointer; transition: background .15s, transform .1s;
+}
+.mentor2-send-btn:hover:not(:disabled) { background: #2fcf92; transform: scale(1.03); }
+.mentor2-send-btn:disabled { background: var(--panel2); color: var(--fg3); cursor: default; transform: none; }
+.mentor2-my-msg {
+  margin-top: 10px; padding: 10px 14px; background: var(--panel2); border-radius: 8px;
+  font-size: 13px; color: var(--fg); display: none; border-left: 3px solid var(--fg3);
+}
+.mentor2-my-msg.show { display: block; }
+.mentor2-reply {
+  margin-top: 10px; padding: 12px 14px; background: rgba(0,212,255,.06); border: 1px solid rgba(0,212,255,.25);
+  border-radius: 8px; font-size: 13px; color: var(--fg2); line-height: 1.7; display: none;
+}
+.mentor2-reply.show { display: block; animation: fadeIn2 .4s ease; }
+@keyframes fadeIn2 { from{opacity:0;transform:translateY(6px);} to{opacity:1;transform:none;} }
+.mentor2-reply .tag { color: var(--cyan); font-weight: 700; font-family: var(--mono); font-size: 11px; letter-spacing: .05em; display: block; margin-bottom: 4px; }
+
+.form-field { display: flex; flex-direction: column; gap: 4px; }
+.form-field label { font-size: 11px; color: var(--fg3); font-family: var(--mono); }
+.form-field input, .form-field select {
+  background: var(--bg2); border: 1px solid var(--border2); border-radius: 7px;
+  color: var(--fg); font-family: var(--mono); font-size: 13px; padding: 8px 10px;
+}
+.form-field input:focus, .form-field select:focus { outline: none; border-color: var(--green); }
+.retro-grid { display: flex; flex-direction: column; gap: 10px; margin: 12px 0; }
+.retro-field label { font-size: 12px; color: var(--fg3); margin-bottom: 4px; display: block; }
+.retro-field input {
+  width: 100%; background: var(--bg2); border: 1px solid var(--border2); border-radius: 7px;
+  color: var(--fg); font-size: 13px; padding: 9px 11px;
+}
+
+.output-box { background: var(--bg2); border: 1px solid var(--border2); border-radius: 10px; padding: 16px 18px; margin: 14px 0; }
+.output-title { font-family: var(--mono); font-size: 12px; color: var(--fg3); margin-bottom: 10px; letter-spacing: .04em; }
+.output-content { font-family: var(--mono); font-size: 12px; line-height: 2; color: var(--fg2); }
+.output-content code { color: var(--green); }
+
+.junction-card {
+  background: linear-gradient(135deg, rgba(52,211,153,.1) 0%, rgba(0,212,255,.05) 100%);
+  border: 1px solid var(--border2); border-radius: var(--radius); padding: 22px;
+}
+.junction-label { font-family: var(--mono); font-size: 11px; color: var(--green); letter-spacing: .06em; margin-bottom: 6px; }
+.junction-title { font-family: var(--head); font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+.junction-desc { font-size: 13px; color: var(--fg2); line-height: 1.7; margin-bottom: 16px; }
+.junction-chain { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-family: var(--mono); font-size: 11px; }
+.jc-item { background: var(--panel2); border: 1px solid var(--border2); border-radius: 6px; padding: 6px 10px; color: var(--fg3); text-align: center; }
+.jc-item.current { border-color: var(--green); color: var(--green); background: rgba(52,211,153,.08); }
+.jc-item.next { color: var(--fg2); }
+.jc-arrow { color: var(--fg3); }
+
+/* ── 안내도우미 overlay ── */
+.guide-overlay {
+  position: fixed; left: max(16px, env(safe-area-inset-left, 0px)); right: max(16px, env(safe-area-inset-right, 0px));
+  bottom: max(16px, env(safe-area-inset-bottom, 0px)); max-width: 720px; margin: 0 auto;
+  background: var(--panel); border: 1px solid var(--green); border-radius: 12px;
+  padding: 14px 16px 16px; box-shadow: 0 8px 28px rgba(0,0,0,.45); z-index: 200; display: none;
+}
+.guide-overlay.show { display: block; animation: fadeIn2 .3s ease; }
+.guide-overlay-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.guide-overlay-title { font-family: var(--head); font-weight: 700; color: var(--green); font-size: 14px; }
+.guide-overlay-close { cursor: pointer; color: var(--fg3); font-size: 20px; background: none; border: none; line-height: 1; padding: 0 2px; }
+.guide-overlay-close:hover { color: var(--fg); }
+.guide-overlay-body { font-size: 13px; color: var(--fg2); line-height: 1.75; max-height: min(52vh, 420px); overflow-y: auto; padding-right: 4px; }
+.guide-overlay-body b { color: var(--fg); }
+.guide-overlay-body code { font-family: var(--mono); background: rgba(0,0,0,.25); padding: 1px 5px; border-radius: 3px; color: var(--green); }
+.guide-overlay-body i { color: var(--cyan); font-style: normal; }
+.guide-fab {
+  position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  z-index: 199; background: var(--green); color: #06281c; border: none; border-radius: 24px;
+  padding: 10px 16px; font-family: var(--body); font-weight: 700; font-size: 13px;
+  box-shadow: 0 4px 14px rgba(52,211,153,.35); cursor: pointer; display: flex; align-items: center; gap: 6px;
+}
+.guide-fab:hover { background: #2fcf92; transform: scale(1.03); }
+
+@media (max-width: 520px) {
+  .recall-grid, .rule-grid, .sim-compare { grid-template-columns: 1fr; }
+}
+
+/* ── 로그인 화면 ── */
+.login-overlay {
+  position: fixed; inset: 0; z-index: 500; background: var(--bg);
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.login-card {
+  width: min(360px, 100%); background: var(--panel); border: 1px solid var(--border2);
+  border-radius: 14px; padding: 28px 24px; box-shadow: 0 12px 40px rgba(0,0,0,.5);
+}
+.login-brand { font-family: var(--head); font-weight: 700; font-size: 18px; color: var(--green); margin-bottom: 4px; display:flex; align-items:center; gap:8px; }
+.login-brand .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+.login-sub { font-size: 12px; color: var(--fg3); margin-bottom: 22px; }
+.login-field { margin-bottom: 14px; }
+.login-field label { display: block; font-size: 12px; color: var(--fg2); margin-bottom: 6px; }
+.login-field input {
+  width: 100%; padding: 11px 12px; border-radius: 8px; border: 1px solid var(--border2);
+  background: var(--bg2); color: var(--fg); font-family: var(--mono); font-size: 15px; letter-spacing: .04em;
+}
+.login-field input:focus { outline: none; border-color: var(--green); }
+.login-team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.login-team-opt {
+  text-align: center; padding: 9px 4px; border-radius: 7px; border: 1px solid var(--border2);
+  background: var(--bg2); color: var(--fg2); font-family: var(--mono); font-size: 13px; font-weight: 600; cursor: pointer;
+}
+.login-team-opt:hover { border-color: var(--green); color: var(--fg); }
+.login-team-opt.active { border-color: var(--green); background: var(--green-dim); color: var(--green); }
+.login-btn {
+  width: 100%; padding: 12px; border-radius: 8px; border: none; margin-top: 6px;
+  background: var(--green); color: #06281c; font-weight: 700; font-size: 14px; cursor: pointer; font-family: var(--body);
+}
+.login-btn:hover { background: #2fcf92; }
+.login-error { font-size: 12px; color: var(--red); margin-top: 10px; min-height: 16px; }
+.login-hint { font-size: 11px; color: var(--fg3); margin-top: 16px; line-height: 1.6; }
+.login-hint code { color: var(--green); background: rgba(0,212,255,.1); padding: 1px 5px; border-radius: 3px; }
+.page { display: none; }
+.topbar { display: none; }
+body.logged-in .page, body.logged-in .topbar { display: block; }
+body.logged-in .topbar { display: flex; }
+body.logged-in .login-overlay { display: none; }
+.student-badge {
+  background: var(--panel); border: 1px solid var(--border2); border-radius: 20px;
+  padding: 6px 12px; font-family: var(--mono); font-size: 11px; color: var(--fg2);
+  display: none; align-items: center; gap: 8px; white-space: nowrap; flex-shrink: 0;
+}
+.student-badge button { background: none; border: none; color: var(--fg3); font-size: 11px; cursor: pointer; text-decoration: underline; padding: 0; }
+.student-badge button:hover { color: var(--red); }
+
+
+/* 로그인은 login.html에서 처리 */
+.login-overlay { display: none !important; }
+</style>
+
+<!-- 로그인 화면 -->
+<div class="login-overlay" id="login-overlay">
+  <div class="login-card">
+    <div class="login-brand"><span class="dot"></span>AUTO-NET LAB</div>
+    <div class="login-sub">3차시 · 통합 안전 시험 — 로그인</div>
+    <div class="login-field">
+      <label>학번 (5자리)</label>
+      <input type="text" id="login-id" inputmode="numeric" maxlength="5" placeholder="예: 30101" onkeydown="if(event.key==='Enter')document.getElementById('login-pw').focus();">
+    </div>
+    <div class="login-field">
+      <label>비밀번호</label>
+      <input type="password" id="login-pw" inputmode="numeric" maxlength="5" placeholder="학번과 동일하게 입력">
+    </div>
+    <div class="login-field">
+      <label>팀 선택</label>
+      <div class="login-team-grid" id="login-team-grid">
+        <div class="login-team-opt" data-car="CAR1" onclick="selectLoginTeam('CAR1')">CAR1</div>
+        <div class="login-team-opt" data-car="CAR2" onclick="selectLoginTeam('CAR2')">CAR2</div>
+        <div class="login-team-opt" data-car="CAR3" onclick="selectLoginTeam('CAR3')">CAR3</div>
+        <div class="login-team-opt" data-car="CAR4" onclick="selectLoginTeam('CAR4')">CAR4</div>
+        <div class="login-team-opt" data-car="CAR5" onclick="selectLoginTeam('CAR5')">CAR5</div>
+        <div class="login-team-opt" data-car="CAR6" onclick="selectLoginTeam('CAR6')">CAR6</div>
+      </div>
+      <input type="hidden" id="login-team">
+    </div>
+    <button class="login-btn" onclick="doLogin()">로그인</button>
+    <div class="login-error" id="login-error"></div>
+    <div class="login-hint">비밀번호는 <code>학번과 동일</code>합니다. 예: 학번이 30101이면 비밀번호도 30101.</div>
+  </div>
+</div>
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-brand"><div class="dot"></div>AUTO-NET LAB · 3차시</div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-bg"><div class="progress-bar-fill" id="pbar"></div></div>
+    <div class="progress-label" id="plabel">0 / 7</div>
+  </div>
+  <div class="team-badge" id="topTeam">팀 미확인</div>
+  <div class="student-badge" id="student-badge">
+    <span id="student-badge-id"></span>
+    <button onclick="doLogout()">로그아웃</button>
+  </div>
+</div>
+
+<div class="page" id="lesson-3">
+
+  <div class="hero-banner">
+    <div class="hero-badge">🛡 TICKET-03 · 안전 시험팀 엔지니어</div>
+    <div class="hero-title">안전 규칙을 설계하고 검증한다</div>
+    <p class="hero-sub">
+      1차시의 패킷 포맷과 2차시의 지연 측정을 바탕으로 <strong>차량</strong>에 적용할 안전 규칙 3가지를 설계하고,
+      적용 전·후를 비교해 검증합니다. 모든 시험은 <strong>시뮬레이터 안에서만</strong> 진행됩니다.
+    </p>
+  </div>
+
+  <!-- S#15 -->
+  <div class="section open" id="sec-s15">
+    <div class="section-header" onclick="toggleSection('s15')">
+      <span class="step-badge">S#15</span>
+      <span class="section-title">1·2차시 결과 소환</span>
+      <button class="demo-mini-btn" onclick="event.stopPropagation(); showGuide('s15')">🧭 안내</button>
+      <span class="lock-icon" id="lock-s15">👁</span>
+      <span class="chevron">›</span>
+    </div>
+    <div class="section-body">
+      <div class="sensei-box">
+        <span class="sensei-icon">🤖</span>
+        <span class="sensei-text">"너희가 1차시에 고친 패킷 포맷과 2차시에 줄인 지연. 이제 그 두 가지를 합쳐서 차량이 위험한 상황에서 멈출 수 있는 규칙을 만들어야 해. 오늘은 <strong>실습 환경에서만</strong> 시험해."</span>
+      </div>
+      <div class="recall-grid">
+        <div class="recall-card">
+          <div class="recall-card-title">📦 1차시 — packet_format_v1.md 핵심 요약</div>
+          <input type="text" id="s15-p1" placeholder="예: TYPE 0x03=긴급정지, CRC-8 체크섬 사용" oninput="s15Update()">
+        </div>
+        <div class="recall-card">
+          <div class="recall-card-title">📶 2차시 — net_protocol_v2.md 핵심 요약</div>
+          <input type="text" id="s15-p2" placeholder="예: 평균 RTT 92ms, 전략 A 적용" oninput="s15Update()">
+        </div>
+      </div>
+      <div class="recall-card" style="margin-top:4px;">
+        <div class="recall-card-title">⚠️ 이번 규칙으로 막으려는 위험 시나리오</div>
+        <input type="text" id="s15-risk" placeholder="예: 긴급정지 신호가 늦게 도착해 차가 장애물을 지나친다" oninput="s15Update()">
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="btn-s15-done" disabled onclick="completeStep('s15')">✓ 소환 완료</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- S#16 -->
+  <div class="section locked" id="sec-s16">
+    <div class="section-header" onclick="toggleSection('s16')">
+      <span class="step-badge">S#16</span>
+      <span class="section-title">안전 규칙 3가지를 설계하라</span>
+      <button class="demo-mini-btn" onclick="event.stopPropagation(); showGuide('s16')">🧭 안내</button>
+      <span class="lock-icon" id="lock-s16">🔒</span>
+      <span class="chevron">›</span>
+    </div>
+    <div class="section-body">
+      <div class="sensei-box">
+        <span class="sensei-icon">🤖</span>
+        <span class="sensei-text">"규칙 하나마다 두 가지 근거가 있어야 해. 첫째, <strong>어떤 패킷(TYPE)</strong>이 이 규칙을 작동시키나. 둘째, <strong>지연이 얼마 이상일 때</strong> 규칙이 발동하나. 측정값이 없으면 '근거 없음'으로 명시해."</span>
+      </div>
+      <div id="rule-cards"></div>
+      <div class="hint-box">💡 예시 — 규칙①: TYPE 0x03(긴급정지)를 수신하면 모든 주행명령 무시 / 규칙②: CRC-8 오류 시 패킷 폐기 후 재요청 / 규칙③: 편도 제어 지연 임계값 초과 시 속도 단계 낮춤</div>
+      <div class="mentor2-panel">
+        <div class="mentor2-title">🤖 AI 사수에게 설명하기</div>
+        <div style="font-size:11px;color:var(--fg3);margin-bottom:6px;">💡 "왜 규칙마다 패킷 근거와 지연 근거가 둘 다 필요한지" 여러분의 말로 설명해보세요. 정답은 바로 안 알려줍니다.</div>
+        <textarea class="mentor2-input" id="s16-memo" placeholder="근거가 하나라도 없으면 어떤 문제가 생길지 설명해보세요" oninput="document.getElementById('s16-memo-send').disabled = !this.value.trim();"></textarea>
+        <div class="mentor2-send-row">
+          <button class="mentor2-send-btn" id="s16-memo-send" disabled onclick="sendS16Memo()">💬 사수에게 전송</button>
+        </div>
+        <div class="mentor2-my-msg" id="s16-my-msg"></div>
+        <div class="mentor2-reply" id="s16-reply">
+          <span class="tag" id="s16-reply-tag">🤖 AI 사수 — 반례 하나</span>
+          <span id="s16-reply-text"></span>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="btn-s16-done" disabled onclick="completeStep('s16')">✓ 안전 규칙 3가지 설계 완료</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- S#17 -->
+  <div class="section locked" id="sec-s17">
+    <div class="section-header" onclick="toggleSection('s17')">
+      <span class="step-badge">S#17</span>
+      <span class="section-title">시뮬레이터에 적용하라 — 적용 전·후 비교</span>
+      <button class="demo-mini-btn" onclick="event.stopPropagation(); showGuide('s17')">🧭 안내</button>
+      <span class="lock-icon" id="lock-s17">🔒</span>
+      <span class="chevron">›</span>
+    </div>
+    <div class="section-body">
+      <div class="sensei-box">
+        <span class="sensei-icon">🤖</span>
+        <span class="sensei-text">"규칙을 넣기 전과 후, 같은 시나리오에서 실행해. <strong>조건을 바꾸지 마.</strong> 결과가 나쁘게 나와도 그대로 기록해."</span>
+      </div>
+      <div class="sim-compare">
+        <div class="sim-card" id="sim-before-card">
+          <div class="sim-card-label">▶ 규칙 미적용</div>
+          <div class="sim-stat" id="sim-before-stat">--</div>
+          <div class="sim-sub">정지 응답 시간(ms)</div>
+          <div class="track-mini-wrap">
+            <div class="track-mini-road">
+              <div class="track-mini-centerline"></div>
+              <div class="track-mini-obstacle">🚧</div>
+              <div class="track-mini-flash" id="mini-flash-before">💥</div>
+              <div class="track-mini-car" id="mini-car-before">🚗</div>
+            </div>
+            <div class="track-mini-verdict" id="mini-verdict-before">실행 전</div>
+          </div>
+          <button class="btn btn-secondary" onclick="runSim('before')">⚙ 시나리오 실행</button>
+        </div>
+        <div class="sim-card after" id="sim-after-card">
+          <div class="sim-card-label">▶ 규칙 적용</div>
+          <div class="sim-stat" id="sim-after-stat">--</div>
+          <div class="sim-sub">정지 응답 시간(ms)</div>
+          <div class="track-mini-wrap">
+            <div class="track-mini-road">
+              <div class="track-mini-centerline"></div>
+              <div class="track-mini-obstacle">🚧</div>
+              <div class="track-mini-flash" id="mini-flash-after">💥</div>
+              <div class="track-mini-car" id="mini-car-after">🚗</div>
+            </div>
+            <div class="track-mini-verdict" id="mini-verdict-after">실행 전</div>
+          </div>
+          <button class="btn btn-primary" onclick="runSim('after')">🛡 시나리오 실행</button>
+        </div>
+        <div class="sim-delta" id="sim-delta"></div>
+      </div>
+      <div class="warn-box">⚠ 시뮬레이터 오류 시 교사 준비 스크린샷 결과지로 대체합니다. 결과가 개선되지 않아도 기록 그대로 유지합니다 — 좋게 꾸미지 않습니다.</div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="btn-s17-done" disabled onclick="completeStep('s17')">✓ 적용 전·후 비교 완료</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- S#18 -->
+  <div class="section locked" id="sec-s18">
+    <div class="section-header" onclick="toggleSection('s18')">
+      <span class="step-badge">S#18</span>
+      <span class="section-title">짝 팀에게 넘겨라 — 교차 검토</span>
+      <button class="demo-mini-btn" onclick="event.stopPropagation(); showGuide('s18')">🧭 안내</button>
+      <span class="lock-icon" id="lock-s18">🔒</span>
+      <span class="chevron">›</span>
+    </div>
+    <div class="section-body">
+      <div class="sensei-box">
+        <span class="sensei-icon">🤖</span>
+        <span class="sensei-text">"네가 설계한 규칙을 짝 팀이 부수러 온 거야. 짝 팀 규칙에서 <strong>빠진 시나리오</strong> 하나와 <strong>근거가 약한 항목</strong> 하나를 찾아 써. 고치라는 게 아니라 발견만 해."</span>
+      </div>
+      <div class="pair-badge" id="pair-badge">🔁 짝 팀 구성 — CAR1↔CAR2 · CAR3↔CAR4 · CAR5↔CAR6</div>
+      <div class="checklist" id="checklist">
+        <div class="check-item" data-k="1" onclick="toggleCheck(this)"><span class="check-box"></span><span class="check-label">① 패킷 근거(TYPE·CRC-8)가 신버전 규격과 일치하나?</span></div>
+        <div class="check-item" data-k="2" onclick="toggleCheck(this)"><span class="check-box"></span><span class="check-label">② 지연 근거가 측정값 또는 '근거 없음' 표시로 명확한가?</span></div>
+        <div class="check-item" data-k="3" onclick="toggleCheck(this)"><span class="check-box"></span><span class="check-label">③ 빠진 위험 시나리오가 있나?</span></div>
+        <div class="check-item" data-k="4" onclick="toggleCheck(this)"><span class="check-box"></span><span class="check-label">④ 전·후 비교가 같은 조건인가?</span></div>
+      </div>
+      <div class="recall-grid">
+        <div class="recall-card">
+          <div class="recall-card-title">빠진 시나리오</div>
+          <input type="text" id="find1" placeholder="예: 두 위험이 동시에 오는 경우가 없음" oninput="s18Update()">
+        </div>
+        <div class="recall-card">
+          <div class="recall-card-title">근거가 약한 항목</div>
+          <input type="text" id="find2" placeholder="예: 규칙③의 지연 근거가 '근거 없음'인데 발동 기준이 있음" oninput="s18Update()">
+        </div>
+      </div>
+      <div class="mentor2-panel">
+        <div class="mentor2-title">🤖 AI 사수에게 설명하기</div>
+        <div style="font-size:11px;color:var(--fg3);margin-bottom:6px;">💡 "검토가 왜 공격이 아니라 제안인지" 여러분의 말로 설명해보세요. 정답은 바로 안 알려줍니다.</div>
+        <textarea class="mentor2-input" id="s18-memo" placeholder="수정 여부를 원 팀이 결정하는 이유를 설명해보세요" oninput="document.getElementById('s18-memo-send').disabled = !this.value.trim();"></textarea>
+        <div class="mentor2-send-row">
+          <button class="mentor2-send-btn" id="s18-memo-send" disabled onclick="sendS18Memo()">💬 사수에게 전송</button>
+        </div>
+        <div class="mentor2-my-msg" id="s18-my-msg"></div>
+        <div class="mentor2-reply" id="s18-reply">
+          <span class="tag" id="s18-reply-tag">🤖 AI 사수 — 반례 하나</span>
+          <span id="s18-reply-text"></span>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="btn-s18-done" disabled onclick="completeStep('s18')">✓ 교차 검토 완료</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- S#19 -->
+  <div class="section locked" id="sec-s19">
+    <div class="section-header" onclick="toggleSection('s19')">
+      <span class="step-badge">S#19</span>
+      <span class="section-title">보완하고 이유를 남겨라</span>
+      <button class="demo-mini-btn" onclick="event.stopPropagation(); showGuide('s19')">🧭 안내</button>
+      <span class="lock-icon" id="lock-s19">🔒</span>
+      <span class="chevron">›</span>
+    </div>
+    <div class="section-body">
+      <div class="sensei-box">
+        <span class="sensei-icon">🤖</span>
+        <span class="sensei-text">"짝 팀이 찾은 게 맞으면 고쳐. 아니면 왜 유지하는지 써. <strong>수정하지 않는 이유도 근거다.</strong>"</span>
+      </div>
+      <div class="finding-card">
+        <div class="finding-title" id="f1-title">발견①: (S#18에서 자동으로 채워집니다)</div>
+        <div class="decide-row">
+          <button class="decide-btn fix" id="f1-fix" onclick="decide('f1','fix')">수정</button>
+          <button class="decide-btn keep" id="f1-keep" onclick="decide('f1','keep')">유지</button>
+        </div>
+        <input type="text" id="f1-reason" placeholder="수정 내용 또는 유지 이유" oninput="s19Update()">
+      </div>
+      <div class="finding-card">
+        <div class="finding-title" id="f2-title">발견②: (S#18에서 자동으로 채워집니다)</div>
+        <div class="decide-row">
+          <button class="decide-btn fix" id="f2-fix" onclick="decide('f2','fix')">수정</button>
+          <button class="decide-btn keep" id="f2-keep" onclick="decide('f2','keep')">유지</button>
+        </div>
+        <input type="text" id="f2-reason" placeholder="수정 내용 또는 유지 이유" oninput="s19Update()">
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="btn-s19-done" disabled onclick="completeStep('s19')">✓ 보완·이유 기록 완료</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- S#20 -->
+  <div class="section locked" id="sec-s20">
+    <div class="section-header" onclick="toggleSection('s20')">
+      <span class="step-badge">S#20</span>
+      <span class="section-title">최종 보고서를 완성하라</span>
+      <button class="demo-mini-btn" onclick="event.stopPropagation(); showGuide('s20')">🧭 안내</button>
+      <span class="lock-icon" id="lock-s20">🔒</span>
+      <span class="chevron">›</span>
+    </div>
+    <div class="section-body">
+      <div class="sensei-box">
+        <span class="sensei-icon">🤖</span>
+        <span class="sensei-text">"근거 없음이라고 쓴 칸이 있어도 괜찮아. 없으면 '근거 없음'이 사실이고, 그걸 정직하게 적는 게 S야."</span>
+      </div>
+      <div class="form-field" style="margin-bottom:10px;">
+        <label>한계 1가지</label>
+        <input type="text" id="s20-limit" placeholder="예: 시뮬레이터 상에서만 검증, 실제 차량 미시험" oninput="s20Update()">
+      </div>
+      <div class="output-box">
+        <div class="output-title">📄 산출물 미리보기 — safety_protocol_v3.md</div>
+        <div class="output-content" id="out-report">
+          <strong style="color:var(--fg);">AUTO-NET LAB 안전 시험 보고서 v1</strong><br><br>
+          팀: <span id="out3-team" style="color:var(--green);">-</span><br><br>
+          <strong>① 1차시 핵심 결과:</strong> <span id="out3-p1">-</span><br>
+          <strong>② 2차시 핵심 결과:</strong> <span id="out3-p2">-</span><br><br>
+          <strong>③ 안전 규칙 3가지:</strong><br><span id="out3-rules">-</span><br><br>
+          <strong>④ 전·후 비교:</strong> <span id="out3-sim">-</span><br><br>
+          <strong>⑤ 교차 검토 발견·처리:</strong> <span id="out3-findings">-</span><br><br>
+          <strong>⑥ 한계:</strong> <code id="out3-limit">-</code>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="completeStep('s20')">🚀 접점⑥ 업로드 — 팀 공유 드라이브</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- S#21 -->
+  <div class="section locked" id="sec-s21">
+    <div class="section-header" onclick="toggleSection('s21')">
+      <span class="step-badge">S#21</span>
+      <span class="section-title">3문장 최종 회고 ⭐ 1~3차시 전체 회고</span>
+      <button class="demo-mini-btn" onclick="event.stopPropagation(); showGuide('s21')">🧭 안내</button>
+      <span class="lock-icon" id="lock-s21">🔒</span>
+      <span class="chevron">›</span>
+    </div>
+    <div class="section-body">
+      <div class="sensei-box">
+        <span class="sensei-icon">🤖</span>
+        <span class="sensei-text">"3차시 혼자가 아니야. 1차시부터 지금까지 네가 바꾼 것 하나만 써."</span>
+      </div>
+      <p style="font-size:13px;font-weight:600;color:var(--fg);margin:0 0 8px;">양식 — "처음에 나는 [생각]이라고 생각했다. 3차시를 통해 나는 [증거]를 보았다. 그래서 나는 [바뀐 판단]으로 바꿨다(또는 유지했다)."</p>
+      <div class="retro-grid">
+        <div class="retro-field"><label>처음 생각한 것</label><input type="text" id="r1"></div>
+        <div class="retro-field"><label>본 증거</label><input type="text" id="r2"></div>
+        <div class="retro-field"><label>바뀐 판단</label><input type="text" id="r3"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="btn-s21-done" disabled onclick="completeStep('s21')">✓ 회고 완료</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 최종 제출 -->
+  <div class="section locked" id="sec-summary">
+    <div class="section-header" onclick="toggleSection('summary')">
+      <span class="step-badge">정리</span>
+      <span class="section-title">접점⑥ 최종 제출</span>
+      <span class="lock-icon" id="lock-summary">🔒</span>
+      <span class="chevron">›</span>
+    </div>
+    <div class="section-body">
+      <div class="junction-card">
+        <div class="junction-label">접점⑥ — 3차시 완료 · 최종</div>
+        <div class="junction-title">safety_protocol_v3.md 제출</div>
+        <div class="junction-desc">
+          1차시 패킷 포맷, 2차시 지연 측정, 3차시 안전 규칙 설계·검증까지 전체 과정을 완성했습니다.
+        </div>
+        <div class="junction-chain">
+          <span class="jc-item">접점④ 1차시<br>packet_format_v1</span>
+          <span class="jc-arrow">→</span>
+          <span class="jc-item">접점⑤ 2차시<br>net_protocol_v2</span>
+          <span class="jc-arrow">→</span>
+          <span class="jc-item current">접점⑥ 3차시<br>safety_test_report</span>
+        </div>
+        <div class="btn-row" style="justify-content:center;margin-top:18px;">
+          <button class="btn btn-success" id="btn-final" onclick="submitFinal()">🎯 접점⑥ 제출 완료 — 전체 과정 완성</button>
+        </div>
+        <div id="final-msg" style="display:none;margin-top:14px;padding:14px;background:var(--green-dim);border-radius:8px;text-align:center;font-size:14px;color:var(--green);">
+          ✅ <strong>3차시 완료! 전체 과정 완성!</strong><br>수고했습니다. safety_protocol_v3.md가 기록되었습니다.<br>
+          <a href="outputs.html" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:12px;padding:10px 18px;border-radius:8px;border:1px solid var(--green);color:var(--green);font-weight:700;text-decoration:none;">📁 학생 산출물 제출</a>
+          <a href="index.html" style="display:inline-block;margin-top:12px;padding:10px 18px;border-radius:8px;background:var(--green);color:#071018;font-weight:700;text-decoration:none;">차시 목록으로 돌아가기 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<!-- 안내도우미 -->
+<button class="guide-fab" onclick="showGuide('intro')">🧭 안내도우미</button>
+<div class="guide-overlay" id="guide-overlay">
+  <div class="guide-overlay-head">
+    <span class="guide-overlay-title" id="guide-overlay-title">안내</span>
+    <button class="guide-overlay-close" onclick="closeGuide()">✕</button>
+  </div>
+  <div class="guide-overlay-body" id="guide-overlay-body"></div>
+</div>
+
+<script>
+// ── 로그인 (학번=비밀번호, index.html과 공유 세션) ────────────────
+let studentId = '';
+let loginTeam = '';
+
+function storageKey() {
+  return 'autonet-lesson3-' + (studentId || 'guest');
+}
+
+function selectLoginTeam(car) {
+  loginTeam = car;
+  document.getElementById('login-team').value = car;
+  document.querySelectorAll('.login-team-opt').forEach(el => {
+    el.classList.toggle('active', el.dataset.car === car);
+  });
+}
+
+function doLogin() {
+  const idEl = document.getElementById('login-id');
+  const pwEl = document.getElementById('login-pw');
+  const errEl = document.getElementById('login-error');
+  const id = idEl.value.trim();
+  const pw = pwEl.value.trim();
+
+  if (!/^\d{5}$/.test(id)) { errEl.textContent = '학번은 5자리 숫자로 입력하세요 (예: 30101).'; return; }
+  if (pw !== id) { errEl.textContent = '비밀번호가 올바르지 않습니다. (비밀번호는 학번과 동일)'; pwEl.value = ''; pwEl.focus(); return; }
+  if (!loginTeam) { errEl.textContent = '팀을 선택해주세요.'; return; }
+
+  errEl.textContent = '';
+  studentId = id;
+  try {
+    localStorage.setItem('autonet-lesson3-current', studentId);
+    localStorage.setItem('autonet-session', JSON.stringify({ id, team: loginTeam }));
+  } catch(e) {}
+  enterApp(loginTeam);
+}
+
+function doLogout() {
+  try {
+    localStorage.removeItem('autonet-lesson3-current');
+    localStorage.removeItem('autonet-session');
+  } catch(e) {}
+  location.replace('login.html');
+}
+
+function enterApp(teamFromLogin) {
+  document.body.classList.add('logged-in');
+  document.getElementById('student-badge').style.display = 'flex';
+  loadState();
+  if (teamFromLogin && !state.team) { state.team = teamFromLogin; saveState(); }
+  const badgeTeam = state.team || teamFromLogin;
+  document.getElementById('student-badge-id').textContent = '학번 ' + studentId + (badgeTeam ? ' · ' + badgeTeam : '');
+  if (state.team) document.getElementById('topTeam').textContent = state.team;
+  restoreProgress3();
+}
+
+// Auto-login: prefer the shared session (index.html or another lesson), else this lesson's own remembered login
+try {
+  const shared = JSON.parse(localStorage.getItem('autonet-session') || 'null');
+  if (shared && /^\d{5}$/.test(shared.id) && shared.team) {
+    studentId = shared.id; loginTeam = shared.team;
+  } else {
+    const remembered = localStorage.getItem('autonet-lesson3-current');
+    if (remembered && /^\d{5}$/.test(remembered)) studentId = remembered;
+  }
+} catch(e) {}
+
+// ── State ──────────────────────────────────────────────────────
+let state = { team: '', completedSteps: new Set() };
+
+function loadState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(storageKey()) || '{}');
+    if (saved.team) state.team = saved.team;
+    if (saved.completedSteps) state.completedSteps = new Set(saved.completedSteps);
+  } catch(e) {}
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(storageKey(), JSON.stringify({
+      team: state.team, completedSteps: [...state.completedSteps],
+    }));
+  } catch(e) {}
+}
+
+const STEP_ORDER = ['s15','s16','s17','s18','s19','s20','s21','summary'];
+
+function toggleSection(id) {
+  const sec = document.getElementById('sec-' + id);
+  if (sec.classList.contains('locked')) return;
+  sec.classList.toggle('open');
+}
+function unlockSection(id) {
+  const sec = document.getElementById('sec-' + id);
+  if (!sec) return;
+  sec.classList.remove('locked');
+  const lock = document.getElementById('lock-' + id);
+  if (lock) lock.remove();
+  sec.classList.add('open');
+}
+function completeStep(id) {
+  state.completedSteps.add(id);
+  saveState();
+  const sec = document.getElementById('sec-' + id);
+  sec.classList.add('completed');
+  sec.classList.remove('open');
+  const badge = sec.querySelector('.step-badge');
+  if (badge) { badge.style.background = 'var(--green-dim)'; badge.style.borderColor='var(--green)'; badge.style.color='var(--green)'; }
+  const chevron = sec.querySelector('.chevron');
+  if (chevron) chevron.textContent = '✓';
+  const idx = STEP_ORDER.indexOf(id);
+  if (idx >= 0 && idx + 1 < STEP_ORDER.length) unlockSection(STEP_ORDER[idx + 1]);
+  updateProgress();
+  if (id === 's20') s20Update();
+}
+function updateProgress() {
+  const done = state.completedSteps.size;
+  const total = 7;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('pbar').style.width = pct + '%';
+  document.getElementById('plabel').textContent = done + ' / ' + total;
+}
+
+// ── S#15 recall ──────────────────────────────────────────────
+function s15Update() {
+  const p1 = document.getElementById('s15-p1').value.trim();
+  const p2 = document.getElementById('s15-p2').value.trim();
+  const risk = document.getElementById('s15-risk').value.trim();
+  document.getElementById('btn-s15-done').disabled = !(p1 && p2 && risk);
+}
+
+// ── S#16 rule builder ────────────────────────────────────────
+function renderRuleCards() {
+  const wrap = document.getElementById('rule-cards');
+  let html = '';
+  for (let n = 1; n <= 3; n++) {
+    html += `
+    <div class="rule-card">
+      <div class="rule-head"><span class="rule-num">규칙 ${n}</span></div>
+      <div class="rule-grid">
+        <div class="rule-field full"><label>위험 시나리오</label><input type="text" id="rule${n}-scenario" placeholder="어떤 상황을 막으려 하나?" oninput="s16Update()"></div>
+        <div class="rule-field"><label>패킷 근거 (TYPE·CRC-8)</label><input type="text" id="rule${n}-packet" placeholder="예: TYPE 0x03" oninput="s16Update()"></div>
+        <div class="rule-field"><label>지연 근거 (RTT 또는 편도 지연)</label><input type="text" id="rule${n}-delay" placeholder="예: 편도 지연 100ms 초과" oninput="s16Update()"></div>
+        <div class="rule-field full"><label>규칙 내용</label><textarea id="rule${n}-content" rows="2" placeholder="발동 시 어떻게 동작하나?" oninput="s16Update()"></textarea></div>
+      </div>
+    </div>`;
+  }
+  wrap.innerHTML = html;
+}
+function s16Update() {
+  let ok = true;
+  for (let n = 1; n <= 3; n++) {
+    const sc = document.getElementById('rule'+n+'-scenario').value.trim();
+    const ct = document.getElementById('rule'+n+'-content').value.trim();
+    const pk = document.getElementById('rule'+n+'-packet').value.trim();
+    const dl = document.getElementById('rule'+n+'-delay').value.trim();
+    if (!sc || !ct || !pk || !dl) ok = false;
+  }
+  if (!ok) document.getElementById('btn-s16-done').disabled = true;
+}
+
+const S16_RIGHT_KEYWORDS = ['둘 다','둘다','하나만','빠지','판단할 수 없','구분','확인할 수 없','근거 없음','알 수 없'];
+const S16_COUNTEREXAMPLES = [
+  '다시 생각해볼까요? 패킷 근거만 있고 지연 근거가 없는 규칙이 있다고 해볼게요. "TYPE 0x03이면 멈춘다"는 알겠는데, 그게 "언제"는 알 수 있을까요?',
+  '반대로, 지연 근거만 있고 패킷 근거가 없다면 어떨까요? "100ms 넘으면 멈춘다"인데, 어떤 패킷이 왔을 때 멈추는지는요?',
+  '둘 중 하나가 "근거 없음"으로 적혀 있다면, 그 규칙을 믿고 차를 멈춰도 될지 어떻게 판단하죠?'
+];
+let s16Attempts = 0, s16Solved = false;
+function sendS16Memo() {
+  if (s16Solved) return;
+  const input = document.getElementById('s16-memo');
+  const txt = input.value.trim();
+  if (!txt) return;
+  document.getElementById('s16-my-msg').textContent = '나: ' + txt;
+  document.getElementById('s16-my-msg').classList.add('show');
+  const correct = S16_RIGHT_KEYWORDS.some(k => txt.includes(k));
+  const tagEl = document.getElementById('s16-reply-tag');
+  let reply;
+  if (correct) {
+    s16Solved = true;
+    tagEl.textContent = '✅ AI 사수 — 인정!';
+    tagEl.style.color = 'var(--green)';
+    reply = '정확해요! 패킷 근거만 있으면 "언제" 발동할지 모르고, 지연 근거만 있으면 "무엇에 반응"할지 몰라요. 둘 다 있어야 규칙이 완전해지고, 둘 다 없는 경우는 "근거 없음"으로 정직하게 남겨야 해요.';
+    input.disabled = true;
+    document.getElementById('s16-memo-send').textContent = '✓ 이해 완료';
+    s16Update();
+    document.getElementById('btn-s16-done').disabled = false;
+    for (let n = 1; n <= 3; n++) {
+      const sc = document.getElementById('rule'+n+'-scenario').value.trim();
+      const ct = document.getElementById('rule'+n+'-content').value.trim();
+      const pk = document.getElementById('rule'+n+'-packet').value.trim();
+      const dl = document.getElementById('rule'+n+'-delay').value.trim();
+      if (!sc || !ct || !pk || !dl) { document.getElementById('btn-s16-done').disabled = true; }
+    }
+  } else {
+    tagEl.textContent = '🤖 AI 사수 — 반례 하나';
+    tagEl.style.color = 'var(--cyan)';
+    reply = S16_COUNTEREXAMPLES[Math.min(s16Attempts, S16_COUNTEREXAMPLES.length - 1)];
+    s16Attempts++;
+  }
+  document.getElementById('s16-reply-text').textContent = reply;
+  const panel = document.getElementById('s16-reply');
+  panel.classList.remove('show'); void panel.offsetWidth; panel.classList.add('show');
+  input.value = '';
+  document.getElementById('s16-memo-send').disabled = true;
+}
+
+// ── S#17 before/after sim (animated mini-track) ──────────────
+let simBeforeVal = null, simAfterVal = null;
+const SIM_OBSTACLE_PCT = 70;
+const SIM_REF_MS = 500; // ms mapped to the full track width
+
+function runSim(which) {
+  const stat = document.getElementById('sim-'+which+'-stat');
+  const car = document.getElementById('mini-car-' + which);
+  const flash = document.getElementById('mini-flash-' + which);
+  const verdict = document.getElementById('mini-verdict-' + which);
+  const btn = document.querySelector(which === 'before' ? '#sim-before-card button' : '#sim-after-card button');
+
+  btn.disabled = true;
+  stat.textContent = '…';
+  verdict.textContent = '🚗 주행 중...';
+  verdict.className = 'track-mini-verdict';
+  flash.classList.remove('show');
+  car.classList.remove('crash-shake');
+  car.style.left = '4%';
+
+  setTimeout(() => {
+    let val;
+    if (which === 'before') { val = 420 + Math.round(Math.random()*60); simBeforeVal = val; }
+    else { val = 95 + Math.round(Math.random()*40); simAfterVal = val; }
+    stat.textContent = val + 'ms';
+
+    // map response time directly and proportionally onto the mini-track:
+    // a longer stop response carries the car further before it actually stops.
+    const carStopPct = Math.min(96, (val / SIM_REF_MS) * 100);
+    const crashed = carStopPct > SIM_OBSTACLE_PCT;
+
+    void car.offsetWidth;
+    car.style.left = carStopPct + '%';
+
+    setTimeout(() => {
+      if (crashed) {
+        flash.classList.add('show');
+        car.classList.add('crash-shake');
+        verdict.textContent = '💥 장애물과 충돌 — 응답이 느려 못 멈췄습니다';
+        verdict.classList.add('crash');
+      } else {
+        verdict.textContent = '🛡 장애물 앞에서 안전하게 정지';
+        verdict.classList.add('safe');
+      }
+      btn.disabled = false;
+      updateSimDelta();
+    }, 1050);
+  }, 400);
+}
+function updateSimDelta() {
+  const d = document.getElementById('sim-delta');
+  if (simBeforeVal != null && simAfterVal != null) {
+    const diff = simBeforeVal - simAfterVal;
+    d.innerHTML = '규칙 적용으로 정지 응답이 <strong>' + diff + 'ms</strong> 빨라졌습니다 (' + simBeforeVal + 'ms → ' + simAfterVal + 'ms). 같은 시나리오·같은 조건에서 측정한 값입니다.';
+    document.getElementById('btn-s17-done').disabled = false;
+  }
+}
+
+// ── S#18 cross-review ───────────────────────────────────────
+let checkedCount = 0;
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+  const box = el.querySelector('.check-box');
+  box.textContent = el.classList.contains('checked') ? '✓' : '';
+  checkedCount = document.querySelectorAll('.check-item.checked').length;
+  s18Update();
+}
+function s18Update() {
+  const f1 = document.getElementById('find1').value.trim();
+  const f2 = document.getElementById('find2').value.trim();
+  if (checkedCount >= 4 && f1 && f2 && !s18Solved) {
+    // keep gated on mentor too, handled below
+  }
+  document.getElementById('f1-title').textContent = f1 ? ('발견①: ' + f1) : '발견①: (S#18에서 자동으로 채워집니다)';
+  document.getElementById('f2-title').textContent = f2 ? ('발견②: ' + f2) : '발견②: (S#18에서 자동으로 채워집니다)';
+}
+const S18_RIGHT_KEYWORDS = ['제안','결정은','원 팀','수정 여부','선택','존중','자기','스스로 판단'];
+const S18_COUNTEREXAMPLES = [
+  '다시 생각해볼까요? 짝 팀이 "이거 틀렸어, 고쳐"라고 명령한다면, 원 팀이 자기 설계를 책임지고 이해할 수 있을까요?',
+  '검토자가 찾은 게 항상 맞다고 가정해볼게요. 그런데 원 팀만 아는 맥락(예: 교사가 준 조건)이 있다면 어떻게 될까요?',
+  '"발견만 하고 고치라고 하지 않는다"는 규칙이 왜 있는지, 원 팀의 입장에서 한 문장으로 말해볼까요?'
+];
+let s18Attempts = 0, s18Solved = false;
+function sendS18Memo() {
+  if (s18Solved) return;
+  const input = document.getElementById('s18-memo');
+  const txt = input.value.trim();
+  if (!txt) return;
+  document.getElementById('s18-my-msg').textContent = '나: ' + txt;
+  document.getElementById('s18-my-msg').classList.add('show');
+  const correct = S18_RIGHT_KEYWORDS.some(k => txt.includes(k));
+  const tagEl = document.getElementById('s18-reply-tag');
+  let reply;
+  if (correct) {
+    s18Solved = true;
+    tagEl.textContent = '✅ AI 사수 — 인정!';
+    tagEl.style.color = 'var(--green)';
+    reply = '정확해요! 검토는 "발견"까지만이고, 수정 여부는 원 팀이 결정해요. 원 팀만 아는 맥락이 있을 수 있고, 자기 설계를 스스로 책임지고 이해해야 다음에도 비슷한 문제를 스스로 찾을 수 있어요.';
+    input.disabled = true;
+    document.getElementById('s18-memo-send').textContent = '✓ 이해 완료';
+    checkS18Done();
+  } else {
+    tagEl.textContent = '🤖 AI 사수 — 반례 하나';
+    tagEl.style.color = 'var(--cyan)';
+    reply = S18_COUNTEREXAMPLES[Math.min(s18Attempts, S18_COUNTEREXAMPLES.length - 1)];
+    s18Attempts++;
+  }
+  document.getElementById('s18-reply-text').textContent = reply;
+  const panel = document.getElementById('s18-reply');
+  panel.classList.remove('show'); void panel.offsetWidth; panel.classList.add('show');
+  input.value = '';
+  document.getElementById('s18-memo-send').disabled = true;
+}
+function checkS18Done() {
+  const f1 = document.getElementById('find1').value.trim();
+  const f2 = document.getElementById('find2').value.trim();
+  document.getElementById('btn-s18-done').disabled = !(checkedCount >= 4 && f1 && f2 && s18Solved);
+}
+document.addEventListener('input', (e) => {
+  if (e.target.id === 'find1' || e.target.id === 'find2') checkS18Done();
+});
+
+// ── S#19 fix-or-keep ─────────────────────────────────────────
+let decisions = { f1: null, f2: null };
+function decide(key, choice) {
+  decisions[key] = choice;
+  document.getElementById(key+'-fix').classList.toggle('active', choice === 'fix');
+  document.getElementById(key+'-keep').classList.toggle('active', choice === 'keep');
+  s19Update();
+}
+function s19Update() {
+  const r1 = document.getElementById('f1-reason').value.trim();
+  const r2 = document.getElementById('f2-reason').value.trim();
+  document.getElementById('btn-s19-done').disabled = !(decisions.f1 && decisions.f2 && r1 && r2);
+}
+
+// ── S#20 report preview ───────────────────────────────────────
+function s20Update() {
+  document.getElementById('out3-team').textContent = state.team || '-';
+  document.getElementById('out3-p1').textContent = document.getElementById('s15-p1').value.trim() || '-';
+  document.getElementById('out3-p2').textContent = document.getElementById('s15-p2').value.trim() || '-';
+  let rulesTxt = '';
+  for (let n = 1; n <= 3; n++) {
+    const sc = document.getElementById('rule'+n+'-scenario')?.value.trim();
+    const ct = document.getElementById('rule'+n+'-content')?.value.trim();
+    if (sc || ct) rulesTxt += '· 규칙'+n+': ' + (sc||'-') + ' → ' + (ct||'-') + '<br>';
+  }
+  document.getElementById('out3-rules').innerHTML = rulesTxt || '-';
+  if (simBeforeVal != null && simAfterVal != null) {
+    document.getElementById('out3-sim').textContent = simBeforeVal + 'ms → ' + simAfterVal + 'ms';
+  }
+  let findTxt = '';
+  const f1 = document.getElementById('find1').value.trim();
+  const f2 = document.getElementById('find2').value.trim();
+  if (f1) findTxt += '· ' + f1 + ' → ' + (decisions.f1 === 'fix' ? '수정' : decisions.f1 === 'keep' ? '유지' : '-') + ' (' + (document.getElementById('f1-reason').value.trim()||'-') + ')<br>';
+  if (f2) findTxt += '· ' + f2 + ' → ' + (decisions.f2 === 'fix' ? '수정' : decisions.f2 === 'keep' ? '유지' : '-') + ' (' + (document.getElementById('f2-reason').value.trim()||'-') + ')<br>';
+  document.getElementById('out3-findings').innerHTML = findTxt || '-';
+}
+
+// ── S#21 retro ─────────────────────────────────────────────────
+['r1','r2','r3'].forEach(id => {
+  document.addEventListener('input', (e) => {
+    if (e.target.id === id) {
+      const all = ['r1','r2','r3'].every(k => document.getElementById(k).value.trim());
+      document.getElementById('btn-s21-done').disabled = !all;
+    }
+  });
+});
+
+function submitFinal() {
+  document.getElementById('final-msg').style.display = 'block';
+  document.getElementById('btn-final').disabled = true;
+}
+
+// ── 안내도우미 (section help) ─────────────────────────────────
+const GUIDE_TEXT = {
+  intro: {
+    title: '🧭 안내도우미 — 전체 사용법',
+    body: '화면 상단의 <b>잠금(🔒)</b> 표시가 있는 칸은 아직 열 수 없습니다. 바로 위 단계를 완료해야 자동으로 열립니다.<br><br>' +
+          '각 S# 제목 옆의 <b>🧭 안내</b> 버튼을 누르면 그 단계에서 무엇을, 어떤 순서로 클릭해야 하는지 알려줍니다.<br>' +
+          '막히는 칸이 있으면 그 칸 옆의 🧭 안내를 눌러보세요.'
+  },
+  s15: {
+    title: '🧭 S#15 안내 — 1·2차시 결과 소환',
+    body: '이 화면은 <b>자동으로 채워지지 않습니다</b> — 팀이 1·2차시에 만든 파일을 직접 열어보고, 그 내용을 여러분의 말로 요약해서 세 칸에 타이핑해야 합니다.<br><br>' +
+
+          '<b>① 왼쪽 칸 — 1차시 packet_format_v1.md 핵심 요약</b><br>' +
+          '팀 공유 드라이브에 저장된 <code>packet_format_v1.md</code> 파일을 열어, "우리 팀이 확정한 패킷 구조에서 가장 중요한 것 한 가지"를 한 문장으로 적습니다.<br>' +
+          '· 어떤 TYPE 값이 있는지(예: 0x01 주행명령, 0x02 상태요청, 0x03 긴급정지)<br>' +
+          '· 체크섬 방식(CRC-8)이나 LENGTH 필드처럼 팀이 특별히 신경 쓴 부분<br>' +
+          '예시 입력: <i>"TYPE 0x03=긴급정지, CRC-8 체크섬으로 오류 감지"</i><br><br>' +
+
+          '<b>② 오른쪽 칸 — 2차시 net_protocol_v2.md 핵심 요약</b><br>' +
+          '<code>net_protocol_v2.md</code>를 열어 팀이 실측한 <b>평균 RTT(ms)</b>와 <b>적용한 전략(A 우선순위 큐 / B 데이터 분할)</b>을 적습니다. 숫자를 지어내지 말고 2차시에 실제로 기록한 값을 그대로 가져오세요.<br>' +
+          '예시 입력: <i>"평균 RTT 92ms, 유실 1건, 전략 A(우선순위 큐) 적용"</i><br><br>' +
+
+          '<b>③ 아래 칸 — 이번 시간에 막으려는 위험 시나리오</b><br>' +
+          '앞의 ①·②를 바탕으로 "이 패킷·지연 데이터로 어떤 사고를 막아야 하는가"를 한 문장으로 적습니다. 구체적인 상황일수록 좋습니다 (언제, 어떤 신호가, 어떻게 늦어서, 무슨 일이 생기는지).<br>' +
+          '예시 입력: <i>"긴급정지(TYPE 0x03) 신호가 RTT 지연 때문에 늦게 도착해 차량이 장애물을 지나친 뒤에야 멈춘다"</i><br><br>' +
+
+          '세 칸을 모두 채우면(빈 칸이 하나도 없어야 함) 아래 <b>"✓ 소환 완료"</b> 버튼이 자동으로 활성화됩니다. 눌러서 다음 단계(S#16 안전 규칙 설계)를 여세요. 여기서 적은 내용은 S#20 최종 보고서 미리보기에도 그대로 다시 나타납니다.'
+  },
+  s16: {
+    title: '🧭 S#16 안내 — 안전 규칙 3가지 설계',
+    body: '규칙 1·2·3 카드마다 4칸을 채웁니다 — <b>위험 시나리오 / 패킷 근거(TYPE·CRC-8) / 지연 근거(RTT 또는 편도 지연) / 규칙 내용</b>.<br>' +
+          '근거가 없으면 칸에 "근거 없음"이라고 그대로 적어도 됩니다 — 솔직한 기록이 더 좋은 평가를 받습니다.<br>' +
+          '모두 채운 뒤, 아래 <b>AI 사수 채팅창</b>에 "왜 두 근거가 모두 필요한지" 직접 설명해서 전송하세요. 사수가 맞다고 인정해야 완료 버튼이 열립니다.'
+  },
+  s17: {
+    title: '🧭 S#17 안내 — 시뮬레이터 적용 전·후',
+    body: '왼쪽(규칙 미적용)과 오른쪽(규칙 적용) 카드의 <b>"시나리오 실행"</b> 버튼을 각각 한 번씩 누르세요.<br>' +
+          '차가 트랙을 달려 장애물 앞에서 멈추는지, 충돌하는지 애니메이션으로 보여줍니다. 둘 다 실행하면 결과 차이가 아래에 표시되고 완료 버튼이 열립니다.'
+  },
+  s18: {
+    title: '🧭 S#18 안내 — 짝 팀 교차 검토',
+    body: '① 체크리스트 4항목을 짝 팀의 규칙과 비교하며 클릭해 체크합니다.<br>' +
+          '② "빠진 시나리오"와 "근거가 약한 항목" 칸에 발견한 내용을 적습니다.<br>' +
+          '③ AI 사수 채팅창에 "왜 검토가 제안일 뿐인지" 설명해 전송하세요. 4개 체크 + 2칸 입력 + 사수 인정이 모두 되어야 완료 버튼이 열립니다.'
+  },
+  s19: {
+    title: '🧭 S#19 안내 — 보완하고 이유 남기기',
+    body: 'S#18에서 적은 발견① · 발견②가 자동으로 제목에 채워집니다.<br>' +
+          '각 발견마다 <b>"수정"</b> 또는 <b>"유지"</b> 버튼 중 하나를 누르고, 그 아래 칸에 수정 내용 또는 유지하는 이유를 적으세요. 두 발견 모두 처리해야 완료 버튼이 열립니다.'
+  },
+  s20: {
+    title: '🧭 S#20 안내 — 최종 보고서 완성',
+    body: '지금까지 입력한 모든 내용이 아래 <b>미리보기</b>에 자동으로 모입니다. 따로 입력할 건 "한계 1가지" 한 칸뿐입니다 (예: 시뮬레이터 상에서만 검증).<br>' +
+          '내용을 확인한 뒤 <b>"🚀 접점⑥ 업로드"</b> 버튼을 누르세요.'
+  },
+  s21: {
+    title: '🧭 S#21 안내 — 3문장 최종 회고',
+    body: '세 칸 모두 채워야 완료됩니다 — <b>처음 생각한 것 / 본 증거 / 바뀐 판단</b>. 1차시부터 지금까지 바뀐 것 하나만 골라 짧게 적으면 충분합니다.'
+  },
+};
+function showGuide(key) {
+  const g = GUIDE_TEXT[key];
+  if (!g) return;
+  document.getElementById('guide-overlay-title').textContent = g.title;
+  document.getElementById('guide-overlay-body').innerHTML = g.body;
+  const overlay = document.getElementById('guide-overlay');
+  overlay.classList.remove('show');
+  void overlay.offsetWidth;
+  overlay.classList.add('show');
+}
+function closeGuide() {
+  document.getElementById('guide-overlay').classList.remove('show');
+}
+
+function restoreProgress3() {
+  // allow this page to be targeted at #lesson-3 (e.g. from an index/router page)
+  if (location.hash === '#lesson-3') {
+    const anchor = document.getElementById('lesson-3');
+    if (anchor) anchor.scrollIntoView({ block: 'start' });
+  }
+  renderRuleCards();
+  [...state.completedSteps].forEach(id => {
+    const sec = document.getElementById('sec-' + id);
+    if (!sec) return;
+    sec.classList.remove('locked');
+    const lock = document.getElementById('lock-' + id);
+    if (lock) lock.remove();
+    sec.classList.add('completed');
+    const badge = sec.querySelector('.step-badge');
+    if (badge) { badge.style.background = 'var(--green-dim)'; badge.style.borderColor='var(--green)'; badge.style.color='var(--green)'; }
+    const chevron = sec.querySelector('.chevron');
+    if (chevron) chevron.textContent = '✓';
+  });
+  const idx = STEP_ORDER.length ? Math.max(...[...state.completedSteps].map(s => STEP_ORDER.indexOf(s)), -1) : -1;
+  if (idx + 1 < STEP_ORDER.length) unlockSection(STEP_ORDER[idx + 1]);
+  updateProgress();
+}
+
+if (studentId) enterApp(loginTeam);
+</script>
+<script>
+(function () {
+  if (!window.AUTONET_TEACHER) return;
+  var page = decodeURIComponent(location.pathname.split('/').pop() || '');
+  var bar = document.createElement('div');
+  bar.id = 'teacher-bar';
+  bar.innerHTML =
+    '<b>교사용 작동모드</b><span>모든 단계 열림 · 학생 기록 저장 안 함</span>' +
+    '<nav>' +
+    ['lesson1.html|1차시', 'lesson2.html|2차시', 'lesson3.html|3차시', 'outputs.html|학생 산출물']
+      .map(function (x) { var p = x.split('|'); return '<a href="' + p[0] + '"' + (p[0] === page ? ' aria-current="page"' : '') + '>' + p[1] + '</a>'; }).join('') +
+    '<button type="button" id="teacher-bar-out">교사 로그아웃</button></nav>';
+  var css = document.createElement('style');
+  css.textContent = '#teacher-bar{position:sticky;top:0;z-index:9999;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:8px max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px));background:#2a1d08;border-bottom:1px solid #ffb547;color:#ffe2b0;font:13px/1.4 "Noto Sans KR","Malgun Gothic",sans-serif}' +
+    '#teacher-bar b{color:#ffb547}#teacher-bar span{color:#d9b98a;font-size:12px}#teacher-bar nav{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto}' +
+    '#teacher-bar a,#teacher-bar button{all:unset;cursor:pointer;padding:4px 10px;border:1px solid #6b5228;border-radius:6px;color:#ffe2b0;font-size:12px}' +
+    '#teacher-bar a[aria-current]{background:#ffb547;color:#2a1a00;border-color:#ffb547}#teacher-bar a:focus-visible,#teacher-bar button:focus-visible{outline:2px solid #ffb547}';
+  document.head.appendChild(css);
+  document.body.insertBefore(bar, document.body.firstChild);
+  document.getElementById('teacher-bar-out').onclick = function () {
+    try { localStorage.removeItem('autonet-teacher'); localStorage.removeItem('autonet-session'); } catch (e) {}
+    location.replace('login.html');
+  };
+  function openAll() {
+    document.querySelectorAll('.section.locked').forEach(function (sec) {
+      var id = sec.id.replace('sec-', '');
+      if (typeof unlockSection === 'function') unlockSection(id); else sec.classList.remove('locked');
+    });
+    document.querySelectorAll('.student-badge #student-badge-id, #student-badge-id').forEach(function (el) { el.textContent = '교사 모드'; });
+  }
+  openAll(); setTimeout(openAll, 300);
+  try { if (typeof saveState === 'function') window.saveState = function () {}; } catch (e) {}
+})();
+</script>

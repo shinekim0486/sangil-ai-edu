@@ -1,0 +1,21 @@
+﻿사례 1 | 2026.09.22. | 조회 결과와 화면 상태를 나누어 설명하기
+학생 발언 원문. 챗봇 답변과 실행 메타데이터는 이 파일에 수록하지 않음.
+
+학생 발언 1
+JSP와 Oracle로 관제 서버를 만들고 주행 기록을 조회하고 싶어요. 테이블은 만들었는데 JSP를 새로 열면 기록 목록이 비어 있습니다.
+
+학생 발언 2
+RUN_LOG 테이블에는 SQL Developer로 확인하면 12행이 있고, JSP 안에서 직접 SELECT를 실행하는 방식으로 만들었습니다. DTO와 DAO는 아직 안 썼어요.
+
+학생 발언 3
+RunLogDTO와 RunLogDAO로 나눠서 DAO의 findAll을 호출해 봤는데 화면에는 빈 표만 나옵니다. SQL을 단독 실행하면 12행이 나옵니다.
+
+학생 발언 4
+제가 작성한 DAO는 결과를 읽고도 list에 DTO를 추가하지 않았습니다. 아래 코드 기준으로 ORDER BY까지 포함한 전체 메서드 예시를 주세요.
+```java
+while (rs.next()) {
+    RunLogDTO dto = new RunLogDTO();
+    dto.setSpeed(rs.getInt("speed"));
+}
+return list;
+```

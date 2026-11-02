@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>6차시 · 운영 기록의 시간과 사건 순서 확인하기</title>
+<!--
+================================================================================
+  수업 슬라이드 표준 템플릿 (실습 중심)
+  정본 위치: 10_실행도구/Claude_강의자료_작업공간/templates/수업슬라이드_템플릿.html
+  기준 문서: skills/강의자료-빌더/skill.md «수업 시간 배분 기준 ⭐ 실습 중심»
+  참고 완성본: 20_연도별운영/2026학년도/2학기/02_수업자료/docker/01회차
+
+  ── 이 템플릿을 쓰는 법 ────────────────────────────────────────────────────
+  1. 이 파일을 회차 폴더로 복사하고 파일명을 {학년}_{과목}_{단원명}.html 로 바꾼다.
+  2. 아래 <div id="deck"> 안의 슬라이드 예시를 실제 내용으로 채운다.
+  3. 예시 슬라이드는 유형별 견본이다. 필요한 것만 남기고 나머지는 지운다.
+
+  ── 절대 규칙 ─────────────────────────────────────────────────────────────
+  · 실습이 전체의 80% 이상. 이론 전용 슬라이드를 만들지 않는다.
+  · 개념 설명은 실습 슬라이드 안의 <div class="why"> 박스에만 넣는다.
+  · 실습 하나는 3~5단계로 쪼개 각각 슬라이드 1장으로 만든다.
+  · 여러 줄 명령어 금지. 백슬래시(\)는 Bash 문법이라 PowerShell에서 실패한다.
+  · 16:9 / 1920x1080 기준. 한 슬라이드에서 스크롤이 생기면 슬라이드를 나눈다.
+    (코드 블록 내부의 가로 스크롤만 허용)
+
+  ── 2026-09-09 추가 (교사 확정 — «앞으로 이렇게 계속») ────────────────────
+  · 배율 200%. </style> 앞의 «200% 배율» 블록을 지우지 않는다.
+    새 덱을 만들면 반드시 헤드리스 크롬 1920×1080 으로 재고,
+    넘치는 장에만 <div class="slide" style="zoom:0.9"> 로 맞춘다.
+    목표: 넘침 0장 · 채움 평균 70% 대.
+  · 명령을 다루는 회차는 코드 블록을 네 가지로 나눈다 (.cmd/.file/.out/.ex).
+    .cmd 는 «붙여넣으면 그대로 실행»이 계약이다 — 주석·프롬프트·자리표시(이름) 금지.
+    표지 다음에 «이 자료의 상자 네 가지» 안내 장을 한 장 넣는다.
+  · 조작 화면은 그림으로 보여 준다 — 창 배치도(.ide) · 프롬프트 해부 ·
+    폴더 트리(.tree) · 대화상자 목업(.dlg) · «이렇게 나오면 성공» 터미널(.term).
+    단계마다 무엇이 보이면 성공인지 화살표로 짚는다.
+  · 막혔을 때 펴 보는 «첫걸음» 안내서를 과목 00_공통/ 에 두고
+    오른쪽 아래 고정 링크(.help-btn)로 모든 회차에서 열리게 한다.
+
+  ── 과목별 테마 (2026-08-14 교사 확정) ────────────────────────────────────
+  · java   → 다크 테마   ★ 아래 «다크 테마 오버라이드» 블록을 반드시 붙인다
+  · docker → 라이트 (기본)
+  · html   → 라이트 (기본)
+  다크로 만들 때는 이 파일 맨 아래 주석의 오버라이드 CSS를 </style> 직전에
+  통째로 붙여넣기만 하면 된다. 구조·클래스는 손대지 않는다.
+================================================================================
+-->
+<style>
+  :root {
+    --primary: #1a73e8;
+    --primary-dark: #0d47a1;
+    --green: #2e7d32;   --green-light: #e8f5e9;
+    --yellow: #f57f17;  --yellow-light: #fffde7;
+    --red: #c62828;     --red-light: #ffebee;
+    --purple: #6a1b9a;  --purple-light: #f3e5f5;
+    --code-bg: #1e1e2e;
+    --text: #1e2235;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 100%; height: 100%; overflow: hidden;
+    font-family: 'Malgun Gothic', '맑은 고딕', 'Segoe UI', sans-serif;
+    background: #111; color: var(--text);
+  }
+
+  #deck { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+  .slide {
+    position: absolute; inset: 0;
+    display: none; flex-direction: column;
+    padding: 26px 52px 50px;
+    background: #fff;
+    opacity: 0; transition: opacity .2s ease;
+    overflow: hidden;
+  }
+  .slide.active { display: flex; opacity: 1; }
+
+  h1 { font-size: 1.65rem; color: var(--primary-dark); margin-bottom: .3rem; }
+  h3 { font-size: .98rem; margin-bottom: .2rem; }
+  p, li { font-size: .91rem; line-height: 1.55; }
+  ul, ol { padding-left: 1.2rem; margin: .25rem 0; }
+  li { margin: .1rem 0; }
+  .lead { color: #666; font-size: .87rem; margin-bottom: .5rem; }
+
+  /* ===== 실습 단계 배너 — 모든 실습 슬라이드 상단에 필수 ===== */
+  .prac-bar { display: flex; align-items: center; gap: .5rem; margin-bottom: .3rem; }
+  .prac-tag {
+    display: inline-block; background: var(--green); color: #fff;
+    border-radius: 5px; padding: 2px 12px; font-size: .8rem; font-weight: bold;
+  }
+  .prac-tag.b { background: var(--primary); }   /* 실습 B 수정하기 */
+  .prac-tag.c { background: var(--red); }       /* 실습 C 오류 체험 */
+  .prac-tag.d { background: var(--purple); }    /* 실습 D 만들어보기 */
+  .prac-tag.intro { background: #607d8b; }      /* 도입·정리 */
+  .time-chip {
+    margin-left: auto; background: #eceff1; color: #546e7a;
+    border-radius: 12px; padding: 2px 12px; font-size: .78rem; font-weight: bold;
+  }
+  .step-chip {
+    background: #fff; border: 2px solid var(--green); color: var(--green);
+    border-radius: 12px; padding: 1px 10px; font-size: .76rem; font-weight: bold;
+  }
+  .step-chip.b { border-color: var(--primary); color: var(--primary); }
+  .step-chip.c { border-color: var(--red); color: var(--red); }
+  .step-chip.d { border-color: var(--purple); color: var(--purple); }
+
+  /* ===== 💡 「잠깐 —」 설명 박스 : 이 수업의 이론은 전부 여기 들어간다 ===== */
+  .why {
+    background: linear-gradient(180deg, #fffdf3 0%, #fff9e0 100%);
+    border: 2px solid var(--yellow);
+    border-radius: 10px; padding: .6rem .85rem; margin: .35rem 0;
+  }
+  .why-title {
+    font-size: .84rem; font-weight: bold; color: #e65100;
+    margin-bottom: .3rem; display: flex; align-items: center; gap: .3rem;
+  }
+  .why p, .why li { font-size: .88rem; }
+
+  pre {
+    background: var(--code-bg); color: #cdd6f4;
+    border-radius: 8px; padding: .55rem .8rem;
+    font-family: 'D2Coding', 'Consolas', monospace;
+    font-size: .79rem; line-height: 1.48; overflow-x: auto;
+    white-space: pre; margin: .28rem 0;
+  }
+  code {
+    font-family: 'D2Coding', 'Consolas', monospace; font-size: .88em;
+    background: #e8eaf6; padding: 1px 5px; border-radius: 3px;
+  }
+  pre code { background: none; padding: 0; font-size: inherit; }
+  .kw { color: #cba6f7; font-weight: bold; }  /* 키워드 */
+  .cm { color: #6a9955; }                     /* 주석 */
+  .st { color: #a6e3a1; }                     /* 문자열·성공 출력 */
+  .nm { color: #fab387; }                     /* 숫자·명령어 이름 */
+  .hl { color: #f9e2af; font-weight: bold; }  /* 강조 */
+  .err { color: #f38ba8; }                    /* 오류 메시지 */
+  .cached { color: #89dceb; font-weight: bold; }
+
+  .box       { border-radius: 8px; padding: .5rem .8rem; margin: .28rem 0; font-size: .88rem; }
+  .box-blue  { background: #e3f2fd; border-left: 4px solid var(--primary); }
+  .box-green { background: var(--green-light); border-left: 4px solid var(--green); }
+  .box-yellow{ background: var(--yellow-light); border-left: 4px solid var(--yellow); }
+  .box-red   { background: var(--red-light); border-left: 4px solid var(--red); }
+  .box-purple{ background: var(--purple-light); border-left: 4px solid var(--purple); }
+
+  .cols   { display: grid; gap: .9rem; }
+  .cols-2 { grid-template-columns: 1fr 1fr; }
+  .cols-4 { grid-template-columns: repeat(4, 1fr); }
+  .cols-4060 { grid-template-columns: 42fr 58fr; }
+  .cols-6040 { grid-template-columns: 58fr 42fr; }
+  .grow { flex: 1; min-height: 0; }
+  .mt-auto { margin-top: auto; }
+
+  table { width: 100%; border-collapse: collapse; margin: .28rem 0; font-size: .84rem; }
+  th { background: var(--primary); color: #fff; padding: .32rem .5rem; text-align: left; }
+  td { padding: .28rem .5rem; border-bottom: 1px solid #e0e0e0; vertical-align: top; }
+  tr:nth-child(even) td { background: #f5f5f5; }
+
+  .badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; border-radius: 50%;
+    font-size: .7rem; font-weight: bold; color: #fff;
+    background: var(--primary); flex-shrink: 0; margin-right: .3rem;
+  }
+  .badge-green { background: var(--green); }
+  .badge-red { background: var(--red); }
+  .badge-purple { background: var(--purple); }
+  .badge-yellow { background: var(--yellow); }
+  .step-row { display: flex; align-items: flex-start; gap: .3rem; margin: .22rem 0; font-size: .87rem; }
+
+  .cmd-tag {
+    display: inline-block; background: var(--primary); color: #fff;
+    border-radius: 4px; padding: 1px 7px;
+    font-family: 'D2Coding', 'Consolas', monospace;
+    font-size: .76rem; font-weight: bold;
+  }
+
+  #progress-bar { position: fixed; bottom: 0; left: 0; height: 4px; background: var(--primary); transition: width .3s ease; z-index: 100; }
+  #slide-num { position: fixed; bottom: 9px; right: 15px; font-size: .7rem; color: #999; }
+  .nav-btn { position: fixed; bottom: 13px; background: rgba(0,0,0,.15); color: #fff; border: none; border-radius: 20px; padding: 4px 14px; cursor: pointer; font-size: .78rem; }
+  .nav-btn:hover { background: rgba(0,0,0,.35); }
+  #btn-prev { left: 15px; }
+  #btn-next { left: 78px; }
+
+  /* ===== 표지 ===== */
+  .slide-cover { background: linear-gradient(135deg, #0d47a1 0%, #1a73e8 60%, #0db7ed 100%) !important; color: #fff; }
+  .slide-cover h1 { color: #fff; font-size: 2.1rem; margin-bottom: .22rem; }
+  .slide-cover .subtitle { color: rgba(255,255,255,.8); font-size: .98rem; margin-bottom: .22rem; }
+  .slide-cover .meta { color: rgba(255,255,255,.6); font-size: .82rem; margin-bottom: 1rem; }
+  .cover-icon { position: absolute; right: 52px; top: 24px; font-size: 5.2rem; opacity: .18; user-select: none; pointer-events: none; }
+  .goal-list-cover li { font-size: .82rem; color: rgba(255,255,255,.78); margin: .15rem 0; list-style: none; }
+  .goal-label { display: inline-block; border-radius: 3px; padding: 1px 6px; font-size: .68rem; font-weight: bold; margin-right: 5px; }
+  .label-understand { background: rgba(255,255,255,.25); color: #fff; }
+  .label-apply { background: rgba(46,125,50,.8); color: #fff; }
+  .label-analyze { background: rgba(245,127,23,.85); color: #fff; }
+
+  /* ===== 흐름도 ===== */
+  .flow-row { display: flex; align-items: center; gap: .3rem; margin: .35rem 0; }
+  .flow-box { flex: 1; border-radius: 8px; padding: .42rem .4rem; text-align: center; font-weight: bold; font-size: .84rem; color: #fff; }
+  .flow-box small { display: block; font-weight: normal; font-size: .7rem; opacity: .85; margin-top: 2px; }
+  .flow-arrow { font-size: 1rem; color: #aaa; flex-shrink: 0; }
+
+  /* ===== 회차 목록 (정리 슬라이드) ===== */
+  .lesson-item { display: flex; align-items: center; gap: .4rem; padding: .26rem .6rem; border-radius: 6px; font-size: .82rem; margin-bottom: 3px; }
+  .lesson-tag { border-radius: 4px; padding: 1px 7px; font-size: .69rem; font-weight: bold; color: #fff; flex-shrink: 0; }
+
+  /* ===== 실습 로드맵 카드 (도입 슬라이드) ===== */
+  .road-card { border-radius: 10px; padding: .55rem .65rem; color: #fff; display: flex; flex-direction: column; gap: .12rem; }
+  .road-card .t { font-weight: bold; font-size: .92rem; }
+  .road-card .m { font-size: .76rem; opacity: .9; }
+  .road-card .tm { font-size: .73rem; opacity: .8; margin-top: auto; }
+
+  details { margin: .22rem 0; }
+  summary { cursor: pointer; font-size: .83rem; font-weight: bold; color: var(--primary); padding: .22rem .4rem; background: #e3f2fd; border-radius: 4px; list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: '▶ '; font-size: .7rem; }
+
+  /* (다크 테마 오버라이드 블록 제거 — 시스템운영은 라이트) */  /* ===== 코드 복사 버튼 ===== */
+  pre { position: relative; }
+  .copy-btn {
+    position: absolute; top: 5px; right: 5px;
+    background: rgba(255,255,255,.12); color: #cdd6f4;
+    border: 1px solid rgba(255,255,255,.22); border-radius: 5px;
+    padding: 1px 9px; font-size: .68rem; cursor: pointer;
+    font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+    opacity: 0; transition: opacity .15s;
+  }
+  pre:hover .copy-btn, .copy-btn:focus { opacity: 1; }
+  .copy-btn:hover { background: rgba(255,255,255,.26); }
+  .copy-btn.done { background: #2e7d32; color: #fff; border-color: #2e7d32; opacity: 1; }
+
+  /* ══════════════════════════════════════════════════════════════
+     ⭐ 코드 블록 네 가지 — 명령을 다루는 회차에서 쓴다 (2026-09-09 교사 확정)
+     학생이 «어디까지가 명령이고 어디부터가 결과인지» 헷갈려 틀리는 일을 없앤다.
+       .cmd  파란색 — 붙여넣으면 그대로 실행된다. 주석·프롬프트·줄바꿈(\) 금지
+       .file 보라색 — 명령 창이 아니라 메모장에 넣을 «파일 내용»
+       .out  회색  — 화면에 나오는 것. 치는 게 아니다 (복사 버튼 없음)
+       .ex   주황색 — 지난 회차 예시. 그때 재료가 있어야 도니 지금은 치지 않는다
+     ★ 첫 슬라이드 다음에 «이 자료의 상자 네 가지» 안내 장을 한 장 넣는다.
+     ★ 복사 버튼은 .cmd 와 .file 에만 붙는다 (아래 스크립트의 선택자).
+     ══════════════════════════════════════════════════════════════ */
+  pre.cmd, pre.file, pre.out, pre.ex { padding-top: 1.5rem; }
+  pre.cmd::before, pre.file::before, pre.out::before, pre.ex::before {
+    position: absolute; top: 5px; left: 8px;
+    font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+    font-size: .66rem; font-weight: bold;
+    border-radius: 4px; padding: 0 7px; letter-spacing: .2px;
+  }
+  pre.cmd  { border-left: 4px solid #4fc3f7; }
+  pre.file { border-left: 4px solid #ce93d8; }
+  pre.out  { border-left: 4px solid #78909c; opacity: .95; }
+  pre.ex   { border-left: 4px solid #ffb74d; }
+  pre.cmd::before  { content: '▶ 명령 — 그대로 붙여넣어 실행'; background: #1565c0; color: #fff; }
+  pre.file::before { content: '📄 파일 내용 — 메모장에 붙여넣기'; background: #6a1b9a; color: #fff; }
+  pre.out::before  { content: '🖥 화면에 나오는 것 — 치지 않는다'; background: #455a64; color: #fff; }
+  pre.ex::before   { content: '📖 지난 회차 예시 — 지금은 치지 않는다'; background: #e65100; color: #fff; }
+
+  /* ══════════════════════════════════════════════════════════════
+     ⭐ 200% 배율 (2026-09-07 java 에서 시작 · 2026-09-09 전 과목 표준)
+     ★ 이 템플릿은 글자 크기가 «인라인 style 까지» 전부 rem 이라
+       루트 글꼴 하나만 바꾸면 본문·표·코드가 통째로 같은 비율로 커진다.
+       개별 font-size 를 손대지 말 것. 되돌리려면 아래를 16px 로만 바꾼다.
+     ── 이 블록을 빼면 1920×1080 에서 화면이 절반도 안 찬다 (실측 평균 36%).
+        넣으면 평균 70% 대가 된다. java·docker 전 회차가 이 값으로 맞춰져 있다.
+     ══════════════════════════════════════════════════════════════ */
+  html { font-size: min(3.2vh, 1.66vw); }   /* 1920x1080 에서 32px = 200% */
+
+  /* 화면 조작 UI 는 «내용»이 아니므로 배율을 따라 키우지 않는다.
+     (키우면 이전·다음 버튼이 서로 겹친다 — 위치가 고정 px 이기 때문) */
+  .nav-btn   { font-size: 13px; padding: 4px 14px; }
+  #btn-prev  { left: 15px; }
+  #btn-next  { left: 84px; }
+  #slide-num { font-size: 12px; bottom: 9px; right: 15px; }
+  .copy-btn  { font-size: 11px; padding: 1px 9px; top: 5px; right: 5px; }
+  #progress-bar { height: 4px; }
+
+  /* 상자는 «내용 분량»만큼만 차지하고, 제목 바로 아래부터 위에서 아래로 쌓는다. */
+  .cols.grow {
+    grid-auto-rows: min-content;
+    align-items: start;
+    align-content: start;
+  }
+
+  /* 번호 동그라미는 지름이 고정 px 이라 글자만 커지면 숫자가 원 밖으로 나간다. */
+  .badge { width: 1.25rem; height: 1.25rem; }
+
+  /* 여백도 rem 이라야 배율이 화면을 따라간다.
+     px 로 남겨 두면 작은 화면(노트북·프로젝터)에서 여백만 상대적으로 커져
+     내용이 아래로 밀려 잘린다. 값은 16px 기준 원래 px 를 그대로 옮긴 것이다. */
+  .slide { padding: 1.625rem 3.25rem 3.125rem; }
+  .cover-icon, .cover-whale { right: 3.25rem; top: 1.5rem; }
+
+  .cols > div { min-width: 0; }
+  pre.cmd, pre.out, pre.ex { white-space: pre-wrap; word-break: break-all; }
+</style>
+</head>
+<body>
+<div id="deck">
+  <!-- ══ 표지 ══ -->
+  <div class="slide slide-cover active">
+    <div class="cover-icon">⏱️</div>
+    <div style="margin-top:auto; margin-bottom:auto;">
+      <div style="font-size:.82rem; opacity:.7; margin-bottom:.35rem;">운영 상태 · 사용 기록 · 오류 점검 · 시간 ①</div>
+      <h1>운영 기록의 시간과 사건 순서 확인하기</h1>
+      <div class="subtitle">챗봇 서버 기록과 차량 라즈베리파이 기록, 시계가 다르면?</div>
+      <div class="meta">시스템 운영 및 네트워크 운영 3학년 &nbsp;|&nbsp; 6차시 / 7 &nbsp;|&nbsp; 50분 &nbsp;|&nbsp; <strong>실습 42분</strong></div>
+      <ul class="goal-list-cover">
+        <li><span class="goal-label label-apply">적용</span>챗봇 서버와 라즈베리파이 기록에서 같은 사건의 시각 차이를 구한다</li>
+        <li><span class="goal-label label-analyze">분석</span>두 기록을 합쳐 정렬하고 순서가 이상한 곳을 찾는다</li>
+        <li><span class="goal-label label-understand">이해</span>시각은 글자가 아니라 시간 값으로 바꿔 계산한다</li>
+      </ul>
+      <div style="margin-top:1rem; font-size:.84rem; color:rgba(255,255,255,.7);">📌 명령은 <strong style="color:#fff;">파란 상자만</strong> 그대로 붙여넣습니다. 회색 상자는 화면에 나오는 것입니다.</div>
+    </div>
+  </div>
+
+  <!-- ══ 안내 · 상자 네 가지 ══ -->
+  <div class="slide">
+    <div class="prac-bar"><span class="prac-tag intro">안내</span><span class="time-chip">1분</span></div>
+    <h1>이 자료의 상자 네 가지</h1>
+    <div class="cols cols-2 grow">
+      <div>
+<pre class="cmd">Import-Csv .\server.csv</pre>
+        <div class="box box-blue" style="font-size:.84rem;"><strong>파란 상자 = 명령</strong> — 복사해서 붙여넣으면 그대로 실행됩니다.</div>
+<pre class="file">이 차시에는 파일 내용 상자가 없습니다</pre>
+        <div class="box box-purple" style="font-size:.84rem;"><strong>보라 상자 = 파일 내용</strong> — 메모장에 붙여넣는 것.</div>
+      </div>
+      <div>
+<pre class="out">event     time
+-----     ----
+주행 시작 명령  09:02:10</pre>
+        <div class="box" style="background:#eceff1; border-left:4px solid #455a64; font-size:.84rem;"><strong>회색 상자 = 화면에 나오는 것</strong> — 치지 않습니다. 내 화면과 비교만.</div>
+<pre class="ex">… | Sort-Object time</pre>
+        <div class="box" style="background:#fff3e0; border-left:4px solid #e65100; font-size:.84rem;"><strong>주황 상자 = 요약·예시</strong> — 지금 치지 않습니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 도입 ══ -->
+  <div class="slide">
+    <div class="prac-bar"><span class="prac-tag intro">도입</span><span class="time-chip">3분</span></div>
+    <h1>정지 명령이 장애물 감지보다 먼저 일어났다?</h1>
+    <div class="cols cols-4060">
+      <div>
+        <div class="box box-red"><strong>❓ 오늘의 문제</strong><br><span style="font-size:.85rem;">서버: 09:03:20 정지 명령 → 라즈베리파이: 09:03:42 장애물 감지. 멈추라고 한 다음에 장애물을 봤다? 말이 안 된다.</span></div>
+        <div class="box box-blue" style="font-size:.85rem;"><strong>오늘의 재료</strong> — <code>server.csv</code>(챗봇 서버) · <code>device.csv</code>(차량 라즈베리파이) 사건 기록 <span style="color:#888;">(수업용 예시 기록)</span></div>
+      </div>
+      <div>
+        <div class="box box-green"><strong>오늘의 답</strong> — 두 장치의 <b>시계가 다르다</b>. 같은 사건끼리 비교하면 차이가 보인다.</div>
+        <div class="box box-purple"><strong>🎯 오늘 끝나면 생기는 것</strong><br><span style="font-size:.85rem;">시간 비교표와 보정 전 순서표 (활동지 1·2번)</span></div>
+      </div>
+    </div>
+    <div class="cols cols-2" style="margin-top:.5rem;">
+      <div class="road-card" style="background:var(--green); min-height:90px;"><div class="t">A · 따라하기</div><div class="m">열기 → 차이 구하기 → 합쳐 보기</div><div class="tm">30분 · 전원 성공</div></div>
+      <div class="road-card" style="background:var(--red); min-height:90px;"><div class="t">C · 오류 체험</div><div class="m">글자 빼기 · 시각 형식</div><div class="tm">12분</div></div>
+    </div>
+    <div class="box box-red mt-auto"><strong>⚠️ 지금 바로</strong> — 바탕화면 <code>시운실습</code> 폴더에서 <b>터미널에서 열기</b></div>
+  </div>
+
+  <!-- ══ A1 ══ -->
+  <div class="slide">
+    <div class="prac-bar"><span class="prac-tag">실습 A · 따라하기</span><span class="step-chip">1단계 / 3</span><span class="time-chip">8분</span></div>
+    <h1>두 장치의 기록 열어 보기</h1>
+    <div class="cols cols-2 grow">
+      <div>
+<pre class="cmd">Import-Csv .\server.csv</pre>
+<pre class="out">event     time
+-----     ----
+주행 시작 명령  09:02:10
+장애물 알림 수신 09:03:05
+정지 명령     09:03:20</pre>
+      </div>
+      <div>
+<pre class="cmd">Import-Csv .\device.csv</pre>
+<pre class="out">event  time
+-----  ----
+주행 시작  09:02:47
+장애물 감지 09:03:42
+정지     09:03:57</pre>
+        <div class="box box-blue mt-auto" style="font-size:.85rem;">👀 같은 줄끼리 짝: 주행 시작 명령 ↔ 주행 시작 … 시각이 다르다</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ A2 ══ -->
+  <div class="slide">
+    <div class="prac-bar"><span class="prac-tag">실습 A · 따라하기</span><span class="step-chip">2단계 / 3</span><span class="time-chip">11분</span></div>
+    <h1>같은 사건끼리 시각 차이 구하기 → 활동지 1번</h1>
+    <div class="cols cols-6040 grow">
+      <div>
+<pre class="cmd">$s = Import-Csv .\server.csv; $d = Import-Csv .\device.csv; for ($i = 0; $i -lt $s.Count; $i++) { [pscustomobject]@{ server = $s[$i].event; device = $d[$i].event; diff_sec = ([datetime]$d[$i].time - [datetime]$s[$i].time).TotalSeconds } }</pre>
+<pre class="out">server    device diff_sec
+------    ------ --------
+주행 시작 명령  주행 시작        37
+장애물 알림 수신 장애물 감지       37
+정지 명령     정지           37</pre>
+      </div>
+      <div>
+        <div class="why">
+          <div class="why-title">💡 잠깐 — 왜 [datetime] 으로 바꾸나요?</div>
+          <p>CSV의 <code>09:02:47</code> 은 그냥 <b>글자</b>입니다. <code>[datetime]</code>으로 바꿔야 시각끼리 뺄 수 있습니다.</p>
+        </div>
+        <div class="box box-blue mt-auto" style="font-size:.85rem;">✅ 세 줄 모두 37 — 장치 시계가 <b>37초 빠르다</b> (일정한 차이)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ A3 ══ -->
+  <div class="slide">
+    <div class="prac-bar"><span class="prac-tag">실습 A · 따라하기</span><span class="step-chip">3단계 / 3</span><span class="time-chip">11분</span></div>
+    <h1>두 기록을 합쳐 시각순으로 — 보정 전</h1>
+    <div class="cols cols-6040 grow">
+      <div>
+<pre class="cmd">$s = Import-Csv .\server.csv; $d = Import-Csv .\device.csv; @($s | Select-Object event, time, @{n='from';e={'server'}}) + @($d | Select-Object event, time, @{n='from';e={'device'}}) | Sort-Object time</pre>
+<pre class="out">event     time     from
+-----     ----     ----
+주행 시작 명령  09:02:10 server
+주행 시작     09:02:47 device
+장애물 알림 수신 09:03:05 server
+정지 명령     09:03:20 server
+장애물 감지    09:03:42 device
+정지        09:03:57 device</pre>
+      </div>
+      <div>
+        <div class="box box-red" style="font-size:.88rem;"><strong>이상한 곳</strong> — 서버가 <b>09:03:05</b>에 장애물 알림을 받았는데, 장치는 <b>09:03:42</b>에 감지했다?</div>
+        <div class="step-row"><span class="badge">1</span><span>활동지 2번 «보정 전» 칸에 옮기고 이상한 줄에 ✗</span></div>
+        <div class="box box-blue mt-auto" style="font-size:.85rem;">✅ ✗ 표시가 있으면 A 완료</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ C1 ══ -->
+  <div class="slide">
+    <div class="prac-bar"><span class="prac-tag c">실습 C · 오류 체험</span><span class="step-chip c">오류 1 / 2</span><span class="time-chip">6분</span></div>
+    <h1>일부러 틀리기 ① — 글자끼리 빼기</h1>
+    <div class="cols cols-2 grow">
+      <div>
+<pre class="cmd">$s = Import-Csv .\server.csv; $d = Import-Csv .\device.csv; $d[0].time - $s[0].time</pre>
+<pre class="out"><span class="err">Cannot convert value "09:02:47" to type "System.Int32". Error: "Input string was not in a correct format."</span></pre>
+        <div class="box box-yellow"><strong>🤔 30초만 스스로 읽어봅시다</strong></div>
+      </div>
+      <div>
+        <table>
+          <tr><th style="width:48%">단서</th><th>뜻</th></tr>
+          <tr><td><code>Cannot convert value "09:02:47"</code></td><td>이 글자를 바꿀 수 없다</td></tr>
+          <tr><td><code>to type "System.Int32"</code></td><td>정수(숫자)로</td></tr>
+        </table>
+        <div class="box box-green" style="font-size:.86rem;"><strong>결론</strong> — 글자는 뺄 수 없다. <code>[datetime]</code> 으로 바꾼 뒤 뺀다 (A2 명령)</div>
+        <div class="box box-blue" style="font-size:.82rem;"><strong>고친 명령</strong></div>
+<pre class="cmd">$s = Import-Csv .\server.csv; $d = Import-Csv .\device.csv; ([datetime]$d[0].time - [datetime]$s[0].time).TotalSeconds</pre>
+<pre class="out">37</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ C2 ══ -->
+  <div class="slide">
+    <div class="prac-bar"><span class="prac-tag c">실습 C · 오류 체험</span><span class="step-chip c">오류 2 / 2</span><span class="time-chip">6분</span></div>
+    <h1>일부러 틀리기 ② — 기록마다 시각 형식이 다르면</h1>
+    <div class="cols cols-2 grow">
+      <div>
+<pre class="cmd">[datetime]'09시 02분 47초'</pre>
+<pre class="out"><span class="err">Cannot convert value "09시 02분 47초" to type "System.DateTime". Error: "The string was not recognized as a valid DateTime. There is an unknown word starting at index 2."</span></pre>
+        <div class="box box-yellow"><strong>🤔 30초만 스스로 읽어봅시다</strong></div>
+      </div>
+      <div>
+        <table>
+          <tr><th style="width:48%">단서</th><th>뜻</th></tr>
+          <tr><td><code>not recognized as a valid DateTime</code></td><td>시각으로 알아볼 수 없다</td></tr>
+          <tr><td><code>unknown word … index 2</code></td><td>세 번째 글자(「시」)부터 모르는 말</td></tr>
+        </table>
+        <div class="box box-green" style="font-size:.86rem;"><strong>결론</strong> — 장치마다 기록 형식을 <b>HH:mm:ss</b> 로 맞춰 남겨야 비교할 수 있다</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 정리 ══ -->
+  <div class="slide">
+    <div class="prac-bar"><span class="prac-tag intro">정리</span><span class="time-chip">4분</span></div>
+    <h1>정리 &amp; 다음 시간</h1>
+    <div class="cols cols-6040 grow">
+      <div>
+<pre class="ex">([datetime]$d.time - [datetime]$s.time).TotalSeconds   ← 시각 차이</pre>
+        <div class="box box-green">
+          <strong>꼭 기억할 것</strong>
+          <div class="step-row"><span class="badge badge-green">1</span><span>여러 장치 기록은 <b>같은 사건끼리</b> 시각을 비교한다</span></div>
+          <div class="step-row"><span class="badge badge-green">2</span><span>시각은 <code>[datetime]</code>으로 바꿔서 뺀다</span></div>
+          <div class="step-row"><span class="badge badge-green">3</span><span>모든 사건의 차이가 같으면 <b>시계 차이</b>다</span></div>
+        </div>
+        
+      </div>
+      <div>
+        <h3>7차시 진행 상황</h3>
+        <div class="lesson-item" style="background:#eceff1; padding:.25rem .5rem;"><span class="lesson-tag" style="background:#90a4ae;">1</span><span>운영 조건과 문제 상황 질문 ①</span></div>
+        <div class="lesson-item" style="background:#eceff1; padding:.25rem .5rem;"><span class="lesson-tag" style="background:#90a4ae;">2</span><span>운영 조건과 문제 상황 질문 ②</span></div>
+        <div class="lesson-item" style="background:#eceff1; padding:.25rem .5rem;"><span class="lesson-tag" style="background:#90a4ae;">3</span><span>장애 상황을 조건·오류로 나눠 질문</span></div>
+        <div class="lesson-item" style="background:#eceff1; padding:.25rem .5rem;"><span class="lesson-tag" style="background:#90a4ae;">4</span><span>사용 기록 열고 팀별로 집계</span></div>
+        <div class="lesson-item" style="background:#eceff1; padding:.25rem .5rem;"><span class="lesson-tag" style="background:#90a4ae;">5</span><span>집계로 이용 기준 정하기</span></div>
+        <div class="lesson-item" style="background:var(--green-light); border:2px solid var(--green); padding:.25rem .5rem;"><span class="lesson-tag" style="background:var(--green);">6</span><span><strong>서버·라즈베리파이 기록의 시각 차이</strong></span></div>
+        <div class="lesson-item" style="background:var(--yellow-light); border:2px solid var(--yellow); padding:.25rem .5rem;"><span class="lesson-tag" style="background:var(--yellow);">7</span><span>시각 보정과 확인 절차 (사후)</span></div>
+        <div class="box box-blue" style="margin-top:.5rem; font-size:.84rem;"><strong>다음 시간</strong> — 차이(37초)만큼 <b>보정</b>해 순서를 바로잡고, 확인 절차를 세운다.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="progress-bar"></div>
+<span id="slide-num"></span>
+<button class="nav-btn" id="btn-prev">◀ 이전</button>
+<button class="nav-btn" id="btn-next">다음 ▶</button>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+let cur = 0;
+
+function show(n) {
+  slides[cur].classList.remove('active');
+  cur = Math.max(0, Math.min(n, slides.length - 1));
+  slides[cur].classList.add('active');
+  document.getElementById('progress-bar').style.width =
+    ((cur + 1) / slides.length * 100) + '%';
+  document.getElementById('slide-num').textContent =
+    (cur + 1) + ' / ' + slides.length;
+}
+
+document.getElementById('btn-next').onclick = () => show(cur + 1);
+document.getElementById('btn-prev').onclick = () => show(cur - 1);
+
+document.addEventListener('keydown', e => {
+  if (e.target && e.target.classList && e.target.classList.contains('copy-btn')) return;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); show(cur + 1); }
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   show(cur - 1);
+  if (e.key === 'Home') show(0);
+  if (e.key === 'End')  show(slides.length - 1);
+});
+
+
+// ===== 코드 블록 복사 버튼 =====
+function copyFallback(text, done) {
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed'; ta.style.top = '-1000px'; ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.focus(); ta.select();
+  try { document.execCommand('copy'); done(); } catch (err) { /* 무시 */ }
+  document.body.removeChild(ta);
+}
+
+// 명령(.cmd)·파일 내용(.file) 에만 붙인다. 화면 출력(.out)·지난 회차 예시(.ex)는 칠 것이 아니다.
+// 클래스를 안 쓰는 덱(코드 위주 회차)은 아래 선택자를 '#deck pre' 로 두면 전부 붙는다.
+document.querySelectorAll('#deck pre.cmd, #deck pre.file, #deck pre:not(.cmd):not(.file):not(.out):not(.ex)').forEach(function (pre) {
+  var text = pre.innerText;          // ★ 버튼 붙이기 전에 원문 확보
+  var btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'copy-btn';
+  btn.textContent = '복사';
+  btn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+    var done = function () {
+      btn.textContent = '복사됨';
+      btn.classList.add('done');
+      setTimeout(function () {
+        btn.textContent = '복사';
+        btn.classList.remove('done');
+      }, 1200);
+      btn.blur();                    // 스페이스바가 버튼을 다시 누르지 않게
+    };
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(done, function () { copyFallback(text, done); });
+    } else {
+      copyFallback(text, done);
+    }
+  });
+  pre.appendChild(btn);
+});
+
+show(0);
+</script>
+</body>
+</html>

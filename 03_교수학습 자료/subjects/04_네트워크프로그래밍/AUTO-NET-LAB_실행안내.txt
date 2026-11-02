@@ -1,0 +1,18 @@
+AUTO-NET LAB 실행 방법 (네트워크프로그래밍 전용 실습 시뮬레이터)
+- 공식 GitHub 저장소: https://github.com/shinekim0486/AUTO-NET-LAB
+
+1. AUTO-NET-LAB_네트워크프로그래밍.exe를 더블클릭합니다.
+2. 서버가 시작되면 기본 브라우저에서 http://localhost:3000 이 자동으로 열립니다.
+3. API 키가 없으면 시험 모드로 실행되어 화면 연결과 대화 저장을 확인할 수 있습니다.
+4. 실제 AI 답변을 사용하려면 다음 파일을 만드십시오.
+   %LOCALAPPDATA%\AUTO-NET-LAB\.env
+
+   OPENAI_API_KEY=발급받은_API_키
+   OPENAI_MODEL=gpt-4.1-mini
+   MOCK_OPENAI=false
+
+대화 기록 저장 위치
+%LOCALAPPDATA%\AUTO-NET-LAB\data\chat-records.jsonl
+
+서버 종료 방법
+작업 관리자에서 AUTO-NET-LAB 실행 프로세스를 종료하거나 Windows에서 로그아웃합니다.

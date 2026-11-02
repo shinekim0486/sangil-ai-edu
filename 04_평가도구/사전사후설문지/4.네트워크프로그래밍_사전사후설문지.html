@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>네트워크프로그래밍 사전·사후 설문지</title>
+  <style>
+    :root { --ink:#172033; --muted:#667085; --line:#d8deea; --brand:#3157c8; --soft:#eef3ff; --paper:#fff; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:#f4f6fa; color:var(--ink); font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif; line-height:1.55; }
+    .toolbar { position:sticky; top:0; z-index:10; display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:center; padding:12px; background:rgba(255,255,255,.96); border-bottom:1px solid var(--line); }
+    button { border:1px solid var(--line); border-radius:9px; background:#fff; color:var(--ink); padding:9px 14px; font-weight:700; cursor:pointer; }
+    button.active, button.primary { color:#fff; background:var(--brand); border-color:var(--brand); }
+    .sheet { width:min(100% - 28px, 980px); margin:24px auto; padding:42px 46px; background:var(--paper); border-radius:14px; box-shadow:0 8px 30px rgba(20,32,62,.08); }
+    .eyebrow { color:var(--brand); font-size:13px; font-weight:800; letter-spacing:.08em; }
+    h1 { margin:4px 0 8px; font-size:30px; letter-spacing:-.04em; }
+    h2 { margin:34px 0 12px; padding-left:10px; border-left:5px solid var(--brand); font-size:20px; }
+    .intro { color:var(--muted); margin:0 0 22px; }
+    .meta { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; padding:16px; background:var(--soft); border-radius:10px; }
+    label.meta-item { font-weight:700; font-size:14px; }
+    input[type="text"] { width:100%; margin-top:5px; border:0; border-bottom:1px solid #9aa8cc; background:transparent; padding:6px 4px; font:inherit; }
+    table { width:100%; border-collapse:collapse; table-layout:fixed; font-size:14px; }
+    th, td { border:1px solid var(--line); padding:9px 7px; text-align:center; vertical-align:middle; }
+    th { background:#f7f9fc; }
+    th:first-child, td:first-child { width:44px; }
+    th.question, td.question { width:auto; text-align:left; }
+    th.score, td.score { width:50px; }
+    input[type="radio"] { width:17px; height:17px; accent-color:var(--brand); }
+    .scale { margin:0 0 10px; color:var(--muted); font-size:13px; }
+    fieldset { margin:0 0 14px; padding:16px; border:1px solid var(--line); border-radius:10px; }
+    legend { padding:0 6px; font-weight:800; }
+    .choice { display:block; margin:7px 0; }
+    textarea { width:100%; min-height:82px; margin-top:8px; padding:10px; resize:vertical; border:1px solid var(--line); border-radius:8px; font:inherit; }
+    .note { margin-top:28px; padding:14px 16px; color:#374151; background:#fff8e6; border-left:4px solid #e3a008; font-size:13px; }
+    .status { margin-left:6px; color:var(--muted); font-size:13px; }
+    [hidden] { display:none !important; }
+    @media (max-width:720px) {
+      .sheet { width:100%; margin:0; padding:28px 14px; border-radius:0; box-shadow:none; }
+      .meta { grid-template-columns:1fr; }
+      table { font-size:12px; }
+      th, td { padding:7px 3px; }
+      th.score, td.score { width:34px; }
+    }
+    @media print {
+      @page { size:A4 portrait; margin:12mm; }
+      body { background:#fff; font-size:10pt; }
+      .toolbar { display:none; }
+      .sheet { width:100%; margin:0; padding:0; border-radius:0; box-shadow:none; }
+      h1 { font-size:22pt; }
+      h2 { break-after:avoid; margin-top:18px; }
+      table, fieldset { break-inside:avoid; }
+      textarea { min-height:60px; }
+      input[type="text"] { border-bottom:1px solid #555; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="toolbar" aria-label="설문 도구">
+    <button id="preBtn" class="active" type="button">사전 설문</button>
+    <button id="postBtn" type="button">사후 설문</button>
+    <button id="printBtn" class="primary" type="button">인쇄 / PDF 저장</button>
+    <button id="clearBtn" type="button">현재 설문 초기화</button>
+    <span id="status" class="status" aria-live="polite"></span>
+  </nav>
+
+  <main id="survey" class="sheet">
+    <div class="eyebrow">AUTO-NET LAB · 1~3차시</div>
+    <h1 id="surveyTitle">네트워크프로그래밍 사전 설문지</h1>
+    <p class="intro"><strong>패킷 형식 설계 → RTT 측정·개선 → 안전규칙 설계</strong></p>
+    <p id="surveyIntro" class="intro">AUTO-NET LAB 1차시 시작 전에 응답합니다. 학번은 학생 코드로만 적습니다.</p>
+
+    <section class="meta" aria-label="응답자 정보">
+      <label class="meta-item">학생 코드<input name="student" type="text" autocomplete="off"></label>
+      <label class="meta-item">팀 또는 모둠<input name="team" type="text" autocomplete="off"></label>
+      <label class="meta-item">응답 시기<input id="period" name="period" type="text" value="수업 전" readonly></label>
+    </section>
+
+    <h2>1. 공통 문항</h2>
+    <p class="scale">① 전혀 그렇지 않다 · ② 그렇지 않다 · ③ 보통이다 · ④ 그렇다 · ⑤ 매우 그렇다</p>
+    <div id="commonQuestions"></div>
+
+    <h2>2. 네트워크 프로그래밍 문항</h2>
+    <p class="scale">각 문장을 읽고 현재 자신의 수준과 가장 가까운 번호를 선택합니다.</p>
+    <div id="subjectQuestions"></div>
+
+    <h2>3. 개념 확인</h2>
+    <fieldset>
+      <legend>온라인 주행 로그에서 데이터가 일부 빠졌는지 확인하려면 가장 필요한 항목은 무엇입니까?</legend>
+      <label class="choice"><input type="radio" name="concept" value="1"> ① 시간</label>
+      <label class="choice"><input type="radio" name="concept" value="2"> ② 순번 SEQ</label>
+      <label class="choice"><input type="radio" name="concept" value="3"> ③ 데이터 종류</label>
+      <label class="choice"><input type="radio" name="concept" value="4"> ④ 화면 색상</label>
+    </fieldset>
+
+    <h2>4. 서술</h2>
+    <label>1. 온라인 주행 데이터에서 가장 관심 있는 정보는 무엇입니까?<textarea name="essay1"></textarea></label>
+    <label>2. 네트워크 문제가 생겼을 때 가장 먼저 확인할 것은 무엇이라고 생각합니까?<textarea name="essay2"></textarea></label>
+    <label>3. 챗봇이나 교사에게 어떤 도움을 받고 싶습니까?<textarea name="essay3"></textarea></label>
+
+    <aside class="note"><strong>교사용 참고</strong><br>문항 수: 공통 13 · 네트워크 7 · 개념 확인 1 · 서술 3. 사전·사후 문항은 같으며 응답 시기만 다릅니다. 공통 13번은 역문항입니다(점수가 낮을수록 바람직). 개념 확인 정답은 ② 순번 SEQ입니다(데이터 누락은 순번이 건너뛰는지로 확인).</aside>
+  </main>
+
+  <script>
+    const common = [
+      'AI가 작성한 코드를 받았을 때 코드가 맞는지 스스로 확인할 수 있다.',
+      '원하는 결과를 얻기 위해 챗봇에 질문을 구체적으로 작성할 수 있다.',
+      'AI가 준 답이 우리 팀 조건에 맞는지 판단하고 수정할 수 있다.',
+      '문제가 무엇인지 다른 사람에게 설명할 수 있다.',
+      '문제가 생겼을 때 원인 후보를 좁혀 가며 찾을 수 있다.',
+      '고치기 전에 먼저 측정하고, 고친 뒤 다시 측정해 비교할 수 있다.',
+      '네트워크 프로그래밍에서 만든 결과가 다른 과목이나 팀에서 어떻게 쓰이는지 알고 있다.',
+      '다른 팀이 사용할 수 있도록 결과를 문서로 정리해 전달할 수 있다.',
+      '온라인 주행 로그가 수집·분석·표시되는 과정을 설명할 수 있다.',
+      '네트워크 프로그래밍이 실제 직업이나 현장에서 어떻게 쓰이는지 알고 있다.',
+      '챗봇이 되물을 때 목표·진행·증상·측정값·시도한 것을 말할 수 있다.',
+      '개인정보, API 키, 저작권을 지키며 온라인 도구를 안전하게 사용할 수 있다.',
+      'AI가 준 코드는 이해하지 못해도 실행되면 그대로 사용해도 된다고 생각한다. (역문항)'
+    ];
+    const subject = [
+      '온라인 주행 로그에서 시간·거리·속도·조향값을 구분해 읽을 수 있다.',
+      '웹 API가 주행 데이터를 어떤 형식과 방향으로 주고받는지 설명할 수 있다.',
+      '헤더·종류·길이·순번·검사합이 왜 필요한지 설명할 수 있다.',
+      'API 응답 시간과 데이터 누락을 측정하고 개선 전후를 비교할 수 있다.',
+      '긴급 정지나 위험 상태 데이터를 일반 로그보다 먼저 처리하도록 설계할 수 있다.',
+      '주행 로그와 패킷 형식 문서를 다른 팀이 사용할 수 있게 전달할 수 있다.',
+      '온라인 데이터 분석 문제를 챗봇에 물을 때 측정값과 코드를 근거로 제시할 수 있다.'
+    ];
+    let mode = 'pre';
+
+    function questionTable(items, prefix) {
+      const rows = items.map((q, i) => `<tr><td>${i + 1}</td><td class="question">${q}</td>${[1,2,3,4,5].map(v => `<td class="score"><input aria-label="${i+1}번 문항 ${v}점" type="radio" name="${prefix}${i+1}" value="${v}"></td>`).join('')}</tr>`).join('');
+      return `<table><thead><tr><th>번호</th><th class="question">문항</th>${[1,2,3,4,5].map(v => `<th class="score">${v}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table>`;
+    }
+
+    function storageKey() { return `html-survey-${mode}`; }
+    function fields() { return [...document.querySelectorAll('#survey input, #survey textarea')]; }
+    function save() {
+      const data = {};
+      fields().forEach(el => {
+        if (el.type === 'radio') { if (el.checked) data[el.name] = el.value; }
+        else data[el.name] = el.value;
+      });
+      localStorage.setItem(storageKey(), JSON.stringify(data));
+      document.getElementById('status').textContent = '자동 저장됨';
+    }
+    function load() {
+      const data = JSON.parse(localStorage.getItem(storageKey()) || '{}');
+      fields().forEach(el => {
+        if (el.type === 'radio') el.checked = data[el.name] === el.value;
+        else if (el.name !== 'period') el.value = data[el.name] || '';
+      });
+      document.getElementById('status').textContent = Object.keys(data).length ? '저장된 응답 불러옴' : '';
+    }
+    function setMode(next) {
+      mode = next;
+      const pre = mode === 'pre';
+      document.getElementById('surveyTitle').textContent = `네트워크프로그래밍 ${pre ? '사전' : '사후'} 설문지`;
+      document.getElementById('surveyIntro').textContent = pre
+        ? 'AUTO-NET LAB 1차시 시작 전에 응답합니다. 학번은 학생 코드로만 적습니다.'
+        : 'AUTO-NET LAB 1~3차시를 마친 뒤 응답합니다. 사전 설문과 문항이 같으며, 학번은 학생 코드로만 적습니다.';
+      document.getElementById('period').value = pre ? '수업 전' : '수업 후';
+      document.getElementById('preBtn').classList.toggle('active', pre);
+      document.getElementById('postBtn').classList.toggle('active', !pre);
+      load();
+      document.title = `네트워크프로그래밍 ${pre ? '사전' : '사후'} 설문지`;
+    }
+
+    document.getElementById('commonQuestions').innerHTML = questionTable(common, 'common');
+    document.getElementById('subjectQuestions').innerHTML = questionTable(subject, 'subject');
+    document.getElementById('survey').addEventListener('input', save);
+    document.getElementById('preBtn').addEventListener('click', () => setMode('pre'));
+    document.getElementById('postBtn').addEventListener('click', () => setMode('post'));
+    document.getElementById('printBtn').addEventListener('click', () => window.print());
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      if (!confirm('현재 설문의 응답을 모두 지울까요?')) return;
+      localStorage.removeItem(storageKey()); load();
+    });
+    setMode('pre');
+  </script>
+</body>
+</html>

@@ -1,0 +1,1087 @@
+﻿<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>08_연구회 운영자료 및 7대 전문교과 수업 사진 아카이브 | AI 에이전트 교육혁신 연구회</title>
+<style>
+:root{
+  --navy:#122531;
+  --navy-light:#1c394b;
+  --teal:#0d7a6f;
+  --teal-light:#e6f6f4;
+  --bg:#f4f7f8;
+  --card-bg:#ffffff;
+  --line:#dde5e9;
+  --muted:#5c6f7c;
+  --blue:#1e5ba8;
+  --amber:#d97706;
+  --purple:#7c3aed;
+  --emerald:#059669;
+  --rose:#e11d48;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--navy);font:15px/1.65 -apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo","Malgun Gothic","맑은 고딕",sans-serif;-webkit-font-smoothing:antialiased}
+header{background:linear-gradient(135deg,#0e1e28 0%,#0f3535 50%,#094c44 100%);color:#fff;padding:42px 28px;border-bottom:3px solid var(--teal)}
+.wrap{max-width:1380px;margin:0 auto;padding:0 24px}
+.top-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px}
+.top-nav .badge{background:rgba(255,255,255,0.16);border:1px solid rgba(255,255,255,0.22);color:#e2f5f2;padding:5px 14px;border-radius:999px;font-size:13px;font-weight:700}
+.top-nav a{color:#a7f3d0;text-decoration:none;font-size:13.5px;font-weight:700;padding:6px 14px;border:1px solid rgba(255,255,255,0.25);border-radius:8px;transition:background 0.2s}
+.top-nav a:hover{background:rgba(255,255,255,0.15)}
+h1{margin:0 0 10px;font-size:30px;font-weight:800;letter-spacing:-0.5px}
+header p{margin:0 0 20px;color:#d2e7e5;font-size:15px;line-height:1.65;max-width:1100px}
+
+/* 7개 과목 배너 */
+.subject-summary-banner{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:10px;
+  padding-top:18px;
+  border-top:1px solid rgba(255,255,255,0.15);
+}
+.subj-pill{
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.14);
+  border-radius:12px;
+  padding:10px 14px;
+  cursor:pointer;
+  transition:all 0.2s ease;
+  display:flex;
+  flex-direction:column;
+}
+.subj-pill:hover{
+  background:rgba(255,255,255,0.2);
+  border-color:#5eead4;
+  transform:translateY(-2px);
+}
+.subj-pill .name{font-size:13px;font-weight:700;color:#ffffff}
+.subj-pill .cnt{font-size:18px;font-weight:800;color:#5eead4;margin-top:2px}
+
+/* 운영 증빙 패널 */
+.doc-panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px 28px;margin:28px auto 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:18px;box-shadow:0 4px 14px rgba(0,0,0,0.04)}
+.doc-links{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:10px;text-decoration:none;font-weight:700;font-size:13.5px;background:var(--teal);color:#fff;transition:background 0.2s}
+.btn:hover{background:#096158}
+.btn.outline{background:#f0f6f5;color:var(--navy);border:1px solid #c5d8d6}
+.btn.outline:hover{background:#e2eeec}
+
+/* 필터 탭 */
+.tab-section{margin:22px 0 16px}
+.tab-group-title{font-size:13px;font-weight:800;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tab{border:1px solid var(--line);background:#fff;color:var(--navy);padding:9px 16px;border-radius:999px;cursor:pointer;font:inherit;font-size:13.5px;font-weight:700;transition:all 0.15s ease}
+.tab:hover{border-color:#99b9c4;background:#f8fafb}
+.tab.active{background:var(--navy);color:#fff;border-color:var(--navy);box-shadow:0 2px 8px rgba(18,37,49,0.2)}
+.tab.highlight{border-color:#11a393;color:var(--teal)}
+.tab.highlight.active{background:var(--teal);color:#fff;border-color:var(--teal)}
+
+/* 갤러리 그리드 */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:20px;padding-bottom:60px}
+.photo-card{margin:0;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer;transition:transform .18s,box-shadow .18s,border-color .18s;display:flex;flex-direction:column;box-shadow:0 2px 8px rgba(0,0,0,0.03)}
+.photo-card:hover{transform:translateY(-4px);box-shadow:0 12px 28px rgba(18,37,49,0.12);border-color:#9ec2cc}
+.img-wrap{aspect-ratio:4/3;background:#e9eef0;overflow:hidden;position:relative}
+.img-wrap img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.25s ease}
+.photo-card:hover .img-wrap img{transform:scale(1.03)}
+figcaption{padding:14px 16px;display:flex;flex-direction:column;gap:5px;flex:1;justify-content:space-between}
+.tag-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.tag{display:inline-block;font-size:11.5px;font-weight:800;padding:2px 8px;border-radius:6px;background:#e7f4f2;color:var(--teal)}
+.tag.subj-net{background:#dbeafe;color:#1e40af}
+.tag.subj-3d{background:#fef3c7;color:#92400e}
+.tag.subj-game{background:#f3e8ff;color:#6b21a8}
+.tag.subj-ai{background:#e0e7ff;color:#3730a3}
+.tag.subj-sysnet{background:#f1f5f9;color:#334155;border:1px solid #cbd5e1}
+.tag.subj-smartapp{background:#ecfdf5;color:#065f46}
+.tag.subj-appdev{background:#fee2e2;color:#991b1b}
+.tag.type-open{background:#fff;border:1px solid #bad5d1;color:#0d7a6f}
+.tag.type-integ{background:#fff;border:1px solid #d1d5db;color:#4b5563}
+figcaption b{font-size:14.5px;font-weight:700;color:var(--navy);line-height:1.45}
+figcaption .desc{font-size:12.5px;color:#475569;line-height:1.45;margin-top:2px}
+figcaption small{color:var(--muted);font-size:11.5px;margin-top:4px}
+
+/* 라이트박스 */
+.lightbox{position:fixed;inset:0;background:rgba(10,18,24,0.92);display:none;place-items:center;z-index:100;padding:24px}
+.lightbox.open{display:grid}
+.lb-content{display:flex;flex-direction:column;align-items:center;max-width:94vw}
+.lightbox img{max-width:92vw;max-height:80vh;border-radius:10px;box-shadow:0 12px 48px rgba(0,0,0,0.6);object-fit:contain}
+.lb-cap{color:#fff;margin-top:14px;text-align:center;font-size:16px;font-weight:700;line-height:1.5}
+.lb-sub{color:#94a3b8;font-size:13px;margin-top:4px;text-align:center;max-width:850px}
+.lb-close{position:fixed;top:20px;right:28px;background:rgba(255,255,255,0.18);color:#fff;border:1px solid rgba(255,255,255,0.3);border-radius:8px;padding:9px 18px;font-size:14px;cursor:pointer;font-weight:700;transition:background 0.2s}
+.lb-close:hover{background:rgba(255,255,255,0.3)}
+
+footer{text-align:center;padding:32px 24px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);background:#fff}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="top-nav">
+      <span class="badge">2026 상일미디어고등학교 AI 에이전트 교육혁신 연구회</span>
+      <a href="../index.html">← 최종제출 통합 포털로 돌아가기</a>
+    </div>
+    <h1>08_연구회 운영자료 및 7대 전문교과 수업 현장 사진 아카이브</h1>
+    <p>
+      정기 협의회 회의록(3회), 연구회 활동일지(4회) 완본과 <strong>7대 전문교과(네트워크프로그래밍, 3D 프린터, 게임프로그래밍, AI 모델링, 시스템운영및 네트워크운영, 스마트문화앱제작, 응용프로그래밍 개발)</strong>의 공개수업(27장) 및 자율주행자동차 조별 융합수업(42장) 총 69장 고화질 정선 아카이브입니다.
+    </p>
+
+    <!-- 7대 전문교과 사진 통계 바로가기 배너 -->
+    <div class="subject-summary-banner">
+      <div class="subj-pill" onclick="filterBy('network')">
+        <span class="name">🌐 네트워크프로그래밍</span>
+        <span class="cnt">8장</span>
+      </div>
+      <div class="subj-pill" onclick="filterBy('3dprint')">
+        <span class="name">🖨️ 3D 프린터</span>
+        <span class="cnt">20장</span>
+      </div>
+      <div class="subj-pill" onclick="filterBy('game')">
+        <span class="name">🎮 게임프로그래밍</span>
+        <span class="cnt">8장</span>
+      </div>
+      <div class="subj-pill" onclick="filterBy('ai')">
+        <span class="name">🤖 AI 모델링</span>
+        <span class="cnt">9장</span>
+      </div>
+      <div class="subj-pill" onclick="filterBy('sysnet')">
+        <span class="name">🖥️ 시스템운영및 네트워크운영</span>
+        <span class="cnt">10장</span>
+      </div>
+      <div class="subj-pill" onclick="filterBy('smartapp')">
+        <span class="name">📱 스마트문화앱제작</span>
+        <span class="cnt">8장</span>
+      </div>
+      <div class="subj-pill" onclick="filterBy('appdev')">
+        <span class="name">💻 응용프로그래밍 개발</span>
+        <span class="cnt">6장</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- 회의록 및 활동일지 다운로드/열람 -->
+  <section class="doc-panel">
+    <div>
+      <strong style="font-size:17px">🔒 연구회 운영 증빙 문서</strong>
+      <div style="color:var(--muted);font-size:13px;margin-top:4px">협의회 회의록과 활동일지는 개인정보 보호를 위해 비공개로 보관합니다.</div>
+    </div>
+    <div class="doc-links">
+      <span class="btn">협의회 회의록: 비공개</span>
+      <span class="btn outline">활동일지: 비공개</span>
+    </div>
+  </section>
+
+  <!-- 필터 탭 -->
+  <div class="tab-section">
+    <div class="tab-group-title">📌 7대 전문교과별 사진 모아보기 (원클릭 필터)</div>
+    <div class="tabs">
+      <button class="tab highlight active" data-filter="all">전체 사진 보기 (69장)</button>
+      <button class="tab" data-filter="network">🌐 네트워크프로그래밍 (8장)</button>
+      <button class="tab" data-filter="3dprint">🖨️ 3D 프린터 (20장)</button>
+      <button class="tab" data-filter="game">🎮 게임프로그래밍 (8장)</button>
+      <button class="tab" data-filter="ai">🤖 AI 모델링 (9장)</button>
+      <button class="tab" data-filter="sysnet">🖥️ 시스템운영및 네트워크운영 (10장)</button>
+      <button class="tab" data-filter="smartapp">📱 스마트문화앱제작 (8장)</button>
+      <button class="tab" data-filter="appdev">💻 응용프로그래밍 개발 (6장)</button>
+    </div>
+    
+    <div class="tab-group-title" style="margin-top:14px">📂 수업 유형별 모아보기</div>
+    <div class="tabs">
+      <button class="tab" data-filter="openclass">🏫 전문교과 공개수업 (27장)</button>
+      <button class="tab" data-filter="integration">🚗 자율주행자동차 조별 융합수업 (42장)</button>
+    </div>
+  </div>
+
+  <!-- 사진 그리드 -->
+  <section class="grid" id="photoGrid">
+    <figure class="photo-card" data-subject="ai" data-type="openclass" onclick="openLightbox('01_인공지능모델링_게임프로그래밍_공개수업/01_AI모델링_게임프로그래밍_공개수업_01.jpg', 'AI 모델링 공개수업 (01)', 'AI 모델링 · 전문교과 공개수업 | 자율주행 전면 카메라 시야각(ROI) 점검 및 실차 주행 차선 인식 데이터셋 전처리·분할 실습')">
+      <div class="img-wrap"><img src="01_인공지능모델링_게임프로그래밍_공개수업/01_AI모델링_게임프로그래밍_공개수업_01.jpg" alt="AI 모델링 공개수업 (01)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-ai">🤖 AI 모델링</span>
+          <span class="tag type-open">공개수업</span>
+        </div>
+        <b>AI 모델링 공개수업 (01)</b>
+        <div class="desc">자율주행 전면 카메라 시야각(ROI) 점검 및 실차 주행 차선 인식 데이터셋 전처리·분할 실습</div>
+        <small>01_AI모델링_게임프로그래밍_공개수업_01.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="ai" data-type="openclass" onclick="openLightbox('01_인공지능모델링_게임프로그래밍_공개수업/01_AI모델링_게임프로그래밍_공개수업_02.jpg', 'AI 모델링 공개수업 (02)', 'AI 모델링 · 전문교과 공개수업 | 자율주행 전면 카메라 시야각(ROI) 점검 및 실차 주행 차선 인식 데이터셋 전처리·분할 실습')">
+      <div class="img-wrap"><img src="01_인공지능모델링_게임프로그래밍_공개수업/01_AI모델링_게임프로그래밍_공개수업_02.jpg" alt="AI 모델링 공개수업 (02)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-ai">🤖 AI 모델링</span>
+          <span class="tag type-open">공개수업</span>
+        </div>
+        <b>AI 모델링 공개수업 (02)</b>
+        <div class="desc">자율주행 전면 카메라 시야각(ROI) 점검 및 실차 주행 차선 인식 데이터셋 전처리·분할 실습</div>
+        <small>01_AI모델링_게임프로그래밍_공개수업_02.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="ai" data-type="openclass" onclick="openLightbox('01_인공지능모델링_게임프로그래밍_공개수업/01_AI모델링_게임프로그래밍_공개수업_03.jpg', 'AI 모델링 공개수업 (03)', 'AI 모델링 · 전문교과 공개수업 | 자율주행 전면 카메라 시야각(ROI) 점검 및 실차 주행 차선 인식 데이터셋 전처리·분할 실습')">
+      <div class="img-wrap"><img src="01_인공지능모델링_게임프로그래밍_공개수업/01_AI모델링_게임프로그래밍_공개수업_03.jpg" alt="AI 모델링 공개수업 (03)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-ai">🤖 AI 모델링</span>
+          <span class="tag type-open">공개수업</span>
+        </div>
+        <b>AI 모델링 공개수업 (03)</b>
+        <div class="desc">자율주행 전면 카메라 시야각(ROI) 점검 및 실차 주행 차선 인식 데이터셋 전처리·분할 실습</div>
+        <small>01_AI모델링_게임프로그래밍_공개수업_03.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="game" data-type="openclass" onclick="openLightbox('01_인공지능모델링_게임프로그래밍_공개수업/01_AI모델링_게임프로그래밍_공개수업_04.jpg', '게임프로그래밍 공개수업 (01)', '게임프로그래밍 · 전문교과 공개수업 | Unity 가상 주행 트랙 환경 구성 및 128×96 ROI 시점 통제·조향각(14종) 라벨 정규화 검증')">
+      <div class="img-wrap"><img src="01_인공지능모델링_게임프로그래밍_공개수업/01_AI모델링_게임프로그래밍_공개수업_04.jpg" alt="게임프로그래밍 공개수업 (01)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-game">🎮 게임프로그래밍</span>
+          <span class="tag type-open">공개수업</span>
+        </div>
+        <b>게임프로그래밍 공개수업 (01)</b>
+        <div class="desc">Unity 가상 주행 트랙 환경 구성 및 128×96 ROI 시점 통제·조향각(14종) 라벨 정규화 검증</div>
+        <small>01_AI모델링_게임프로그래밍_공개수업_04.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="game" data-type="openclass" onclick="openLightbox('01_인공지능모델링_게임프로그래밍_공개수업/01_AI모델링_게임프로그래밍_공개수업_05.jpg', '게임프로그래밍 공개수업 (02)', '게임프로그래밍 · 전문교과 공개수업 | Unity 가상 주행 트랙 환경 구성 및 128×96 ROI 시점 통제·조향각(14종) 라벨 정규화 검증')">
+      <div class="img-wrap"><img src="01_인공지능모델링_게임프로그래밍_공개수업/01_AI모델링_게임프로그래밍_공개수업_05.jpg" alt="게임프로그래밍 공개수업 (02)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-game">🎮 게임프로그래밍</span>
+          <span class="tag type-open">공개수업</span>
+        </div>
+        <b>게임프로그래밍 공개수업 (02)</b>
+        <div class="desc">Unity 가상 주행 트랙 환경 구성 및 128×96 ROI 시점 통제·조향각(14종) 라벨 정규화 검증</div>
+        <small>01_AI모델링_게임프로그래밍_공개수업_05.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="sysnet" data-type="openclass" onclick="openLightbox('02_시스템운영_네트워크프로그래밍_공개수업/02_시스템운영_네트워크_공개수업_01.jpg', '시스템운영및 네트워크운영 공개수업 (01)', '시스템운영및 네트워크운영 · 전문교과 공개수업 | 기준 시계(Reference Clock) 정립, 장치 간 시각 오차(+2.0초) 보정 및 다중 장치 장애 타임라인 재정렬')">
+      <div class="img-wrap"><img src="02_시스템운영_네트워크프로그래밍_공개수업/02_시스템운영_네트워크_공개수업_01.jpg" alt="시스템운영및 네트워크운영 공개수업 (01)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-sysnet">🖥️ 시스템운영및 네트워크운영</span>
+          <span class="tag type-open">공개수업</span>
+        </div>
+        <b>시스템운영및 네트워크운영 공개수업 (01)</b>
+        <div class="desc">기준 시계(Reference Clock) 정립, 장치 간 시각 오차(+2.0초) 보정 및 다중 장치 장애 타임라인 재정렬</div>
+        <small>02_시스템운영_네트워크_공개수업_01.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="sysnet" data-type="openclass" onclick="openLightbox('02_시스템운영_네트워크프로그래밍_공개수업/02_시스템운영_네트워크_공개수업_02.jpg', '시스템운영및 네트워크운영 공개수업 (02)', '시스템운영및 네트워크운영 · 전문교과 공개수업 | 기준 시계(Reference Clock) 정립, 장치 간 시각 오차(+2.0초) 보정 및 다중 장치 장애 타임라인 재정렬')">
+      <div class="img-wrap"><img src="02_시스템운영_네트워크프로그래밍_공개수업/02_시스템운영_네트워크_공개수업_02.jpg" alt="시스템운영및 네트워크운영 공개수업 (02)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-sysnet">🖥️ 시스템운영및 네트워크운영</span>
+          <span class="tag type-open">공개수업</span>
+        </div>
+        <b>시스템운영및 네트워크운영 공개수업 (02)</b>
+        <div class="desc">기준 시계(Reference Clock) 정립, 장치 간 시각 오차(+2.0초) 보정 및 다중 장치 장애 타임라인 재정렬</div>
+        <small>02_시스템운영_네트워크_공개수업_02.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="sysnet" data-type="openclass" onclick="openLightbox('02_시스템운영_네트워크프로그래밍_공개수업/02_시스템운영_네트워크_공개수업_03.jpg', '시스템운영및 네트워크운영 공개수업 (03)', '시스템운영및 네트워크운영 · 전문교과 공개수업 | 기준 시계(Reference Clock) 정립, 장치 간 시각 오차(+2.0초) 보정 및 다중 장치 장애 타임라인 재정렬')">
+      <div class="img-wrap"><img src="02_시스템운영_네트워크프로그래밍_공개수업/02_시스템운영_네트워크_공개수업_03.jpg" alt="시스템운영및 네트워크운영 공개수업 (03)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-sysnet">🖥️ 시스템운영및 네트워크운영</span>
+          <span class="tag type-open">공개수업</span>
+        </div>
+        <b>시스템운영및 네트워크운영 공개수업 (03)</b>
+        <div class="desc">기준 시계(Reference Clock) 정립, 장치 간 시각 오차(+2.0초) 보정 및 다중 장치 장애 타임라인 재정렬</div>
+        <small>02_시스템운영_네트워크_공개수업_03.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="sysnet" data-type="openclass" onclick="openLightbox('02_시스템운영_네트워크프로그래밍_공개수업/02_시스템운영_네트워크_공개수업_04.jpg', '시스템운영및 네트워크운영 공개수업 (04)', '시스템운영및 네트워크운영 · 전문교과 공개수업 | 기준 시계(Reference Clock) 정립, 장치 간 시각 오차(+2.0초) 보정 및 다중 장치 장애 타임라인 재정렬')">
+      <div class="img-wrap"><img src="02_시스템운영_네트워크프로그래밍_공개수업/02_시스템운영_네트워크_공개수업_04.jpg" alt="시스템운영및 네트워크운영 공개수업 (04)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-sysnet">🖥️ 시스템운영및 네트워크운영</span>
+          <span class="tag type-open">공개수업</span>
+        </div>
+        <b>시스템운영및 네트워크운영 공개수업 (04)</b>
+        <div class="desc">기준 시계(Reference Clock) 정립, 장치 간 시각 오차(+2.0초) 보정 및 다중 장치 장애 타임라인 재정렬</div>
+        <small>02_시스템운영_네트워크_공개수업_04.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="network" data-type="openclass" onclick="openLightbox('02_시스템운영_네트워크프로그래밍_공개수업/02_시스템운영_네트워크_공개수업_05.jpg', '네트워크프로그래밍 공개수업 (01)', '네트워크프로그래밍 · 전문교과 공개수업 | AUTO-NET LAB 시뮬레이터 RTT 측정, 패킷 유실률 분리 및 100ms 재전송 안전 규약(v3) 검증')">
+      <div class="img-wrap"><img src="02_시스템운영_네트워크프로그래밍_공개수업/02_시스템운영_네트워크_공개수업_05.jpg" alt="네트워크프로그래밍 공개수업 (01)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-net">🌐 네트워크프로그래밍</span>
+          <span class="tag type-open">공개수업</span>
+        </div>
+        <b>네트워크프로그래밍 공개수업 (01)</b>
+        <div class="desc">AUTO-NET LAB 시뮬레이터 RTT 측정, 패킷 유실률 분리 및 100ms 재전송 안전 규약(v3) 검증</div>
+        <small>02_시스템운영_네트워크_공개수업_05.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="network" data-type="openclass" onclick="openLightbox('02_시스템운영_네트워크프로그래밍_공개수업/02_시스템운영_네트워크_공개수업_06.jpg', '네트워크프로그래밍 공개수업 (02)', '네트워크프로그래밍 · 전문교과 공개수업 | AUTO-NET LAB 시뮬레이터 RTT 측정, 패킷 유실률 분리 및 100ms 재전송 안전 규약(v3) 검증')">
+      <div class="img-wrap"><img src="02_시스템운영_네트워크프로그래밍_공개수업/02_시스템운영_네트워크_공개수업_06.jpg" alt="네트워크프로그래밍 공개수업 (02)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-net">🌐 네트워크프로그래밍</span>
+          <span class="tag type-open">공개수업</span>
+        </div>
+        <b>네트워크프로그래밍 공개수업 (02)</b>
+        <div class="desc">AUTO-NET LAB 시뮬레이터 RTT 측정, 패킷 유실률 분리 및 100ms 재전송 안전 규약(v3) 검증</div>
+        <small>02_시스템운영_네트워크_공개수업_06.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="smartapp" data-type="openclass" onclick="openLightbox('02_시스템운영_네트워크프로그래밍_공개수업/02_시스템운영_네트워크_공개수업_07.jpg', '스마트문화앱제작 공개수업 (01)', '스마트문화앱제작 · 전문교과 공개수업 | 모바일 관제 웹앱 긴급 경보 1순위 상단 배치, 차량 ID별 알림 그룹화 및 반응형 UI 검증')">
+      <div class="img-wrap"><img src="02_시스템운영_네트워크프로그래밍_공개수업/02_시스템운영_네트워크_공개수업_07.jpg" alt="스마트문화앱제작 공개수업 (01)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-smartapp">📱 스마트문화앱제작</span>
+          <span class="tag type-open">공개수업</span>
+        </div>
+        <b>스마트문화앱제작 공개수업 (01)</b>
+        <div class="desc">모바일 관제 웹앱 긴급 경보 1순위 상단 배치, 차량 ID별 알림 그룹화 및 반응형 UI 검증</div>
+        <small>02_시스템운영_네트워크_공개수업_07.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="smartapp" data-type="openclass" onclick="openLightbox('02_시스템운영_네트워크프로그래밍_공개수업/02_시스템운영_네트워크_공개수업_08.jpg', '스마트문화앱제작 공개수업 (02)', '스마트문화앱제작 · 전문교과 공개수업 | 모바일 관제 웹앱 긴급 경보 1순위 상단 배치, 차량 ID별 알림 그룹화 및 반응형 UI 검증')">
+      <div class="img-wrap"><img src="02_시스템운영_네트워크프로그래밍_공개수업/02_시스템운영_네트워크_공개수업_08.jpg" alt="스마트문화앱제작 공개수업 (02)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-smartapp">📱 스마트문화앱제작</span>
+          <span class="tag type-open">공개수업</span>
+        </div>
+        <b>스마트문화앱제작 공개수업 (02)</b>
+        <div class="desc">모바일 관제 웹앱 긴급 경보 1순위 상단 배치, 차량 ID별 알림 그룹화 및 반응형 UI 검증</div>
+        <small>02_시스템운영_네트워크_공개수업_08.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="3dprint" data-type="openclass" onclick="openLightbox('03_3D프린터용제품제작_공개수업/03_3D프린터용제품제작_공개수업_01.jpg', '3D 프린터 공개수업 (01)', '3D 프린터용 제품 제작 · 전문교과 공개수업 | Fusion 360 모델링, 기준면·구속 조건 설정, 조립 공차(+0.5mm) 반영 및 부품 간섭(Interference 0건) 검사·출력')">
+      <div class="img-wrap"><img src="03_3D프린터용제품제작_공개수업/03_3D프린터용제품제작_공개수업_01.jpg" alt="3D 프린터 공개수업 (01)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-3d">🖨️ 3D 프린터</span>
+          <span class="tag type-open">공개수업</span>
+        </div>
+        <b>3D 프린터 공개수업 (01)</b>
+        <div class="desc">Fusion 360 모델링, 기준면·구속 조건 설정, 조립 공차(+0.5mm) 반영 및 부품 간섭(Interference 0건) 검사·출력</div>
+        <small>03_3D프린터용제품제작_공개수업_01.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="3dprint" data-type="openclass" onclick="openLightbox('03_3D프린터용제품제작_공개수업/03_3D프린터용제품제작_공개수업_02.jpg', '3D 프린터 공개수업 (02)', '3D 프린터용 제품 제작 · 전문교과 공개수업 | Fusion 360 모델링, 기준면·구속 조건 설정, 조립 공차(+0.5mm) 반영 및 부품 간섭(Interference 0건) 검사·출력')">
+      <div class="img-wrap"><img src="03_3D프린터용제품제작_공개수업/03_3D프린터용제품제작_공개수업_02.jpg" alt="3D 프린터 공개수업 (02)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-3d">🖨️ 3D 프린터</span>
+          <span class="tag type-open">공개수업</span>
+        </div>
+        <b>3D 프린터 공개수업 (02)</b>
+        <div class="desc">Fusion 360 모델링, 기준면·구속 조건 설정, 조립 공차(+0.5mm) 반영 및 부품 간섭(Interference 0건) 검사·출력</div>
+        <small>03_3D프린터용제품제작_공개수업_02.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="3dprint" data-type="openclass" onclick="openLightbox('03_3D프린터용제품제작_공개수업/03_3D프린터용제품제작_공개수업_03.jpg', '3D 프린터 공개수업 (03)', '3D 프린터용 제품 제작 · 전문교과 공개수업 | Fusion 360 모델링, 기준면·구속 조건 설정, 조립 공차(+0.5mm) 반영 및 부품 간섭(Interference 0건) 검사·출력')">
+      <div class="img-wrap"><img src="03_3D프린터용제품제작_공개수업/03_3D프린터용제품제작_공개수업_03.jpg" alt="3D 프린터 공개수업 (03)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-3d">🖨️ 3D 프린터</span>
+          <span class="tag type-open">공개수업</span>
+        </div>
+        <b>3D 프린터 공개수업 (03)</b>
+        <div class="desc">Fusion 360 모델링, 기준면·구속 조건 설정, 조립 공차(+0.5mm) 반영 및 부품 간섭(Interference 0건) 검사·출력</div>
+        <small>03_3D프린터용제품제작_공개수업_03.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="3dprint" data-type="openclass" onclick="openLightbox('03_3D프린터용제품제작_공개수업/03_3D프린터용제품제작_공개수업_04.jpg', '3D 프린터 공개수업 (04)', '3D 프린터용 제품 제작 · 전문교과 공개수업 | Fusion 360 모델링, 기준면·구속 조건 설정, 조립 공차(+0.5mm) 반영 및 부품 간섭(Interference 0건) 검사·출력')">
+      <div class="img-wrap"><img src="03_3D프린터용제품제작_공개수업/03_3D프린터용제품제작_공개수업_04.jpg" alt="3D 프린터 공개수업 (04)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-3d">🖨️ 3D 프린터</span>
+          <span class="tag type-open">공개수업</span>
+        </div>
+        <b>3D 프린터 공개수업 (04)</b>
+        <div class="desc">Fusion 360 모델링, 기준면·구속 조건 설정, 조립 공차(+0.5mm) 반영 및 부품 간섭(Interference 0건) 검사·출력</div>
+        <small>03_3D프린터용제품제작_공개수업_04.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="3dprint" data-type="openclass" onclick="openLightbox('03_3D프린터용제품제작_공개수업/03_3D프린터용제품제작_공개수업_05.jpg', '3D 프린터 공개수업 (05)', '3D 프린터용 제품 제작 · 전문교과 공개수업 | Fusion 360 모델링, 기준면·구속 조건 설정, 조립 공차(+0.5mm) 반영 및 부품 간섭(Interference 0건) 검사·출력')">
+      <div class="img-wrap"><img src="03_3D프린터용제품제작_공개수업/03_3D프린터용제품제작_공개수업_05.jpg" alt="3D 프린터 공개수업 (05)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-3d">🖨️ 3D 프린터</span>
+          <span class="tag type-open">공개수업</span>
+        </div>
+        <b>3D 프린터 공개수업 (05)</b>
+        <div class="desc">Fusion 360 모델링, 기준면·구속 조건 설정, 조립 공차(+0.5mm) 반영 및 부품 간섭(Interference 0건) 검사·출력</div>
+        <small>03_3D프린터용제품제작_공개수업_05.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="3dprint" data-type="openclass" onclick="openLightbox('03_3D프린터용제품제작_공개수업/03_3D프린터용제품제작_공개수업_06.jpg', '3D 프린터 공개수업 (06)', '3D 프린터용 제품 제작 · 전문교과 공개수업 | Fusion 360 모델링, 기준면·구속 조건 설정, 조립 공차(+0.5mm) 반영 및 부품 간섭(Interference 0건) 검사·출력')">
+      <div class="img-wrap"><img src="03_3D프린터용제품제작_공개수업/03_3D프린터용제품제작_공개수업_06.jpg" alt="3D 프린터 공개수업 (06)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-3d">🖨️ 3D 프린터</span>
+          <span class="tag type-open">공개수업</span>
+        </div>
+        <b>3D 프린터 공개수업 (06)</b>
+        <div class="desc">Fusion 360 모델링, 기준면·구속 조건 설정, 조립 공차(+0.5mm) 반영 및 부품 간섭(Interference 0건) 검사·출력</div>
+        <small>03_3D프린터용제품제작_공개수업_06.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="3dprint" data-type="openclass" onclick="openLightbox('03_3D프린터용제품제작_공개수업/03_3D프린터용제품제작_공개수업_07.jpg', '3D 프린터 공개수업 (07)', '3D 프린터용 제품 제작 · 전문교과 공개수업 | Fusion 360 모델링, 기준면·구속 조건 설정, 조립 공차(+0.5mm) 반영 및 부품 간섭(Interference 0건) 검사·출력')">
+      <div class="img-wrap"><img src="03_3D프린터용제품제작_공개수업/03_3D프린터용제품제작_공개수업_07.jpg" alt="3D 프린터 공개수업 (07)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-3d">🖨️ 3D 프린터</span>
+          <span class="tag type-open">공개수업</span>
+        </div>
+        <b>3D 프린터 공개수업 (07)</b>
+        <div class="desc">Fusion 360 모델링, 기준면·구속 조건 설정, 조립 공차(+0.5mm) 반영 및 부품 간섭(Interference 0건) 검사·출력</div>
+        <small>03_3D프린터용제품제작_공개수업_07.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="3dprint" data-type="openclass" onclick="openLightbox('03_3D프린터용제품제작_공개수업/03_3D프린터용제품제작_공개수업_08.jpg', '3D 프린터 공개수업 (08)', '3D 프린터용 제품 제작 · 전문교과 공개수업 | Fusion 360 모델링, 기준면·구속 조건 설정, 조립 공차(+0.5mm) 반영 및 부품 간섭(Interference 0건) 검사·출력')">
+      <div class="img-wrap"><img src="03_3D프린터용제품제작_공개수업/03_3D프린터용제품제작_공개수업_08.jpg" alt="3D 프린터 공개수업 (08)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-3d">🖨️ 3D 프린터</span>
+          <span class="tag type-open">공개수업</span>
+        </div>
+        <b>3D 프린터 공개수업 (08)</b>
+        <div class="desc">Fusion 360 모델링, 기준면·구속 조건 설정, 조립 공차(+0.5mm) 반영 및 부품 간섭(Interference 0건) 검사·출력</div>
+        <small>03_3D프린터용제품제작_공개수업_08.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="3dprint" data-type="openclass" onclick="openLightbox('03_3D프린터용제품제작_공개수업/03_3D프린터용제품제작_공개수업_09.jpg', '3D 프린터 공개수업 (09)', '3D 프린터용 제품 제작 · 전문교과 공개수업 | Fusion 360 모델링, 기준면·구속 조건 설정, 조립 공차(+0.5mm) 반영 및 부품 간섭(Interference 0건) 검사·출력')">
+      <div class="img-wrap"><img src="03_3D프린터용제품제작_공개수업/03_3D프린터용제품제작_공개수업_09.jpg" alt="3D 프린터 공개수업 (09)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-3d">🖨️ 3D 프린터</span>
+          <span class="tag type-open">공개수업</span>
+        </div>
+        <b>3D 프린터 공개수업 (09)</b>
+        <div class="desc">Fusion 360 모델링, 기준면·구속 조건 설정, 조립 공차(+0.5mm) 반영 및 부품 간섭(Interference 0건) 검사·출력</div>
+        <small>03_3D프린터용제품제작_공개수업_09.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="3dprint" data-type="openclass" onclick="openLightbox('03_3D프린터용제품제작_공개수업/03_3D프린터용제품제작_공개수업_10.jpg', '3D 프린터 공개수업 (10)', '3D 프린터용 제품 제작 · 전문교과 공개수업 | Fusion 360 모델링, 기준면·구속 조건 설정, 조립 공차(+0.5mm) 반영 및 부품 간섭(Interference 0건) 검사·출력')">
+      <div class="img-wrap"><img src="03_3D프린터용제품제작_공개수업/03_3D프린터용제품제작_공개수업_10.jpg" alt="3D 프린터 공개수업 (10)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-3d">🖨️ 3D 프린터</span>
+          <span class="tag type-open">공개수업</span>
+        </div>
+        <b>3D 프린터 공개수업 (10)</b>
+        <div class="desc">Fusion 360 모델링, 기준면·구속 조건 설정, 조립 공차(+0.5mm) 반영 및 부품 간섭(Interference 0건) 검사·출력</div>
+        <small>03_3D프린터용제품제작_공개수업_10.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="3dprint" data-type="openclass" onclick="openLightbox('03_3D프린터용제품제작_공개수업/03_3D프린터용제품제작_공개수업_11.jpg', '3D 프린터 공개수업 (11)', '3D 프린터용 제품 제작 · 전문교과 공개수업 | Fusion 360 모델링, 기준면·구속 조건 설정, 조립 공차(+0.5mm) 반영 및 부품 간섭(Interference 0건) 검사·출력')">
+      <div class="img-wrap"><img src="03_3D프린터용제품제작_공개수업/03_3D프린터용제품제작_공개수업_11.jpg" alt="3D 프린터 공개수업 (11)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-3d">🖨️ 3D 프린터</span>
+          <span class="tag type-open">공개수업</span>
+        </div>
+        <b>3D 프린터 공개수업 (11)</b>
+        <div class="desc">Fusion 360 모델링, 기준면·구속 조건 설정, 조립 공차(+0.5mm) 반영 및 부품 간섭(Interference 0건) 검사·출력</div>
+        <small>03_3D프린터용제품제작_공개수업_11.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="3dprint" data-type="openclass" onclick="openLightbox('03_3D프린터용제품제작_공개수업/03_3D프린터용제품제작_공개수업_12.jpg', '3D 프린터 공개수업 (12)', '3D 프린터용 제품 제작 · 전문교과 공개수업 | Fusion 360 모델링, 기준면·구속 조건 설정, 조립 공차(+0.5mm) 반영 및 부품 간섭(Interference 0건) 검사·출력')">
+      <div class="img-wrap"><img src="03_3D프린터용제품제작_공개수업/03_3D프린터용제품제작_공개수업_12.jpg" alt="3D 프린터 공개수업 (12)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-3d">🖨️ 3D 프린터</span>
+          <span class="tag type-open">공개수업</span>
+        </div>
+        <b>3D 프린터 공개수업 (12)</b>
+        <div class="desc">Fusion 360 모델링, 기준면·구속 조건 설정, 조립 공차(+0.5mm) 반영 및 부품 간섭(Interference 0건) 검사·출력</div>
+        <small>03_3D프린터용제품제작_공개수업_12.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="3dprint" data-type="openclass" onclick="openLightbox('03_3D프린터용제품제작_공개수업/03_3D프린터용제품제작_공개수업_13.jpg', '3D 프린터 공개수업 (13)', '3D 프린터용 제품 제작 · 전문교과 공개수업 | Fusion 360 모델링, 기준면·구속 조건 설정, 조립 공차(+0.5mm) 반영 및 부품 간섭(Interference 0건) 검사·출력')">
+      <div class="img-wrap"><img src="03_3D프린터용제품제작_공개수업/03_3D프린터용제품제작_공개수업_13.jpg" alt="3D 프린터 공개수업 (13)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-3d">🖨️ 3D 프린터</span>
+          <span class="tag type-open">공개수업</span>
+        </div>
+        <b>3D 프린터 공개수업 (13)</b>
+        <div class="desc">Fusion 360 모델링, 기준면·구속 조건 설정, 조립 공차(+0.5mm) 반영 및 부품 간섭(Interference 0건) 검사·출력</div>
+        <small>03_3D프린터용제품제작_공개수업_13.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="3dprint" data-type="openclass" onclick="openLightbox('03_3D프린터용제품제작_공개수업/03_3D프린터용제품제작_공개수업_14.jpg', '3D 프린터 공개수업 (14)', '3D 프린터용 제품 제작 · 전문교과 공개수업 | Fusion 360 모델링, 기준면·구속 조건 설정, 조립 공차(+0.5mm) 반영 및 부품 간섭(Interference 0건) 검사·출력')">
+      <div class="img-wrap"><img src="03_3D프린터용제품제작_공개수업/03_3D프린터용제품제작_공개수업_14.jpg" alt="3D 프린터 공개수업 (14)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-3d">🖨️ 3D 프린터</span>
+          <span class="tag type-open">공개수업</span>
+        </div>
+        <b>3D 프린터 공개수업 (14)</b>
+        <div class="desc">Fusion 360 모델링, 기준면·구속 조건 설정, 조립 공차(+0.5mm) 반영 및 부품 간섭(Interference 0건) 검사·출력</div>
+        <small>03_3D프린터용제품제작_공개수업_14.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="appdev" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_01.jpg', '응용프로그래밍 개발 융합실습 (01)', '응용프로그래밍 개발 · 자율주행 조별 융합실습 | 자율주행 조별 챗봇 질의응답 시스템 연동, CRUD 데이터 처리 API 구현 및 팀별 기능 시험표 검증')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_01.jpg" alt="응용프로그래밍 개발 융합실습 (01)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-appdev">💻 응용프로그래밍 개발</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>응용프로그래밍 개발 융합실습 (01)</b>
+        <div class="desc">자율주행 조별 챗봇 질의응답 시스템 연동, CRUD 데이터 처리 API 구현 및 팀별 기능 시험표 검증</div>
+        <small>04_자율주행자동차_조별수업_01.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="appdev" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_02.jpg', '응용프로그래밍 개발 융합실습 (02)', '응용프로그래밍 개발 · 자율주행 조별 융합실습 | 자율주행 조별 챗봇 질의응답 시스템 연동, CRUD 데이터 처리 API 구현 및 팀별 기능 시험표 검증')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_02.jpg" alt="응용프로그래밍 개발 융합실습 (02)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-appdev">💻 응용프로그래밍 개발</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>응용프로그래밍 개발 융합실습 (02)</b>
+        <div class="desc">자율주행 조별 챗봇 질의응답 시스템 연동, CRUD 데이터 처리 API 구현 및 팀별 기능 시험표 검증</div>
+        <small>04_자율주행자동차_조별수업_02.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="appdev" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_03.jpg', '응용프로그래밍 개발 융합실습 (03)', '응용프로그래밍 개발 · 자율주행 조별 융합실습 | 자율주행 조별 챗봇 질의응답 시스템 연동, CRUD 데이터 처리 API 구현 및 팀별 기능 시험표 검증')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_03.jpg" alt="응용프로그래밍 개발 융합실습 (03)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-appdev">💻 응용프로그래밍 개발</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>응용프로그래밍 개발 융합실습 (03)</b>
+        <div class="desc">자율주행 조별 챗봇 질의응답 시스템 연동, CRUD 데이터 처리 API 구현 및 팀별 기능 시험표 검증</div>
+        <small>04_자율주행자동차_조별수업_03.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="appdev" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_04.jpg', '응용프로그래밍 개발 융합실습 (04)', '응용프로그래밍 개발 · 자율주행 조별 융합실습 | 자율주행 조별 챗봇 질의응답 시스템 연동, CRUD 데이터 처리 API 구현 및 팀별 기능 시험표 검증')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_04.jpg" alt="응용프로그래밍 개발 융합실습 (04)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-appdev">💻 응용프로그래밍 개발</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>응용프로그래밍 개발 융합실습 (04)</b>
+        <div class="desc">자율주행 조별 챗봇 질의응답 시스템 연동, CRUD 데이터 처리 API 구현 및 팀별 기능 시험표 검증</div>
+        <small>04_자율주행자동차_조별수업_04.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="appdev" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_05.jpg', '응용프로그래밍 개발 융합실습 (05)', '응용프로그래밍 개발 · 자율주행 조별 융합실습 | 자율주행 조별 챗봇 질의응답 시스템 연동, CRUD 데이터 처리 API 구현 및 팀별 기능 시험표 검증')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_05.jpg" alt="응용프로그래밍 개발 융합실습 (05)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-appdev">💻 응용프로그래밍 개발</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>응용프로그래밍 개발 융합실습 (05)</b>
+        <div class="desc">자율주행 조별 챗봇 질의응답 시스템 연동, CRUD 데이터 처리 API 구현 및 팀별 기능 시험표 검증</div>
+        <small>04_자율주행자동차_조별수업_05.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="appdev" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_06.jpg', '응용프로그래밍 개발 융합실습 (06)', '응용프로그래밍 개발 · 자율주행 조별 융합실습 | 자율주행 조별 챗봇 질의응답 시스템 연동, CRUD 데이터 처리 API 구현 및 팀별 기능 시험표 검증')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_06.jpg" alt="응용프로그래밍 개발 융합실습 (06)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-appdev">💻 응용프로그래밍 개발</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>응용프로그래밍 개발 융합실습 (06)</b>
+        <div class="desc">자율주행 조별 챗봇 질의응답 시스템 연동, CRUD 데이터 처리 API 구현 및 팀별 기능 시험표 검증</div>
+        <small>04_자율주행자동차_조별수업_06.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="3dprint" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_07.jpg', '3D 프린터 기구·차체 융합실습 (01)', '3D 프린터 · 자율주행 조별 융합실습 | 3D 출력 차체 케이스 조립, 카메라·모터 마운트 장착 공차 점검 및 타 교과 하드웨어 인계 규격 검증')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_07.jpg" alt="3D 프린터 기구·차체 융합실습 (01)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-3d">🖨️ 3D 프린터</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>3D 프린터 기구·차체 융합실습 (01)</b>
+        <div class="desc">3D 출력 차체 케이스 조립, 카메라·모터 마운트 장착 공차 점검 및 타 교과 하드웨어 인계 규격 검증</div>
+        <small>04_자율주행자동차_조별수업_07.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="3dprint" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_08.jpg', '3D 프린터 기구·차체 융합실습 (02)', '3D 프린터 · 자율주행 조별 융합실습 | 3D 출력 차체 케이스 조립, 카메라·모터 마운트 장착 공차 점검 및 타 교과 하드웨어 인계 규격 검증')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_08.jpg" alt="3D 프린터 기구·차체 융합실습 (02)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-3d">🖨️ 3D 프린터</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>3D 프린터 기구·차체 융합실습 (02)</b>
+        <div class="desc">3D 출력 차체 케이스 조립, 카메라·모터 마운트 장착 공차 점검 및 타 교과 하드웨어 인계 규격 검증</div>
+        <small>04_자율주행자동차_조별수업_08.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="3dprint" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_09.jpg', '3D 프린터 기구·차체 융합실습 (03)', '3D 프린터 · 자율주행 조별 융합실습 | 3D 출력 차체 케이스 조립, 카메라·모터 마운트 장착 공차 점검 및 타 교과 하드웨어 인계 규격 검증')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_09.jpg" alt="3D 프린터 기구·차체 융합실습 (03)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-3d">🖨️ 3D 프린터</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>3D 프린터 기구·차체 융합실습 (03)</b>
+        <div class="desc">3D 출력 차체 케이스 조립, 카메라·모터 마운트 장착 공차 점검 및 타 교과 하드웨어 인계 규격 검증</div>
+        <small>04_자율주행자동차_조별수업_09.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="3dprint" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_10.jpg', '3D 프린터 기구·차체 융합실습 (04)', '3D 프린터 · 자율주행 조별 융합실습 | 3D 출력 차체 케이스 조립, 카메라·모터 마운트 장착 공차 점검 및 타 교과 하드웨어 인계 규격 검증')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_10.jpg" alt="3D 프린터 기구·차체 융합실습 (04)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-3d">🖨️ 3D 프린터</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>3D 프린터 기구·차체 융합실습 (04)</b>
+        <div class="desc">3D 출력 차체 케이스 조립, 카메라·모터 마운트 장착 공차 점검 및 타 교과 하드웨어 인계 규격 검증</div>
+        <small>04_자율주행자동차_조별수업_10.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="3dprint" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_11.jpg', '3D 프린터 기구·차체 융합실습 (05)', '3D 프린터 · 자율주행 조별 융합실습 | 3D 출력 차체 케이스 조립, 카메라·모터 마운트 장착 공차 점검 및 타 교과 하드웨어 인계 규격 검증')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_11.jpg" alt="3D 프린터 기구·차체 융합실습 (05)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-3d">🖨️ 3D 프린터</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>3D 프린터 기구·차체 융합실습 (05)</b>
+        <div class="desc">3D 출력 차체 케이스 조립, 카메라·모터 마운트 장착 공차 점검 및 타 교과 하드웨어 인계 규격 검증</div>
+        <small>04_자율주행자동차_조별수업_11.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="3dprint" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_12.jpg', '3D 프린터 기구·차체 융합실습 (06)', '3D 프린터 · 자율주행 조별 융합실습 | 3D 출력 차체 케이스 조립, 카메라·모터 마운트 장착 공차 점검 및 타 교과 하드웨어 인계 규격 검증')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_12.jpg" alt="3D 프린터 기구·차체 융합실습 (06)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-3d">🖨️ 3D 프린터</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>3D 프린터 기구·차체 융합실습 (06)</b>
+        <div class="desc">3D 출력 차체 케이스 조립, 카메라·모터 마운트 장착 공차 점검 및 타 교과 하드웨어 인계 규격 검증</div>
+        <small>04_자율주행자동차_조별수업_12.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="game" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_13.jpg', '게임프로그래밍 가상시뮬레이션 융합실습 (01)', '게임프로그래밍 · 자율주행 조별 융합실습 | Unity 시뮬레이터 가상 환경과 실차 주행 트랙 연계, 주행 궤적 단일 변인 통제 및 데이터셋 검증')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_13.jpg" alt="게임프로그래밍 가상시뮬레이션 융합실습 (01)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-game">🎮 게임프로그래밍</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>게임프로그래밍 가상시뮬레이션 융합실습 (01)</b>
+        <div class="desc">Unity 시뮬레이터 가상 환경과 실차 주행 트랙 연계, 주행 궤적 단일 변인 통제 및 데이터셋 검증</div>
+        <small>04_자율주행자동차_조별수업_13.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="game" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_14.jpg', '게임프로그래밍 가상시뮬레이션 융합실습 (02)', '게임프로그래밍 · 자율주행 조별 융합실습 | Unity 시뮬레이터 가상 환경과 실차 주행 트랙 연계, 주행 궤적 단일 변인 통제 및 데이터셋 검증')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_14.jpg" alt="게임프로그래밍 가상시뮬레이션 융합실습 (02)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-game">🎮 게임프로그래밍</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>게임프로그래밍 가상시뮬레이션 융합실습 (02)</b>
+        <div class="desc">Unity 시뮬레이터 가상 환경과 실차 주행 트랙 연계, 주행 궤적 단일 변인 통제 및 데이터셋 검증</div>
+        <small>04_자율주행자동차_조별수업_14.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="game" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_15.jpg', '게임프로그래밍 가상시뮬레이션 융합실습 (03)', '게임프로그래밍 · 자율주행 조별 융합실습 | Unity 시뮬레이터 가상 환경과 실차 주행 트랙 연계, 주행 궤적 단일 변인 통제 및 데이터셋 검증')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_15.jpg" alt="게임프로그래밍 가상시뮬레이션 융합실습 (03)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-game">🎮 게임프로그래밍</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>게임프로그래밍 가상시뮬레이션 융합실습 (03)</b>
+        <div class="desc">Unity 시뮬레이터 가상 환경과 실차 주행 트랙 연계, 주행 궤적 단일 변인 통제 및 데이터셋 검증</div>
+        <small>04_자율주행자동차_조별수업_15.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="game" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_16.jpg', '게임프로그래밍 가상시뮬레이션 융합실습 (04)', '게임프로그래밍 · 자율주행 조별 융합실습 | Unity 시뮬레이터 가상 환경과 실차 주행 트랙 연계, 주행 궤적 단일 변인 통제 및 데이터셋 검증')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_16.jpg" alt="게임프로그래밍 가상시뮬레이션 융합실습 (04)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-game">🎮 게임프로그래밍</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>게임프로그래밍 가상시뮬레이션 융합실습 (04)</b>
+        <div class="desc">Unity 시뮬레이터 가상 환경과 실차 주행 트랙 연계, 주행 궤적 단일 변인 통제 및 데이터셋 검증</div>
+        <small>04_자율주행자동차_조별수업_16.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="game" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_17.jpg', '게임프로그래밍 가상시뮬레이션 융합실습 (05)', '게임프로그래밍 · 자율주행 조별 융합실습 | Unity 시뮬레이터 가상 환경과 실차 주행 트랙 연계, 주행 궤적 단일 변인 통제 및 데이터셋 검증')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_17.jpg" alt="게임프로그래밍 가상시뮬레이션 융합실습 (05)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-game">🎮 게임프로그래밍</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>게임프로그래밍 가상시뮬레이션 융합실습 (05)</b>
+        <div class="desc">Unity 시뮬레이터 가상 환경과 실차 주행 트랙 연계, 주행 궤적 단일 변인 통제 및 데이터셋 검증</div>
+        <small>04_자율주행자동차_조별수업_17.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="game" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_18.jpg', '게임프로그래밍 가상시뮬레이션 융합실습 (06)', '게임프로그래밍 · 자율주행 조별 융합실습 | Unity 시뮬레이터 가상 환경과 실차 주행 트랙 연계, 주행 궤적 단일 변인 통제 및 데이터셋 검증')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_18.jpg" alt="게임프로그래밍 가상시뮬레이션 융합실습 (06)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-game">🎮 게임프로그래밍</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>게임프로그래밍 가상시뮬레이션 융합실습 (06)</b>
+        <div class="desc">Unity 시뮬레이터 가상 환경과 실차 주행 트랙 연계, 주행 궤적 단일 변인 통제 및 데이터셋 검증</div>
+        <small>04_자율주행자동차_조별수업_18.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="network" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_19.jpg', '네트워크프로그래밍 무선패킷제어 융합실습 (01)', '네트워크프로그래밍 · 자율주행 조별 융합실습 | 무선 원격 주행 제어 패킷 송수신, RTT 지연 실측 및 긴급정지(E-STOP) 패킷 우선순위 안전 검증')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_19.jpg" alt="네트워크프로그래밍 무선패킷제어 융합실습 (01)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-net">🌐 네트워크프로그래밍</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>네트워크프로그래밍 무선패킷제어 융합실습 (01)</b>
+        <div class="desc">무선 원격 주행 제어 패킷 송수신, RTT 지연 실측 및 긴급정지(E-STOP) 패킷 우선순위 안전 검증</div>
+        <small>04_자율주행자동차_조별수업_19.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="network" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_20.jpg', '네트워크프로그래밍 무선패킷제어 융합실습 (02)', '네트워크프로그래밍 · 자율주행 조별 융합실습 | 무선 원격 주행 제어 패킷 송수신, RTT 지연 실측 및 긴급정지(E-STOP) 패킷 우선순위 안전 검증')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_20.jpg" alt="네트워크프로그래밍 무선패킷제어 융합실습 (02)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-net">🌐 네트워크프로그래밍</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>네트워크프로그래밍 무선패킷제어 융합실습 (02)</b>
+        <div class="desc">무선 원격 주행 제어 패킷 송수신, RTT 지연 실측 및 긴급정지(E-STOP) 패킷 우선순위 안전 검증</div>
+        <small>04_자율주행자동차_조별수업_20.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="network" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_21.jpg', '네트워크프로그래밍 무선패킷제어 융합실습 (03)', '네트워크프로그래밍 · 자율주행 조별 융합실습 | 무선 원격 주행 제어 패킷 송수신, RTT 지연 실측 및 긴급정지(E-STOP) 패킷 우선순위 안전 검증')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_21.jpg" alt="네트워크프로그래밍 무선패킷제어 융합실습 (03)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-net">🌐 네트워크프로그래밍</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>네트워크프로그래밍 무선패킷제어 융합실습 (03)</b>
+        <div class="desc">무선 원격 주행 제어 패킷 송수신, RTT 지연 실측 및 긴급정지(E-STOP) 패킷 우선순위 안전 검증</div>
+        <small>04_자율주행자동차_조별수업_21.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="network" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_22.jpg', '네트워크프로그래밍 무선패킷제어 융합실습 (04)', '네트워크프로그래밍 · 자율주행 조별 융합실습 | 무선 원격 주행 제어 패킷 송수신, RTT 지연 실측 및 긴급정지(E-STOP) 패킷 우선순위 안전 검증')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_22.jpg" alt="네트워크프로그래밍 무선패킷제어 융합실습 (04)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-net">🌐 네트워크프로그래밍</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>네트워크프로그래밍 무선패킷제어 융합실습 (04)</b>
+        <div class="desc">무선 원격 주행 제어 패킷 송수신, RTT 지연 실측 및 긴급정지(E-STOP) 패킷 우선순위 안전 검증</div>
+        <small>04_자율주행자동차_조별수업_22.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="network" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_23.jpg', '네트워크프로그래밍 무선패킷제어 융합실습 (05)', '네트워크프로그래밍 · 자율주행 조별 융합실습 | 무선 원격 주행 제어 패킷 송수신, RTT 지연 실측 및 긴급정지(E-STOP) 패킷 우선순위 안전 검증')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_23.jpg" alt="네트워크프로그래밍 무선패킷제어 융합실습 (05)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-net">🌐 네트워크프로그래밍</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>네트워크프로그래밍 무선패킷제어 융합실습 (05)</b>
+        <div class="desc">무선 원격 주행 제어 패킷 송수신, RTT 지연 실측 및 긴급정지(E-STOP) 패킷 우선순위 안전 검증</div>
+        <small>04_자율주행자동차_조별수업_23.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="network" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_24.jpg', '네트워크프로그래밍 무선패킷제어 융합실습 (06)', '네트워크프로그래밍 · 자율주행 조별 융합실습 | 무선 원격 주행 제어 패킷 송수신, RTT 지연 실측 및 긴급정지(E-STOP) 패킷 우선순위 안전 검증')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_24.jpg" alt="네트워크프로그래밍 무선패킷제어 융합실습 (06)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-net">🌐 네트워크프로그래밍</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>네트워크프로그래밍 무선패킷제어 융합실습 (06)</b>
+        <div class="desc">무선 원격 주행 제어 패킷 송수신, RTT 지연 실측 및 긴급정지(E-STOP) 패킷 우선순위 안전 검증</div>
+        <small>04_자율주행자동차_조별수업_24.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="ai" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_25.jpg', 'AI 모델링 실차자율주행 융합실습 (01)', 'AI 모델링 · 자율주행 조별 융합실습 | 실차 탑재 카메라 전면 차선 인식 비전 AI 추론, 회차별 시간순 분할 검증 및 트랙 완주 실증')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_25.jpg" alt="AI 모델링 실차자율주행 융합실습 (01)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-ai">🤖 AI 모델링</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>AI 모델링 실차자율주행 융합실습 (01)</b>
+        <div class="desc">실차 탑재 카메라 전면 차선 인식 비전 AI 추론, 회차별 시간순 분할 검증 및 트랙 완주 실증</div>
+        <small>04_자율주행자동차_조별수업_25.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="ai" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_26.jpg', 'AI 모델링 실차자율주행 융합실습 (02)', 'AI 모델링 · 자율주행 조별 융합실습 | 실차 탑재 카메라 전면 차선 인식 비전 AI 추론, 회차별 시간순 분할 검증 및 트랙 완주 실증')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_26.jpg" alt="AI 모델링 실차자율주행 융합실습 (02)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-ai">🤖 AI 모델링</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>AI 모델링 실차자율주행 융합실습 (02)</b>
+        <div class="desc">실차 탑재 카메라 전면 차선 인식 비전 AI 추론, 회차별 시간순 분할 검증 및 트랙 완주 실증</div>
+        <small>04_자율주행자동차_조별수업_26.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="ai" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_27.jpg', 'AI 모델링 실차자율주행 융합실습 (03)', 'AI 모델링 · 자율주행 조별 융합실습 | 실차 탑재 카메라 전면 차선 인식 비전 AI 추론, 회차별 시간순 분할 검증 및 트랙 완주 실증')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_27.jpg" alt="AI 모델링 실차자율주행 융합실습 (03)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-ai">🤖 AI 모델링</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>AI 모델링 실차자율주행 융합실습 (03)</b>
+        <div class="desc">실차 탑재 카메라 전면 차선 인식 비전 AI 추론, 회차별 시간순 분할 검증 및 트랙 완주 실증</div>
+        <small>04_자율주행자동차_조별수업_27.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="ai" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_28.jpg', 'AI 모델링 실차자율주행 융합실습 (04)', 'AI 모델링 · 자율주행 조별 융합실습 | 실차 탑재 카메라 전면 차선 인식 비전 AI 추론, 회차별 시간순 분할 검증 및 트랙 완주 실증')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_28.jpg" alt="AI 모델링 실차자율주행 융합실습 (04)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-ai">🤖 AI 모델링</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>AI 모델링 실차자율주행 융합실습 (04)</b>
+        <div class="desc">실차 탑재 카메라 전면 차선 인식 비전 AI 추론, 회차별 시간순 분할 검증 및 트랙 완주 실증</div>
+        <small>04_자율주행자동차_조별수업_28.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="ai" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_29.jpg', 'AI 모델링 실차자율주행 융합실습 (05)', 'AI 모델링 · 자율주행 조별 융합실습 | 실차 탑재 카메라 전면 차선 인식 비전 AI 추론, 회차별 시간순 분할 검증 및 트랙 완주 실증')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_29.jpg" alt="AI 모델링 실차자율주행 융합실습 (05)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-ai">🤖 AI 모델링</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>AI 모델링 실차자율주행 융합실습 (05)</b>
+        <div class="desc">실차 탑재 카메라 전면 차선 인식 비전 AI 추론, 회차별 시간순 분할 검증 및 트랙 완주 실증</div>
+        <small>04_자율주행자동차_조별수업_29.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="ai" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_30.jpg', 'AI 모델링 실차자율주행 융합실습 (06)', 'AI 모델링 · 자율주행 조별 융합실습 | 실차 탑재 카메라 전면 차선 인식 비전 AI 추론, 회차별 시간순 분할 검증 및 트랙 완주 실증')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_30.jpg" alt="AI 모델링 실차자율주행 융합실습 (06)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-ai">🤖 AI 모델링</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>AI 모델링 실차자율주행 융합실습 (06)</b>
+        <div class="desc">실차 탑재 카메라 전면 차선 인식 비전 AI 추론, 회차별 시간순 분할 검증 및 트랙 완주 실증</div>
+        <small>04_자율주행자동차_조별수업_30.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="sysnet" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_31.jpg', '시스템운영및 네트워크운영 관제로그 융합실습 (01)', '시스템운영및 네트워크운영 · 자율주행 조별 융합실습 | 차량 제어기·서버·관제 단말 간 타임스탬프 동기화 및 6개 조(CAR1~CAR6) 실시간 통합 로그 모니터링')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_31.jpg" alt="시스템운영및 네트워크운영 관제로그 융합실습 (01)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-sysnet">🖥️ 시스템운영및 네트워크운영</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>시스템운영및 네트워크운영 관제로그 융합실습 (01)</b>
+        <div class="desc">차량 제어기·서버·관제 단말 간 타임스탬프 동기화 및 6개 조(CAR1~CAR6) 실시간 통합 로그 모니터링</div>
+        <small>04_자율주행자동차_조별수업_31.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="sysnet" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_32.jpg', '시스템운영및 네트워크운영 관제로그 융합실습 (02)', '시스템운영및 네트워크운영 · 자율주행 조별 융합실습 | 차량 제어기·서버·관제 단말 간 타임스탬프 동기화 및 6개 조(CAR1~CAR6) 실시간 통합 로그 모니터링')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_32.jpg" alt="시스템운영및 네트워크운영 관제로그 융합실습 (02)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-sysnet">🖥️ 시스템운영및 네트워크운영</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>시스템운영및 네트워크운영 관제로그 융합실습 (02)</b>
+        <div class="desc">차량 제어기·서버·관제 단말 간 타임스탬프 동기화 및 6개 조(CAR1~CAR6) 실시간 통합 로그 모니터링</div>
+        <small>04_자율주행자동차_조별수업_32.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="sysnet" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_33.jpg', '시스템운영및 네트워크운영 관제로그 융합실습 (03)', '시스템운영및 네트워크운영 · 자율주행 조별 융합실습 | 차량 제어기·서버·관제 단말 간 타임스탬프 동기화 및 6개 조(CAR1~CAR6) 실시간 통합 로그 모니터링')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_33.jpg" alt="시스템운영및 네트워크운영 관제로그 융합실습 (03)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-sysnet">🖥️ 시스템운영및 네트워크운영</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>시스템운영및 네트워크운영 관제로그 융합실습 (03)</b>
+        <div class="desc">차량 제어기·서버·관제 단말 간 타임스탬프 동기화 및 6개 조(CAR1~CAR6) 실시간 통합 로그 모니터링</div>
+        <small>04_자율주행자동차_조별수업_33.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="sysnet" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_34.jpg', '시스템운영및 네트워크운영 관제로그 융합실습 (04)', '시스템운영및 네트워크운영 · 자율주행 조별 융합실습 | 차량 제어기·서버·관제 단말 간 타임스탬프 동기화 및 6개 조(CAR1~CAR6) 실시간 통합 로그 모니터링')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_34.jpg" alt="시스템운영및 네트워크운영 관제로그 융합실습 (04)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-sysnet">🖥️ 시스템운영및 네트워크운영</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>시스템운영및 네트워크운영 관제로그 융합실습 (04)</b>
+        <div class="desc">차량 제어기·서버·관제 단말 간 타임스탬프 동기화 및 6개 조(CAR1~CAR6) 실시간 통합 로그 모니터링</div>
+        <small>04_자율주행자동차_조별수업_34.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="sysnet" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_35.jpg', '시스템운영및 네트워크운영 관제로그 융합실습 (05)', '시스템운영및 네트워크운영 · 자율주행 조별 융합실습 | 차량 제어기·서버·관제 단말 간 타임스탬프 동기화 및 6개 조(CAR1~CAR6) 실시간 통합 로그 모니터링')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_35.jpg" alt="시스템운영및 네트워크운영 관제로그 융합실습 (05)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-sysnet">🖥️ 시스템운영및 네트워크운영</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>시스템운영및 네트워크운영 관제로그 융합실습 (05)</b>
+        <div class="desc">차량 제어기·서버·관제 단말 간 타임스탬프 동기화 및 6개 조(CAR1~CAR6) 실시간 통합 로그 모니터링</div>
+        <small>04_자율주행자동차_조별수업_35.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="sysnet" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_36.jpg', '시스템운영및 네트워크운영 관제로그 융합실습 (06)', '시스템운영및 네트워크운영 · 자율주행 조별 융합실습 | 차량 제어기·서버·관제 단말 간 타임스탬프 동기화 및 6개 조(CAR1~CAR6) 실시간 통합 로그 모니터링')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_36.jpg" alt="시스템운영및 네트워크운영 관제로그 융합실습 (06)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-sysnet">🖥️ 시스템운영및 네트워크운영</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>시스템운영및 네트워크운영 관제로그 융합실습 (06)</b>
+        <div class="desc">차량 제어기·서버·관제 단말 간 타임스탬프 동기화 및 6개 조(CAR1~CAR6) 실시간 통합 로그 모니터링</div>
+        <small>04_자율주행자동차_조별수업_36.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="smartapp" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_37.jpg', '스마트문화앱제작 모바일관제웹앱 융합실습 (01)', '스마트문화앱제작 · 자율주행 조별 융합실습 | 실기기 모바일 관제 대시보드 연동, 실시간 차량 속도·배터리 모니터링 및 0.9초 긴급정지 터치 시험')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_37.jpg" alt="스마트문화앱제작 모바일관제웹앱 융합실습 (01)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-smartapp">📱 스마트문화앱제작</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>스마트문화앱제작 모바일관제웹앱 융합실습 (01)</b>
+        <div class="desc">실기기 모바일 관제 대시보드 연동, 실시간 차량 속도·배터리 모니터링 및 0.9초 긴급정지 터치 시험</div>
+        <small>04_자율주행자동차_조별수업_37.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="smartapp" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_38.jpg', '스마트문화앱제작 모바일관제웹앱 융합실습 (02)', '스마트문화앱제작 · 자율주행 조별 융합실습 | 실기기 모바일 관제 대시보드 연동, 실시간 차량 속도·배터리 모니터링 및 0.9초 긴급정지 터치 시험')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_38.jpg" alt="스마트문화앱제작 모바일관제웹앱 융합실습 (02)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-smartapp">📱 스마트문화앱제작</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>스마트문화앱제작 모바일관제웹앱 융합실습 (02)</b>
+        <div class="desc">실기기 모바일 관제 대시보드 연동, 실시간 차량 속도·배터리 모니터링 및 0.9초 긴급정지 터치 시험</div>
+        <small>04_자율주행자동차_조별수업_38.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="smartapp" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_39.jpg', '스마트문화앱제작 모바일관제웹앱 융합실습 (03)', '스마트문화앱제작 · 자율주행 조별 융합실습 | 실기기 모바일 관제 대시보드 연동, 실시간 차량 속도·배터리 모니터링 및 0.9초 긴급정지 터치 시험')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_39.jpg" alt="스마트문화앱제작 모바일관제웹앱 융합실습 (03)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-smartapp">📱 스마트문화앱제작</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>스마트문화앱제작 모바일관제웹앱 융합실습 (03)</b>
+        <div class="desc">실기기 모바일 관제 대시보드 연동, 실시간 차량 속도·배터리 모니터링 및 0.9초 긴급정지 터치 시험</div>
+        <small>04_자율주행자동차_조별수업_39.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="smartapp" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_40.jpg', '스마트문화앱제작 모바일관제웹앱 융합실습 (04)', '스마트문화앱제작 · 자율주행 조별 융합실습 | 실기기 모바일 관제 대시보드 연동, 실시간 차량 속도·배터리 모니터링 및 0.9초 긴급정지 터치 시험')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_40.jpg" alt="스마트문화앱제작 모바일관제웹앱 융합실습 (04)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-smartapp">📱 스마트문화앱제작</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>스마트문화앱제작 모바일관제웹앱 융합실습 (04)</b>
+        <div class="desc">실기기 모바일 관제 대시보드 연동, 실시간 차량 속도·배터리 모니터링 및 0.9초 긴급정지 터치 시험</div>
+        <small>04_자율주행자동차_조별수업_40.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="smartapp" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_41.jpg', '스마트문화앱제작 모바일관제웹앱 융합실습 (05)', '스마트문화앱제작 · 자율주행 조별 융합실습 | 실기기 모바일 관제 대시보드 연동, 실시간 차량 속도·배터리 모니터링 및 0.9초 긴급정지 터치 시험')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_41.jpg" alt="스마트문화앱제작 모바일관제웹앱 융합실습 (05)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-smartapp">📱 스마트문화앱제작</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>스마트문화앱제작 모바일관제웹앱 융합실습 (05)</b>
+        <div class="desc">실기기 모바일 관제 대시보드 연동, 실시간 차량 속도·배터리 모니터링 및 0.9초 긴급정지 터치 시험</div>
+        <small>04_자율주행자동차_조별수업_41.jpg</small>
+      </figcaption>
+    </figure>
+    <figure class="photo-card" data-subject="smartapp" data-type="integration" onclick="openLightbox('04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_42.jpg', '스마트문화앱제작 모바일관제웹앱 융합실습 (06)', '스마트문화앱제작 · 자율주행 조별 융합실습 | 실기기 모바일 관제 대시보드 연동, 실시간 차량 속도·배터리 모니터링 및 0.9초 긴급정지 터치 시험')">
+      <div class="img-wrap"><img src="04_자율주행자동차_융합프로젝트_조별수업/04_자율주행자동차_조별수업_42.jpg" alt="스마트문화앱제작 모바일관제웹앱 융합실습 (06)" loading="lazy"></div>
+      <figcaption>
+        <div class="tag-row">
+          <span class="tag subj-smartapp">📱 스마트문화앱제작</span>
+          <span class="tag type-integ">조별 융합수업</span>
+        </div>
+        <b>스마트문화앱제작 모바일관제웹앱 융합실습 (06)</b>
+        <div class="desc">실기기 모바일 관제 대시보드 연동, 실시간 차량 속도·배터리 모니터링 및 0.9초 긴급정지 터치 시험</div>
+        <small>04_자율주행자동차_조별수업_42.jpg</small>
+      </figcaption>
+    </figure>
+  </section>
+</main>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <button class="lb-close" onclick="closeLightbox(event)">✕ 닫기 (ESC)</button>
+  <div class="lb-content" onclick="event.stopPropagation()">
+    <img id="lbImg" src="" alt="">
+    <div class="lb-cap" id="lbCap"></div>
+    <div class="lb-sub" id="lbSub"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div><strong>AI 에이전트 교육혁신 연구회</strong> (상일미디어고등학교) | 2026 교육부 직업계고 교수학습능력 향상 교사연구회 지원사업 확산용 산출물</div>
+  </div>
+</footer>
+
+<script>
+function filterBy(subj) {
+  document.querySelectorAll('.tab').forEach(b => {
+    if (b.dataset.filter === subj) b.classList.add('active');
+    else b.classList.remove('active');
+  });
+  applyFilter(subj);
+}
+
+function applyFilter(f) {
+  document.querySelectorAll('.photo-card').forEach(card => {
+    if (f === 'all') {
+      card.style.display = 'flex';
+    } else if (card.dataset.subject === f || card.dataset.type === f) {
+      card.style.display = 'flex';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    applyFilter(btn.dataset.filter);
+  });
+});
+
+function openLightbox(src, cap, sub) {
+  document.getElementById('lbImg').src = src;
+  document.getElementById('lbCap').textContent = cap;
+  document.getElementById('lbSub').textContent = sub || '';
+  document.getElementById('lightbox').classList.add('open');
+}
+
+function closeLightbox(e) {
+  document.getElementById('lightbox').classList.remove('open');
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeLightbox();
+});
+</script>
+</body>
+</html>

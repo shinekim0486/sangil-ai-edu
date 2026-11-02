@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AUTO-NET LAB 교사 로그인</title>
+<style>
+  :root {
+    --bg: #0a1120;
+    --card: #0f1a2c;
+    --border: #22324d;
+    --input: #0b1424;
+    --text: #e6edf7;
+    --muted: #7f93b3;
+    --accent: #ffb547;
+    --accent-dark: #2a1a00;
+    --error: #ff6b7a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    font-family: "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", system-ui, sans-serif;
+    color: var(--text);
+    padding: 16px;
+  }
+  .card {
+    width: 100%;
+    max-width: 380px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px 26px 28px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: 0.3px;
+  }
+  .brand::before {
+    content: "";
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+  }
+  .subtitle {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  label, .label {
+    display: block;
+    margin: 26px 0 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #b9c6dc;
+  }
+  input {
+    width: 100%;
+    height: 48px;
+    padding: 0 16px;
+    background: var(--input);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 15px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  input::placeholder { color: #5d6f8c; letter-spacing: 1px; }
+  input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(255, 181, 71, .18);
+  }
+  .teams {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 7px;
+  }
+  .team {
+    height: 46px;
+    background: var(--input);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: #c9d4e6;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .team:hover { border-color: #3a5378; }
+  .team.selected {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(18, 214, 245, .08);
+    box-shadow: 0 0 0 1px var(--accent) inset;
+  }
+  .btn {
+    width: 100%;
+    height: 48px;
+    margin-top: 22px;
+    background: var(--accent);
+    border: none;
+    border-radius: 8px;
+    color: var(--accent-dark);
+    font-size: 15px;
+    font-weight: 800;
+    font-family: inherit;
+    cursor: pointer;
+    transition: filter .15s, transform .05s;
+  }
+  .btn:hover { filter: brightness(1.08); }
+  .btn:active { transform: translateY(1px); }
+  .msg {
+    min-height: 18px;
+    margin-top: 12px;
+    font-size: 12.5px;
+    color: var(--error);
+    text-align: center;
+  }
+  .msg.ok { color: var(--accent); }
+  .hint {
+    margin-top: 18px;
+    font-size: 12px;
+    line-height: 1.8;
+    color: var(--muted);
+  }
+  .hint mark {
+    background: rgba(255, 181, 71, .14);
+    color: var(--accent);
+    padding: 1px 5px;
+    border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+  <form class="card" id="loginForm" novalidate>
+    <div class="brand">AUTO-NET LAB</div>
+    <p class="subtitle">교사용 — 학생 산출물 로그인</p>
+
+    <label for="tid">교사 아이디</label>
+    <input id="tid" type="text" maxlength="20" placeholder="예: teacher" autocomplete="username">
+
+    <label for="tpw">교사 코드</label>
+    <input id="tpw" type="password" maxlength="20" placeholder="교사 코드 입력" autocomplete="current-password">
+
+    <button type="submit" class="btn">교사 로그인</button>
+    <p class="msg" id="msg"></p>
+    <p class="hint"><a href="login.html" style="color:var(--accent)">← 학생 로그인으로</a></p>
+  </form>
+
+<script>
+  const form = document.getElementById('loginForm');
+  const msg = document.getElementById('msg');
+  function show(text, ok = false) { msg.textContent = text; msg.classList.toggle('ok', ok); }
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const id = document.getElementById('tid').value.trim();
+    const pw = document.getElementById('tpw').value;
+    if (!id) return show('교사 아이디를 입력하세요.');
+    if (id !== 'teacher' || pw !== 'netlab2026') return show('아이디 또는 교사 코드가 올바르지 않습니다.');
+    try { localStorage.setItem('autonet-teacher', JSON.stringify({ id, at: Date.now() })); } catch (_) {}
+    show('교사 로그인 성공!', true);
+    setTimeout(() => location.replace('outputs.html'), 350);
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><title>전문교과 성취도 변화분석</title><style>
+:root {
+  --bg: #f8fafc; --card: #ffffff; --ink: #0f172a; --muted: #475569;
+  --blue: #1d4ed8; --blue-lt: #eff6ff; --teal: #0f766e; --teal-lt: #f0fdfa;
+  --amber: #b45309; --amber-lt: #fffbeb; --rose: #be123c; --rose-lt: #fff1f2;
+  --line: #e2e8f0;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: 'Pretendard', 'Malgun Gothic', sans-serif; background: var(--bg); color: var(--ink); line-height: 1.65; }
+header { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #0f766e 100%); color: #fff; padding: 36px 24px; }
+.wrap { max-width: 1180px; margin: 0 auto; }
+.badge { display: inline-block; background: rgba(255,255,255,0.16); padding: 5px 13px; border-radius: 999px; font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+h1 { margin: 0 0 8px; font-size: 27px; }
+.sub { margin: 0; opacity: 0.9; font-size: 14.5px; }
+.top-nav { margin-top: 18px; display: flex; gap: 8px; flex-wrap: wrap; }
+.top-nav a { color: #fff; text-decoration: none; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.28); padding: 7px 13px; border-radius: 8px; font-size: 13px; font-weight: 700; }
+.top-nav a:hover, .top-nav a.active { background: #fff; color: #0f172a; }
+main { max-width: 1180px; margin: 26px auto 60px; padding: 0 20px; }
+.section { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 26px; margin-bottom: 22px; box-shadow: 0 4px 14px rgba(15,23,42,0.04); }
+h2 { margin: 0 0 14px; font-size: 20px; color: #1e3a8a; border-bottom: 2px solid var(--line); padding-bottom: 9px; }
+h3 { margin: 18px 0 10px; font-size: 16px; color: var(--teal); }
+.kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-bottom: 20px; }
+.kpi { background: var(--blue-lt); border: 1px solid #bfdbfe; border-radius: 12px; padding: 16px; }
+.kpi .lbl { font-size: 12.5px; font-weight: 700; color: var(--muted); }
+.kpi .val { font-size: 24px; font-weight: 800; color: var(--blue); margin: 4px 0; }
+.kpi .desc { font-size: 12px; color: var(--muted); }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 12px 0; }
+th, td { border: 1px solid var(--line); padding: 10px 12px; text-align: left; vertical-align: middle; }
+th { background: #f1f5f9; font-weight: 700; color: #1e293b; text-align: center; }
+td.center { text-align: center; }
+.pill { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+.pill-high { background: #dcfce7; color: #166534; }
+.pill-mid { background: #dbeafe; color: #1e40af; }
+.pill-low { background: #fef3c7; color: #92400e; }
+.ba-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px; }
+.ba-box { border-radius: 12px; padding: 16px; border: 1px solid var(--line); }
+.ba-before { background: #fff1f2; border-color: #fecdd3; }
+.ba-after { background: #f0fdf4; border-color: #bbf7d0; }
+@media (max-width: 768px) { .ba-grid { grid-template-columns: 1fr; } }
+footer { text-align: center; padding: 24px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); }
+</style></head><body>
+<header><div class="wrap">
+  <span class="badge">06_연구결과 및 효과검증자료 · 세부 분석 보고서 ③</span>
+  <h1>③ 전문교과 성취도 변화분석 보고서</h1>
+  <p class="sub">7개 전문교과 특화 문항(S1~S7) 사전·사후 대응표본 t-검정(N=238) 및 전공 핵심 개념(K1·K2) 정답률 변화</p>
+  <div class="top-nav">
+    <a href="index.html">📊 통합 분석 대시보드</a>
+    <a href="수행평가 과제 및 루브릭 채점 결과.html">① 수행평가·루브릭 결과</a>
+    <a href="AI활용 전 후 결과물 비교.html">② AI 활용 전·후 결과물 비교</a>
+    <a href="전문교과 성취도 변화분석.html" class="active">③ 전문교과 성취도 변화분석</a>
+    <a href="AI 활용에 대한 학생인식변화.html">④ AI 활용 학생인식변화</a>
+  </div>
+</div></header>
+<main>
+  <div class="kpi-row">
+    <div class="kpi"><div class="lbl">교과 특화(S1~S7) 전체 평균</div><div class="val">2.73 → 3.38</div><div class="desc">+0.64점 향상 (+23.6%, p&lt;.001)</div></div>
+    <div class="kpi"><div class="lbl">대응표본 효과크기 (Cohen's dz)</div><div class="val">dz = 0.84</div><div class="desc">t = 13.00 (대형 교육 효과 입증)</div></div>
+    <div class="kpi"><div class="lbl">최대 성취 향상 교과</div><div class="val">+1.89점 (+81.1%)</div><div class="desc">네트워크프로그래밍 (2.33 → 4.22)</div></div>
+    <div class="kpi"><div class="lbl">개념 확인 정답률 최대 상승</div><div class="val">+64.7%p 상승</div><div class="desc">스마트문화앱 K2 (26.5% → 91.2%)</div></div>
+  </div>
+  <div class="section">
+    <h2>1. 7개 전문교과별 특화 역량(S1~S7) 및 개념 정답률(K1·K2) 변화 총괄표</h2>
+    <table>
+      <thead><tr><th>전문교과 (담당 교사)</th><th>인원</th><th>사전 평균(S)</th><th>사후 평균(S)</th><th>변화량 (향상률)</th><th>대응표본 t-검정</th><th>핵심 개념 확인 문항(K1·K2) 정답률 및 성취 변화</th></tr></thead>
+      <tbody><tr><td>네트워크프로그래밍 (김0선)</td><td>34명</td><td>2.33</td><td>4.22</td><td>+1.89 (+81.1%)</td><td>t = 9.84 (p &lt; .001)</td><td>RTT vs 편도 지연 구분 100%, SEQ 오개념 8명 전원 교정</td></tr><tr><td>스마트문화앱콘텐츠제작 (윤0상)</td><td>34명</td><td>2.00</td><td>3.33</td><td>+1.34 (+67.0%)</td><td>t = 7.42 (p &lt; .001)</td><td>K1: 35.3% → 88.2% (+52.9%p) / K2: 26.5% → 91.2% (+64.7%p)</td></tr><tr><td>응용프로그래밍개발 (김0훈·김0주)</td><td>34명</td><td>2.98</td><td>3.41</td><td>+0.43 (+14.4%)</td><td>t = 3.53 (p = .001)</td><td>K1: 55.9% → 85.3% (+29.4%p) / K2: 47.1% → 76.5% (+29.4%p)</td></tr><tr><td>3D프린터용제품제작 (김0석)</td><td>34명</td><td>2.55</td><td>2.84</td><td>+0.29 (+11.4%)</td><td>t = 3.91 (p &lt; .001)</td><td>K1(조립 공차 개념): 32.4% → 44.1% (+11.8%p) / 간섭 0건 확인</td></tr><tr><td>게임프로그래밍 (조0민)</td><td>34명</td><td>2.63</td><td>2.87</td><td>+0.24 (+9.1%)</td><td>t = 3.12 (p = .004)</td><td>K1: 29.4% → 52.9% (+23.5%p) / K2: 35.3% → 47.1% (+11.8%p)</td></tr><tr><td>시스템운영및네트워크운영 (우0정)</td><td>34명</td><td>3.32</td><td>3.50</td><td>+0.18 (+5.4%)</td><td>t = 4.15 (p &lt; .001)</td><td>K1·K2 개념 확인 정답률 100% 유지 / 시각 오차 보정 순서 확립</td></tr><tr><td>인공지능모델링 (류0상)</td><td>34명</td><td>3.32</td><td>3.46</td><td>+0.15 (+4.5%)</td><td>t = 3.88 (p &lt; .001)</td><td>K1·K2 개념 확인 정답률 100% 유지 / 데이터 누수 식별 전원 도달</td></tr><tr><td>7개 교과 전체 통합 (N=238)</td><td>238명</td><td>2.73</td><td>3.38</td><td>+0.64 (+23.6%)</td><td>t = 13.00 (p &lt; .001, dz = 0.84)</td><td>전 교과 통계적 유의미 향상 (대형 효과크기 dz = 0.84 달성)</td></tr></tbody>
+    </table>
+  </div>
+  <div class="section">
+    <h2>2. 교과별 전공 성취도 변화 핵심 분석</h2>
+    <ul>
+      <li><strong>시뮬레이터·실측 결합의 높은 학습 효과:</strong> <code>네트워크프로그래밍</code>(+1.89점)은 <code>AUTO-NET LAB</code>과 Wireshark 패킷 실측을 통해 RTT와 편도 지연의 차이를 100% 구분하게 되었고, <code>스마트문화앱콘텐츠제작</code>(+1.34점)은 다중 알림 목록 깨짐 조건을 직접 통제하며 개념 정답률이 90% 내외로 도약하였습니다.</li>
+      <li><strong>데이터 흐름 및 단위 시험 역량 내재화:</strong> <code>응용프로그래밍개발</code>(+0.43점)은 입력·처리·저장·조회 흐름 분리와 예외 조건 시험을 통해 개념 정답률이 K1 +29.4%p, K2 +29.4%p 상승하였습니다.</li>
+      <li><strong>고차원 직무 검증 역량 확보:</strong> <code>인공지능모델링</code>(+0.15점)과 <code>시스템운영및네트워크운영</code>(+0.18점)은 사전부터 높은 기초 역량(3.32점)을 보인 집단으로, 수업 후 데이터 누수(Leakage) 방지와 장치 간 시각 오차(Time Skew) 보정이라는 실무 핵심 검증 역량을 전원 습득하였습니다.</li>
+    </ul>
+  </div>
+</main>
+<footer>상일미디어고등학교 AI 에이전트 교육혁신 연구회 | 2026 직업계고 교수학습능력 향상 교사연구회</footer>
+</body></html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><title>AI 활용에 대한 학생인식변화</title><style>
+:root {
+  --bg: #f8fafc; --card: #ffffff; --ink: #0f172a; --muted: #475569;
+  --blue: #1d4ed8; --blue-lt: #eff6ff; --teal: #0f766e; --teal-lt: #f0fdfa;
+  --amber: #b45309; --amber-lt: #fffbeb; --rose: #be123c; --rose-lt: #fff1f2;
+  --line: #e2e8f0;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: 'Pretendard', 'Malgun Gothic', sans-serif; background: var(--bg); color: var(--ink); line-height: 1.65; }
+header { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #0f766e 100%); color: #fff; padding: 36px 24px; }
+.wrap { max-width: 1180px; margin: 0 auto; }
+.badge { display: inline-block; background: rgba(255,255,255,0.16); padding: 5px 13px; border-radius: 999px; font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+h1 { margin: 0 0 8px; font-size: 27px; }
+.sub { margin: 0; opacity: 0.9; font-size: 14.5px; }
+.top-nav { margin-top: 18px; display: flex; gap: 8px; flex-wrap: wrap; }
+.top-nav a { color: #fff; text-decoration: none; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.28); padding: 7px 13px; border-radius: 8px; font-size: 13px; font-weight: 700; }
+.top-nav a:hover, .top-nav a.active { background: #fff; color: #0f172a; }
+main { max-width: 1180px; margin: 26px auto 60px; padding: 0 20px; }
+.section { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 26px; margin-bottom: 22px; box-shadow: 0 4px 14px rgba(15,23,42,0.04); }
+h2 { margin: 0 0 14px; font-size: 20px; color: #1e3a8a; border-bottom: 2px solid var(--line); padding-bottom: 9px; }
+h3 { margin: 18px 0 10px; font-size: 16px; color: var(--teal); }
+.kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-bottom: 20px; }
+.kpi { background: var(--blue-lt); border: 1px solid #bfdbfe; border-radius: 12px; padding: 16px; }
+.kpi .lbl { font-size: 12.5px; font-weight: 700; color: var(--muted); }
+.kpi .val { font-size: 24px; font-weight: 800; color: var(--blue); margin: 4px 0; }
+.kpi .desc { font-size: 12px; color: var(--muted); }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 12px 0; }
+th, td { border: 1px solid var(--line); padding: 10px 12px; text-align: left; vertical-align: middle; }
+th { background: #f1f5f9; font-weight: 700; color: #1e293b; text-align: center; }
+td.center { text-align: center; }
+.pill { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+.pill-high { background: #dcfce7; color: #166534; }
+.pill-mid { background: #dbeafe; color: #1e40af; }
+.pill-low { background: #fef3c7; color: #92400e; }
+.ba-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px; }
+.ba-box { border-radius: 12px; padding: 16px; border: 1px solid var(--line); }
+.ba-before { background: #fff1f2; border-color: #fecdd3; }
+.ba-after { background: #f0fdf4; border-color: #bbf7d0; }
+@media (max-width: 768px) { .ba-grid { grid-template-columns: 1fr; } }
+footer { text-align: center; padding: 24px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); }
+</style></head><body>
+<header><div class="wrap">
+  <span class="badge">06_연구결과 및 효과검증자료 · 세부 분석 보고서 ④</span>
+  <h1>④ AI 활용에 대한 학생인식변화 심층 분석 보고서</h1>
+  <p class="sub">공통 13문항(Q1~Q13) 사전·사후 대응표본 검정(N=238) · 5대 역량 군집 분석 · 무비판적 수용(KPI-3) 감소 검증</p>
+  <div class="top-nav">
+    <a href="index.html">📊 통합 분석 대시보드</a>
+    <a href="수행평가 과제 및 루브릭 채점 결과.html">① 수행평가·루브릭 결과</a>
+    <a href="AI활용 전 후 결과물 비교.html">② AI 활용 전·후 결과물 비교</a>
+    <a href="전문교과 성취도 변화분석.html">③ 전문교과 성취도 변화분석</a>
+    <a href="AI 활용에 대한 학생인식변화.html" class="active">④ AI 활용 학생인식변화</a>
+  </div>
+</div></header>
+<main>
+  <div class="kpi-row">
+    <div class="kpi"><div class="lbl">공통 13문항 통합 평균</div><div class="val">2.98 → 3.47</div><div class="desc">+0.49점 향상 (+16.6%, dz=0.91)</div></div>
+    <div class="kpi"><div class="lbl">최대 상승 문항 (Q6 비교검증)</div><div class="val">+0.71점 (+24.6%)</div><div class="desc">2.88 → 3.59 (t=10.60, p&lt;.001)</div></div>
+    <div class="kpi"><div class="lbl">AI 무비판 수용 감소 (KPI-3)</div><div class="val">-0.59점 (-19.2%)</div><div class="desc">3.06 → 2.47 (목표 -0.50점 초과 달성)</div></div>
+    <div class="kpi"><div class="lbl">탐구·문제해결 군집(Q4~Q6)</div><div class="val">+0.54점 (+18.4%)</div><div class="desc">2.93 → 3.47 (dz=0.81 대형 효과)</div></div>
+  </div>
+  <div class="section">
+    <h2>1. 공통 13문항(Q1~Q13) 사전·사후 대응표본 t-검정 결과표 (N=238)</h2>
+    <table>
+      <thead><tr><th>문항 코드</th><th>평가 영역</th><th>문항 내용 요약</th><th>사전 평균</th><th>사후 평균</th><th>변화량 (향상률)</th><th>대응표본 t-검정</th><th>효과크기(dz)</th></tr></thead>
+      <tbody><tr><td>Q1 (C1)</td><td>AI 결과 검토 능력</td><td>AI가 제안한 답이나 코드가 우리 팀 문제 조건에 맞는지 스스로 확인한다</td><td>2.96</td><td>3.34</td><td>+0.39 (+13.1%)</td><td>t = 8.30 (p &lt; .001)</td><td>dz = 0.54</td></tr><tr><td>Q2 (C2)</td><td>질문 구성 능력 (KPI-1)</td><td>목적·현재 상황·제약 조건·시도한 내용을 구분해 구체적으로 질문한다</td><td>2.99</td><td>3.47</td><td>+0.48 (+16.2%)</td><td>t = 9.45 (p &lt; .001)</td><td>dz = 0.61</td></tr><tr><td>Q3 (C3)</td><td>맥락 적합성 판단 (KPI-1)</td><td>AI 답변의 제안과 직접 관찰·측정한 결과를 구분하여 맥락에 맞게 수정한다</td><td>2.94</td><td>3.48</td><td>+0.54 (+18.5%)</td><td>t = 10.47 (p &lt; .001)</td><td>dz = 0.68</td></tr><tr><td>Q4 (C4)</td><td>문제 명료화 능력</td><td>예상과 다르게 동작하는 문제 상황을 조건과 증상으로 구조화해 설명한다</td><td>2.97</td><td>3.34</td><td>+0.38 (+12.7%)</td><td>t = 7.59 (p &lt; .001)</td><td>dz = 0.49</td></tr><tr><td>Q5 (C5)</td><td>원인 분석 능력 (KPI-1)</td><td>관찰 기록과 실행 근거를 바탕으로 오류 원인 후보를 좁혀 찾는다</td><td>2.95</td><td>3.47</td><td>+0.52 (+17.7%)</td><td>t = 10.12 (p &lt; .001)</td><td>dz = 0.66</td></tr><tr><td>Q6 (C6)</td><td>비교 검증 태도 (최대 향상)</td><td>조건을 하나씩 바꾸며(단일 변인) 수정 전·후 결과를 측정·비교한다</td><td>2.88</td><td>3.59</td><td>+0.71 (+24.6%)</td><td>t = 10.60 (p &lt; .001)</td><td>dz = 0.69</td></tr><tr><td>Q7 (C7)</td><td>교과 연계 인식 (KPI-2)</td><td>내 과목 산출물이 다음 교과 및 공동 자율주행 프로젝트에 주는 영향을 이해한다</td><td>2.92</td><td>3.43</td><td>+0.51 (+17.4%)</td><td>t = 9.62 (p &lt; .001)</td><td>dz = 0.62</td></tr><tr><td>Q8 (C13 역문항)</td><td>AI 무비판 수용 감소 (KPI-3)</td><td>[역문항 원점수] 이해하지 못한 AI 코드·방법도 일단 그대로 써도 된다</td><td>3.06</td><td>2.47</td><td>-0.59 (-19.2%)</td><td>t = -8.95 (p &lt; .001)</td><td>dz = -0.58</td></tr><tr><td>Q9 (C8)</td><td>산출물 인계 능력</td><td>다른 팀·교과가 재확인할 수 있도록 조건·절차·결과를 문서화해 인계한다</td><td>3.02</td><td>3.50</td><td>+0.48 (+15.9%)</td><td>t = 9.43 (p &lt; .001)</td><td>dz = 0.61</td></tr><tr><td>Q10 (C9)</td><td>데이터·작업 흐름 이해</td><td>요구/문제 확인부터 수정 후 동작 검증까지의 전체 데이터 흐름을 설명한다</td><td>3.01</td><td>3.49</td><td>+0.48 (+15.9%)</td><td>t = 8.59 (p &lt; .001)</td><td>dz = 0.56</td></tr><tr><td>Q11 (C10)</td><td>직업·산업 연계 인식</td><td>전공 실습과 시뮬레이션 검증이 실제 산업·직무 현장에 필요한 이유를 안다</td><td>2.91</td><td>3.37</td><td>+0.47 (+16.0%)</td><td>t = 8.72 (p &lt; .001)</td><td>dz = 0.57</td></tr><tr><td>Q12 (C11)</td><td>AI 대화 지속 능력 (KPI-1)</td><td>챗봇이 되물을 때 빠진 조건·수치·시도 내용을 보완하여 후속 질문한다</td><td>3.09</td><td>3.54</td><td>+0.45 (+14.4%)</td><td>t = 8.61 (p &lt; .001)</td><td>dz = 0.56</td></tr><tr><td>Q13 (C12)</td><td>디지털 윤리·보안 의식</td><td>비밀번호·개인정보·API 키·저작권 등 AI 활용 시 보호 수칙을 준수한다</td><td>3.11</td><td>3.55</td><td>+0.44 (+14.2%)</td><td>t = 8.42 (p &lt; .001)</td><td>dz = 0.55</td></tr><tr><td>전체 종합 (역코딩 반영)</td><td>공통 13문항 전체 평균</td><td>7개 전문교과 238명 대응표본 통합 평균 (Q8 역코딩 합산 기준)</td><td>2.98</td><td>3.47</td><td>+0.49 (+16.6%)</td><td>t = 14.03 (p &lt; .001)</td><td>dz = 0.91</td></tr></tbody>
+    </table>
+  </div>
+  <div class="section">
+    <h2>2. 5대 핵심 역량 군집(Cluster)별 사전·사후 변화 분석</h2>
+    <table>
+      <thead><tr><th>역량 군집명</th><th>포함 문항</th><th>사전 평균</th><th>사후 평균</th><th>변화량 (향상률)</th><th>대응표본 t-검정</th><th>효과크기 및 해석</th></tr></thead>
+      <tbody><tr><td>영역 1. AI 활용 능력</td><td>Q1, Q2, Q3, Q12</td><td>2.99</td><td>3.46</td><td>+0.46 (+15.5%)</td><td>t = 12.33 (p &lt; .001)</td><td>dz = 0.80 (대형 효과)</td></tr><tr><td>영역 2. AI 무비판 수용 감소</td><td>Q8 (역문항 원점수)</td><td>3.06</td><td>2.47</td><td>-0.59 (-19.2%)</td><td>t = -8.95 (p &lt; .001)</td><td>dz = -0.58 (목표 -0.50 초과 달성)</td></tr><tr><td>영역 3. 탐구·문제해결 능력</td><td>Q4, Q5, Q6</td><td>2.93</td><td>3.47</td><td>+0.54 (+18.4%)</td><td>t = 12.47 (p &lt; .001)</td><td>dz = 0.81 (최대 상승 영역)</td></tr><tr><td>영역 4. 교과 연계·인계 역량</td><td>Q7, Q9</td><td>2.97</td><td>3.46</td><td>+0.49 (+16.5%)</td><td>t = 11.54 (p &lt; .001)</td><td>dz = 0.75 (중~대형 효과)</td></tr><tr><td>영역 5. 맥락 이해·디지털 윤리</td><td>Q10, Q11, Q13</td><td>3.01</td><td>3.47</td><td>+0.46 (+15.3%)</td><td>t = 10.88 (p &lt; .001)</td><td>dz = 0.71 (중~대형 효과)</td></tr></tbody>
+    </table>
+  </div>
+</main>
+<footer>상일미디어고등학교 AI 에이전트 교육혁신 연구회 | 2026 직업계고 교수학습능력 향상 교사연구회</footer>
+</body></html>

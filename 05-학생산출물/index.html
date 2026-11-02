@@ -1,0 +1,1326 @@
+﻿<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>05 학생 산출물 통합 아카이브 | AI 에이전트 교육혁신 연구회</title>
+  <meta name="description" content="2026 상일미디어고 직업계고 교수학습능력 향상 교사연구회(AI 에이전트 교육혁신 연구회) 7개 전문교과 학생 산출물 통합 포털 (3D모델링·Unity가상주행·모니터링웹앱·네트워크프로토콜·챗봇로그)">
+  <style>
+    :root {
+      --navy: #152d38;
+      --navy-light: #1f4252;
+      --teal: #087b71;
+      --teal-light: #0d9b8e;
+      --teal-soft: #edf6f4;
+      --amber: #ca9c37;
+      --amber-soft: #faf3e2;
+      --bg: #f4f7f6;
+      --card-bg: #ffffff;
+      --line: #dbe4e5;
+      --line-subtle: #edf1f2;
+      --muted: #627680;
+      --text: #1b2f38;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-sm: 0 2px 8px rgba(21, 45, 56, 0.05);
+      --shadow-md: 0 8px 24px rgba(21, 45, 56, 0.08);
+      --shadow-lg: 0 16px 40px rgba(21, 45, 56, 0.12);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Malgun Gothic", "맑은 고딕", helvetica, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, input, select { font: inherit; }
+
+    /* Top Global Navigation Bar (GNB) */
+    .gnb {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--navy);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+    .gnb-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 28px;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--teal), #3ec8ad);
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 19px;
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(8, 123, 113, 0.35);
+    }
+    .brand-title {
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-title span {
+      font-size: 12px;
+      font-weight: 400;
+      color: #9cb5be;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav-link {
+      padding: 8px 14px;
+      font-size: 13.5px;
+      color: #c4d7de;
+      border-radius: 8px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav-link:hover {
+      background: rgba(255, 255, 255, 0.09);
+      color: #fff;
+    }
+    .nav-link.active {
+      background: var(--teal);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 36px 28px 80px;
+    }
+
+    /* Header Banner */
+    .header-banner {
+      background: linear-gradient(135deg, #152d38 0%, #1a424e 60%, #155552 100%);
+      color: white;
+      border-radius: var(--radius-lg);
+      padding: 44px 48px;
+      margin-bottom: 32px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    .header-banner::after {
+      content: "";
+      position: absolute;
+      right: -80px;
+      bottom: -100px;
+      width: 360px;
+      height: 360px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(94, 208, 175, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .badge-sub {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12.5px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #74e2c9;
+      margin-bottom: 16px;
+    }
+    .header-banner h1 {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.3;
+      margin-bottom: 12px;
+    }
+    .header-banner p {
+      font-size: 15.5px;
+      color: #c9dbdf;
+      max-width: 880px;
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+
+    /* Metrics Grid */
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+    }
+    .metric-card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      transition: transform 0.2s;
+    }
+    .metric-card:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.12);
+    }
+    .metric-num {
+      font-size: 28px;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+    .metric-num span {
+      font-size: 13px;
+      font-weight: 400;
+      color: #7ce2cb;
+    }
+    .metric-label {
+      font-size: 12.5px;
+      color: #b7cdd4;
+      margin-top: 4px;
+    }
+
+    /* Toolbar: Search & Subject Filters */
+    .toolbar {
+      background: white;
+      border-radius: var(--radius-md);
+      padding: 18px 24px;
+      margin-bottom: 28px;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .search-box {
+      flex: 1;
+      min-width: 280px;
+      position: relative;
+    }
+    .search-input {
+      width: 100%;
+      height: 44px;
+      padding: 0 16px 0 42px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      background: #fdfdfd;
+      transition: all 0.2s;
+    }
+    .search-input:focus {
+      outline: none;
+      border-color: var(--teal);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(8, 123, 113, 0.12);
+    }
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 16px;
+      pointer-events: none;
+    }
+    .filter-tabs {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      border: 1px solid var(--line);
+      background: #f9fbfb;
+      color: var(--muted);
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .filter-btn:hover {
+      background: #edf4f3;
+      color: var(--navy);
+      border-color: #cbd9d6;
+    }
+    .filter-btn.active {
+      background: var(--teal);
+      color: #fff;
+      border-color: var(--teal);
+      box-shadow: 0 2px 6px rgba(8, 123, 113, 0.25);
+    }
+
+    /* Cards Grid */
+    .output-grid {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      gap: 28px;
+    }
+
+    .output-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      transition: box-shadow 0.25s, transform 0.2s;
+    }
+    .output-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    /* Card Head */
+    .card-head {
+      padding: 24px 28px;
+      border-bottom: 1px solid var(--line-subtle);
+      background: linear-gradient(to right, #fbfcfc, #ffffff);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+    }
+    .card-title-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .subject-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: var(--teal-soft);
+      color: var(--teal);
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      font-weight: bold;
+      flex-shrink: 0;
+      border: 1px solid rgba(8, 123, 113, 0.15);
+    }
+    .subject-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      color: var(--teal);
+      background: var(--teal-soft);
+      padding: 3px 9px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+    .card-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+    .card-meta-item strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* Quick Action Buttons */
+    .card-actions-quick {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .btn-quick {
+      padding: 8px 14px;
+      font-size: 12.5px;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .btn-quick.outline {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--navy);
+    }
+    .btn-quick.outline:hover {
+      background: #f4f8f7;
+      border-color: var(--teal);
+      color: var(--teal);
+    }
+    .btn-quick.primary {
+      background: var(--teal);
+      border: 1px solid var(--teal);
+      color: #fff;
+    }
+    .btn-quick.primary:hover {
+      background: var(--teal-light);
+    }
+
+    /* Goal Strip */
+    .card-summary-strip {
+      padding: 12px 28px;
+      background: #fcfbf6;
+      border-bottom: 1px solid var(--line-subtle);
+      font-size: 13.5px;
+      color: #5d5334;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card-summary-strip b {
+      color: #8b6d19;
+      background: var(--amber-soft);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 11.5px;
+      letter-spacing: 0.02em;
+    }
+
+    /* Content Body: Columns */
+    .card-body {
+      padding: 24px 28px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    .pillar-box {
+      background: #f8faf9;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--line);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+    }
+    .pillar-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--line);
+    }
+    .pillar-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .pillar-badge {
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-weight: 600;
+      background: #e6f4ea;
+      color: #137333;
+    }
+
+    /* Item List */
+    .item-list {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      flex: 1;
+    }
+    .item-row {
+      background: #ffffff;
+      border: 1px solid var(--line-subtle);
+      border-radius: var(--radius-sm);
+      padding: 11px 13px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .item-row:hover {
+      border-color: #cbdad8;
+      background: #fafdfc;
+    }
+    .item-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+    .item-icon {
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .item-info {
+      min-width: 0;
+    }
+    .item-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .item-desc {
+      font-size: 11.5px;
+      color: var(--muted);
+      margin-top: 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .item-btns {
+      display: flex;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+    .btn-item {
+      padding: 5px 9px;
+      font-size: 11.5px;
+      font-weight: 600;
+      border-radius: 6px;
+      border: 1px solid var(--line);
+      background: #fdfdfd;
+      color: var(--navy);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-item:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+      background: #f1f8f7;
+    }
+    .btn-item.view-btn {
+      background: var(--teal);
+      border-color: var(--teal);
+      color: #fff;
+    }
+    .btn-item.view-btn:hover {
+      background: var(--teal-light);
+    }
+
+    /* Modal Web Viewer */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 33, 41, 0.75);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+    .modal-backdrop.open {
+      display: flex;
+      opacity: 1;
+    }
+    .modal-dialog {
+      background: #fff;
+      width: 100%;
+      max-width: 1400px;
+      height: 92vh;
+      border-radius: var(--radius-lg);
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      transform: scale(0.97);
+      transition: transform 0.25s ease;
+    }
+    .modal-backdrop.open .modal-dialog {
+      transform: scale(1);
+    }
+    .modal-header {
+      padding: 16px 24px;
+      background: var(--navy);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .modal-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .modal-badge {
+      background: var(--teal);
+      color: white;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 3px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    .modal-title {
+      font-size: 16px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .modal-ctrls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .btn-modal {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12.5px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .btn-modal:hover {
+      background: rgba(255, 255, 255, 0.22);
+    }
+    .btn-close {
+      background: #ff5c5c;
+      border-color: #ff5c5c;
+      font-weight: bold;
+    }
+    .btn-close:hover {
+      background: #e04545;
+    }
+    .modal-body {
+      flex: 1;
+      background: #eaeded;
+      position: relative;
+    }
+    .modal-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+      background: #fff;
+    }
+
+    /* Cross Hub */
+    .cross-hub {
+      margin-top: 50px;
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 36px 40px;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-sm);
+    }
+    .hub-title {
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hub-desc {
+      font-size: 13.5px;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+    .hub-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .hub-card {
+      border: 1px solid var(--line);
+      background: #fbfdfc;
+      border-radius: var(--radius-md);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: all 0.2s;
+    }
+    .hub-card:hover {
+      background: #fff;
+      border-color: var(--teal);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+    .hub-badge {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--teal);
+      letter-spacing: 0.05em;
+    }
+    .hub-card h4 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+    .hub-card p {
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height: 1.6;
+      flex: 1;
+    }
+    .hub-link {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--teal);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .page-footer {
+      text-align: center;
+      padding: 36px 0 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 900px) {
+      .container { padding: 20px 16px 60px; }
+      .header-banner { padding: 30px 24px; }
+      .metrics { grid-template-columns: repeat(2, 1fr); }
+      .card-head { flex-direction: column; }
+      .hub-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Global Navigation Bar -->
+  <header class="gnb">
+    <div class="gnb-inner">
+      <div class="brand-wrap">
+        <div class="brand-logo">A</div>
+        <div class="brand-title">
+            2026 상일미디어고등학교 AI 에이전트 교육혁신 연구회
+            <span>직업계고 교수학습능력 향상 교사연구회 연구산출물</span>
+          </div>
+      </div>
+      <nav class="nav-links">
+        <a href="../03_교수학습 자료/index.html" class="nav-link">📚 교수학습 자료 (03)</a>
+        <a href="../04_평가도구/수행평가루브릭/index.html" class="nav-link">📊 평가도구 (04)</a>
+        <a href="index.html" class="nav-link active">💻 학생산출물 (05)</a>
+        <a href="../07_성과확산및 현장적용 자료/공개수업및 수업시연/index.html" class="nav-link">🏫 성과확산·참관 (07)</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+
+    <!-- Header Banner -->
+    <section class="header-banner">
+      <div class="badge-sub">📁 05_학생 산출물 통합 포털 & 갤러리</div>
+      <h1>7개 전문교과 학생 프로젝트 산출물 & 인터랙티브 웹앱</h1>
+      <p>
+        상일미디어고등학교 AI 에이전트 교육혁신 연구회 34명의 학생들이 완성한 
+        <strong>3D 프린터 제품 모델링</strong>, <strong>Unity 가상 트랙 주행</strong>, 
+        <strong>실시간 모바일 모니터링 웹앱 (6개 팀)</strong>, <strong>네트워크 프로토콜 최적화 명세서</strong>, 
+        <strong>실제 트랙 자율주행 주행 영상</strong> 및 <strong>학생-챗봇 프롬프트 로그</strong>를 브라우저에서 바로 열람·체험할 수 있는 통합 포털입니다.
+      </p>
+
+      <!-- Metrics -->
+      <div class="metrics">
+        <div class="metric-card">
+          <div class="metric-num">7<span>개 교과</span></div>
+          <div class="metric-label">학생 산출물 영역</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-num">6<span>개 팀</span></div>
+          <div class="metric-label">CAR1~CAR6 공동 제작</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-num">110<span>+건</span></div>
+          <div class="metric-label">프로토콜 및 코드 산출물</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-num">8<span>종 웹앱</span></div>
+          <div class="metric-label">인터랙티브 웹 산출물</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-num">3,383<span>건</span></div>
+          <div class="metric-label">학생 프롬프트 대화 로그</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Toolbar: Search & Subject Filters -->
+    <div class="toolbar">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" class="search-input" placeholder="교과명, 팀명(CAR1~CAR6), 키워드 검색 (예: 3D, Unity, 모바일, RTT, 주행영상)">
+      </div>
+      <div class="filter-tabs" id="filterTabs">
+        <button class="filter-btn active" data-filter="all">전체 산출물</button>
+        <button class="filter-btn" data-filter="app">응용프로그래밍</button>
+        <button class="filter-btn" data-filter="3d">3D프린터</button>
+        <button class="filter-btn" data-filter="game">게임프로그래밍</button>
+        <button class="filter-btn" data-filter="net">네트워크</button>
+        <button class="filter-btn" data-filter="smart">스마트문화앱</button>
+        <button class="filter-btn" data-filter="sys">시스템운영</button>
+        <button class="filter-btn" data-filter="ai">인공지능모델링</button>
+        <button class="filter-btn" data-filter="chatbot">챗봇·프롬프트</button>
+      </div>
+    </div>
+
+    <!-- Output Grid Container -->
+    <div class="output-grid" id="outputGrid">
+      <!-- Injected by JavaScript -->
+    </div>
+
+    <!-- Cross-Directory Hub Navigation -->
+    <section class="cross-hub">
+      <div class="hub-title">🔗 교사연구회 결과물 통합 연계 안내</div>
+      <p class="hub-desc">본 학생 산출물은 교수학습 지도안, 평가 루브릭, 연구보고서 성과와 상호 연계되어 있습니다.</p>
+      <div class="hub-grid">
+        <div class="hub-card">
+          <span class="hub-badge">03-교수학습자료</span>
+          <h4>차시별 수업지도안 & 활동지</h4>
+          <p>학생들이 본 산출물을 제작하는 데 사용된 7개 교과 공개수업 일체안(HWPX) 및 인터랙티브 웹 슬라이드 포털</p>
+          <a href="../03_교수학습 자료/index.html" class="hub-link">교수학습 자료 바로가기 →</a>
+        </div>
+        <div class="hub-card">
+          <span class="hub-badge">04-평가도구</span>
+          <h4>수행평가 루브릭 & 평가도구</h4>
+          <p>본 산출물의 기능 완성도, 디버깅 과정, 협업 기여도를 다면 평가한 교과별 루브릭 및 설문 웹페이지</p>
+          <a href="../04_평가도구/수행평가루브릭/index.html" class="hub-link">루브릭 평가도구 바로가기 →</a>
+        </div>
+        <div class="hub-card">
+          <span class="hub-badge">07-성과확산및 현장적용</span>
+          <h4>공개수업 참관 아카이브</h4>
+          <p>공개수업 기간(10.19~10.22) 참관 교사들이 학생 산출물 제작 과정을 관찰하고 기록한 48건의 피드백</p>
+          <a href="../07_성과확산및 현장적용 자료/공개수업및 수업시연/index.html" class="hub-link">참관 아카이브 바로가기 →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer Note -->
+    <footer class="page-footer">
+      <p>AI 에이전트 교육혁신 연구회 | 2026 교육부 직업계고 교수학습능력 향상 교사연구회 지원사업</p>
+      <p style="margin-top:4px; font-size:12px;">© 2026 Sangil Media High School. Student Project Archive.</p>
+    </footer>
+
+  </main>
+
+  <!-- Modal Web Viewer -->
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <span class="modal-badge" id="modalBadge">학생 산출물 웹 뷰어</span>
+          <div class="modal-title" id="modalTitle">산출물 미리보기</div>
+        </div>
+        <div class="modal-ctrls">
+          <a id="modalOpenExternal" href="#" target="_blank" class="btn-modal">새 창으로 전체화면 ↗</a>
+          <button id="modalClose" class="btn-modal btn-close">닫기 ✕</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <iframe id="modalIframe" class="modal-iframe" src="about:blank" title="산출물 미리보기"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const OUTPUTS = [
+      {
+        id: "smart",
+        title: "스마트문화앱콘텐츠제작 학생 산출물",
+        icon: "📱",
+        role: "CAR1~CAR6 6개 팀별 모바일 웹앱 & 대시보드",
+        desc: "실시간 자율주행 모니터링, 질문 랩, 대화 매니저, 재시도 스튜디오 등 6개 팀별 웹앱 산출물 완성",
+        summary: "사용자 중심 UX 설계 및 태블릿·스마트폰 반응형 모니터링 UI 구현 산출물",
+        pillars: [
+          {
+            title: "🌐 연구성과 통합 대시보드",
+            badge: "대시보드",
+            items: [
+              {
+                name: "스마트문화앱 연구성과 대시보드",
+                desc: "4대 연구성과 및 화면설계 조망 웹앱",
+                url: "스마트문화앱제작구현  학생 산출물/연구성과_보고서설계/dashboard/index.html",
+                type: "web"
+              }
+            ]
+          },
+          {
+            title: "🚗 팀별 모바일 웹앱 산출물 (CAR1~CAR6)",
+            badge: "6개 웹앱",
+            items: [
+              { name: "CAR1: DriveQuestionLab", desc: "주행 질문 랩 인터랙티브 웹앱", url: "스마트문화앱제작구현  학생 산출물/팀별_학생산출물/CAR1_DriveQuestionLab/index.html", type: "web" },
+              { name: "CAR2: DriveTalkManager", desc: "대화 매니저 웹앱", url: "스마트문화앱제작구현  학생 산출물/팀별_학생산출물/CAR2_DriveTalkManager/index.html", type: "web" },
+              { name: "CAR3: PhotoRetryStudio", desc: "사진 재시도 스튜디오 웹앱", url: "스마트문화앱제작구현  학생 산출물/팀별_학생산출물/CAR3_PhotoRetryStudio/index.html", type: "web" },
+              { name: "CAR4: DriveEvidenceBoard", desc: "주행 증거 보드 웹앱", url: "스마트문화앱제작구현  학생 산출물/팀별_학생산출물/CAR4_DriveEvidenceBoard/index.html", type: "web" },
+              { name: "CAR5: DriveCoach", desc: "주행 코칭 가이드 웹앱", url: "스마트문화앱제작구현  학생 산출물/팀별_학생산출물/CAR5_DriveCoach/index.html", type: "web" },
+              { name: "CAR6: RecoveryMonitor", desc: "장애 복구 모니터링 웹앱", url: "스마트문화앱제작구현  학생 산출물/팀별_학생산출물/CAR6_RecoveryMonitor/index.html", type: "web" }
+            ]
+          }
+        ]
+      },
+
+      {
+        id: "3d",
+        title: "3D 프린터용 제품 제작 학생 산출물",
+        icon: "🖨️",
+        role: "차체 및 센서 마운트 3D 엔지니어링 모델링",
+        desc: "Fusion 360 기반 차체 프레임, 라즈베리파이 거치대, 카메라 마운트 3D 모델링 산출물",
+        summary: "부품 간섭 검토, 공차 분석, 슬라이싱 출력 조건 최적화 및 3D 웹 뷰어",
+        pillars: [
+          {
+            title: "🌐 3D 모델링 웹 뷰어 산출물",
+            badge: "웹 산출물",
+            items: [
+              {
+                name: "3D 프린터 학생 산출물 웹 대시보드",
+                desc: "조립 조감도 및 모델링 결과 갤러리",
+                url: "3D 프린터용 제품 제작 학생 산출물/dist/index.html",
+                type: "web"
+              }
+            ]
+          },
+          {
+            title: "📦 실행 패키지 및 원본",
+            badge: "패키지",
+            items: [
+              {
+                name: "3D프린터_학생산출물_실행패키지.zip",
+                desc: "3D 모델링 실행 패키지 (1.3MB)",
+                url: "3D 프린터용 제품 제작 학생 산출물/3D프린터_학생산출물_실행패키지.zip",
+                type: "zip"
+              },
+              {
+                name: "3D프린터_학생산출물_웹페이지.zip",
+                desc: "웹페이지 배포 소스 압축본",
+                url: "3D 프린터용 제품 제작 학생 산출물/3D프린터_학생산출물_웹페이지.zip",
+                type: "zip"
+              }
+            ]
+          }
+        ]
+      },
+
+      {
+        id: "game",
+        title: "게임프로그래밍 학생 산출물",
+        icon: "🎮",
+        role: "Unity 가상 주행 환경 및 AI 데이터 수집",
+        desc: "Unity 게임엔진 기반 가상 주행 트랙 구축, 3인칭/탑뷰 시점 카메라, 라벨링 데이터 수집",
+        summary: "자율주행 가상 트랙 주행 결과 갤러리 및 데이터 인계 산출물",
+        pillars: [
+          {
+            title: "🌐 가상 주행 갤러리 웹 산출물",
+            badge: "웹 산출물",
+            items: [
+              {
+                name: "게임프로그래밍 학생 산출물 갤러리",
+                desc: "가상 주행 트랙 스크린샷 및 주행 로그 뷰어",
+                url: "게임프로그래밍학생 산출물/index.html",
+                type: "web"
+              }
+            ]
+          }
+        ]
+      },
+
+      {
+        id: "net",
+        title: "네트워크프로그래밍개발 학생 산출물",
+        icon: "🌐",
+        role: "CAR1~CAR6 네트워크 프로토콜 명세서 (110건)",
+        desc: "차량 제어 패킷 포맷 v1, 네트워크 프로토콜 v2, 안전 프로토콜 v3 명세서 및 RTT 측정 보고서",
+        summary: "3개 학급 34명 전원의 네트워크 디버깅 및 프로토콜 최적화 명세서",
+        pillars: [
+          {
+            title: "🌐 네트워크 산출물 통합 포털",
+            badge: "통합 포털",
+            items: [
+              {
+                name: "네트워크 프로그래밍 산출물 뷰어 (110건)",
+                desc: "학급별·팀별 110개 산출물 인터랙티브 뷰어",
+                url: "네크워크프로그래밍개발 학생 산출물/index.html",
+                type: "web"
+              },
+              {
+                name: "AUTO-NET-LAB 실습 홈페이지 (1·2·3차시 & 챗봇)",
+                desc: "네트워크프로그래밍 패킷·지연·안전규칙 시뮬레이터 웹 데모",
+                url: "../03_교수학습 자료/subjects/04_네트워크프로그래밍/AUTO-NET-LAB_웹데모/index.html",
+                type: "web"
+              },
+              {
+                name: "AUTO-NET-LAB 공식 GitHub 저장소 및 웹 배포본",
+                desc: "로컬 완결형 웹 시뮬레이터 바로가기 (원격: https://github.com/shinekim0486/AUTO-NET-LAB)",
+                url: "../03_교수학습 자료/subjects/04_네트워크프로그래밍/AUTO-NET-LAB_웹데모/index.html",
+                type: "link"
+              }
+            ]
+          }
+        ]
+      },
+
+      {
+        id: "app",
+        title: "응용프로그래밍개발 학생 산출물",
+        icon: "💻",
+        role: "Flask/Python 챗봇 연동 및 기능 단위 시험",
+        desc: "학생 요구 기능 명세, 조회 흐름 검증, 단위 테스트 수행 보고서 및 학생 발언 원문",
+        summary: "서버 프로그램 확인 및 테스트 결과 웹 대시보드",
+        pillars: [
+          {
+            title: "🌐 응용프로그래밍 학생 산출물 웹",
+            badge: "웹 산출물",
+            items: [
+              {
+                name: "응용프로그래밍 학생 산출물 웹 대시보드",
+                desc: "기능 명세 및 테스트 결과 조망 웹앱",
+                url: "응용프로그래밍개발 학생산출물/응용프로그래밍개발_학생산출물_웹페이지_20261030/dist/index.html",
+                type: "web"
+              }
+            ]
+          },
+          {
+            title: "📄 학생 산출물 모음 및 발언 녹취",
+            badge: "문서 모음",
+            items: [
+              {
+                name: "응용프로그래밍개발_학생산출물모음.pdf",
+                desc: "학생 단위 테스트 보고서 통합본 (114KB)",
+                url: "응용프로그래밍개발 학생산출물/응용프로그래밍개발_학생산출물모음.pdf",
+                type: "pdf"
+              }
+            ]
+          }
+        ]
+      },
+
+      {
+        id: "sys",
+        title: "시스템운영 및 네트워크운영 산출물",
+        icon: "🖥️",
+        role: "챗봇 사용기록 분석 및 타임스탬프 시각 보정",
+        desc: "서버-라즈베리파이 시각 동기화 분석, 이상 요청 모니터링, 활동지 1~7차시 산출물",
+        summary: "시스템 운영 상태 점검 및 시각 보정 절차서",
+        pillars: [
+          {
+            title: "🌐 시스템운영 산출물 전시관",
+            badge: "전시관 웹",
+            items: [
+              {
+                name: "시스템운영 학생 산출물 전시관",
+                desc: "타임스탬프 분석 및 모니터링 산출물 웹페이지",
+                url: "시스템운영 및 네트워크운영 산출물/index.html",
+                type: "web"
+              }
+            ]
+          },
+          {
+            title: "📄 1~7차시 활동지 취합본",
+            badge: "활동지 PDF",
+            items: [
+              {
+                name: "1~7차시 활동지 취합본.pdf",
+                desc: "학생 작성 활동지 전체 스캔 취합본 (651KB)",
+                url: "시스템운영 및 네트워크운영 산출물/1~7차시 활동지 취합본.pdf",
+                type: "pdf"
+              }
+            ]
+          }
+        ]
+      },
+
+      {
+        id: "ai",
+        title: "인공지능모델링 학생 주행 산출물",
+        icon: "🧠",
+        role: "실제 트랙 자율주행 및 수동운전 데이터 영상",
+        desc: "RC카 실차 탑재 인공지능 모델의 실제 트랙 자율주행 60초 주행 녹화 원본 영상",
+        summary: "CNN 기반 조향 제어 모델의 실차 주행 검증 산출물",
+        pillars: [
+          {
+            title: "🎬 실제 트랙 자율주행 영상",
+            badge: "MP4 비디오",
+            items: [
+              {
+                name: "04_실제트랙주행_사용자제공원본.mp4",
+                desc: "실제 트랙 자율주행 성공 영상 (24.9MB)",
+                url: "인공지능모델링/04_실제트랙주행_사용자제공원본.mp4",
+                type: "video"
+              },
+              {
+                name: "05_실제수동운전_저장기록재생_60초.mp4",
+                desc: "수동운전 데이터 수집 주행 영상 (10.1MB)",
+                url: "인공지능모델링/05_실제수동운전_저장기록재생_60초.mp4",
+                type: "video"
+              }
+            ]
+          }
+        ]
+      },
+
+      {
+        id: "chatbot",
+        title: "교사연구회 챗봇 & 학생 프롬프트 로그",
+        icon: "💬",
+        role: "자율주행 RC카 전용 AI 챗봇 및 3,383건 대화 로그",
+        desc: "교사연구회가 자체 구축한 웹 챗봇 시연 데모 및 7개 교과 학생들의 프롬프트 질문/답변 엑셀 원장",
+        summary: "학생-AI 에이전트 상호작용 및 프롬프트 엔지니어링 분석 자료",
+        pillars: [
+          {
+            title: "🤖 연구회 챗봇 실행 데모",
+            badge: "챗봇 웹앱",
+            items: [
+              {
+                name: "교사연구회 챗봇 데모 화면",
+                desc: "웹 브라우저에서 바로 체험하는 챗봇 UI",
+                url: "교사연구회_챗봇자료_2026-10-29/팀장님_챗봇자료_2026-10-29/02_챗봇_실행폴더/static/demo.html",
+                type: "web"
+              },
+              {
+                name: "교사연구회_챗봇자료_2026-10-29.zip",
+                desc: "챗봇 전체 소스 및 실행 패키지 압축본 (57.7MB)",
+                url: "교사연구회_챗봇자료_2026-10-29/팀장님_챗봇자료_2026-10-29/01_팀장님_상세실행가이드.md",
+                type: "link"
+              }
+            ]
+          },
+          {
+            title: "📊 7개 전문교과 프롬프트 로그 전수 (3,383건)",
+            badge: "엑셀 로그 7종 완비",
+            items: [
+              { name: "01. 응용프로그래밍개발 프롬프트 로그", desc: "학생 챗봇 대화 엑셀 원장 (53KB)", url: "프롬포트로그/응용프로그래밍개발_프롬포트로그.xlsx", type: "data" },
+              { name: "02. 3D프린터용제품제작 프롬프트 로그", desc: "학생 챗봇 대화 엑셀 원장 (149KB)", url: "프롬포트로그/3D프린터용제품제작_프롬포트로그.xlsx", type: "data" },
+              { name: "03. 게임프로그래밍 프롬프트 로그", desc: "학생 챗봇 대화 엑셀 원장 (101KB)", url: "프롬포트로그/게임프로그래밍_프롬포트로그.xlsx", type: "data" },
+              { name: "04. 네트워크프로그래밍 프롬프트 로그", desc: "학생 챗봇 대화 엑셀 원장 (152KB)", url: "프롬포트로그/네트워크프로그래밍_프롬포트로그.xlsx", type: "data" },
+              { name: "05. 인공지능모델링 프롬프트 로그", desc: "학생 챗봇 대화 엑셀 원장 (97KB)", url: "프롬포트로그/인공지능모델링_프롬포트로그.xlsx", type: "data" },
+              { name: "06. 시스템운영및네트워크운영 프롬프트 로그", desc: "학생 챗봇 대화 엑셀 원장 (89KB)", url: "프롬포트로그/시스템운영및네트워크운영_프롬포트로그.xlsx", type: "data" },
+              { name: "07. 스마트문화앱콘텐츠제작 프롬프트 로그", desc: "학생 챗봇 대화 엑셀 원장 (64KB)", url: "프롬포트로그/스마트문화앱콘텐츠제작_프롬포트로그.xlsx", type: "data" }
+            ]
+          }
+        ]
+      }
+    ];
+
+    const outputGrid = document.getElementById('outputGrid');
+    const filterTabs = document.getElementById('filterTabs');
+    const searchInput = document.getElementById('searchInput');
+    const modalBackdrop = document.getElementById('modalBackdrop');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBadge = document.getElementById('modalBadge');
+    const modalIframe = document.getElementById('modalIframe');
+    const modalClose = document.getElementById('modalClose');
+    const modalOpenExternal = document.getElementById('modalOpenExternal');
+
+    let currentFilter = 'all';
+    let searchQuery = '';
+
+    function openModal(title, badge, url) {
+      modalTitle.textContent = title;
+      modalBadge.textContent = badge;
+      modalIframe.src = url;
+      modalOpenExternal.href = url;
+      modalBackdrop.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modalBackdrop.classList.remove('open');
+      document.body.style.overflow = '';
+      setTimeout(() => { modalIframe.src = 'about:blank'; }, 250);
+    }
+
+    modalClose.addEventListener('click', closeModal);
+    modalBackdrop.addEventListener('click', (e) => {
+      if (e.target === modalBackdrop) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modalBackdrop.classList.contains('open')) closeModal();
+    });
+
+    function getTypeIcon(t) {
+      switch(t) {
+        case 'web': return '🌐';
+        case 'pdf': return '📄';
+        case 'zip': return '📦';
+        case 'video': return '🎬';
+        case 'data': return '📊';
+        default: return '📁';
+      }
+    }
+
+    function render() {
+      const q = searchQuery.toLowerCase().trim();
+
+      const filtered = OUTPUTS.filter(item => {
+        const matchFilter = (currentFilter === 'all' || item.id === currentFilter);
+        if (!matchFilter) return false;
+        if (!q) return true;
+        const haystack = `${item.title} ${item.role} ${item.desc} ${item.summary}`.toLowerCase();
+        return haystack.includes(q);
+      });
+
+      if (filtered.length === 0) {
+        outputGrid.innerHTML = `
+          <div style="text-align:center; padding: 60px 20px; background:white; border-radius:16px; border:1px solid var(--line); color:var(--muted);">
+            <div style="font-size:40px; margin-bottom:12px;">🔍</div>
+            <h3 style="color:var(--navy); font-size:18px; margin-bottom:6px;">검색 결과가 없습니다</h3>
+            <p style="font-size:14px;">검색어 "<strong>${searchQuery}</strong>"에 해당하는 산출물을 찾을 수 없습니다.</p>
+          </div>
+        `;
+        return;
+      }
+
+      outputGrid.innerHTML = filtered.map(item => `
+        <article class="output-card" id="card-${item.id}">
+          <div class="card-head">
+            <div class="card-title-group">
+              <div class="subject-icon">${item.icon}</div>
+              <div>
+                <div class="subject-title">
+                  ${item.title}
+                  <span class="role-badge">${item.role}</span>
+                </div>
+                <div class="card-meta-row">
+                  <span class="card-meta-item"><strong>개요:</strong> ${item.desc}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-actions-quick">
+              ${item.pillars[0] && item.pillars[0].items[0] && item.pillars[0].items[0].type === 'web' ? `
+                <button class="btn-quick primary" onclick="openModal('${item.title}', '학생 산출물 웹 뷰어', '${item.pillars[0].items[0].url}')">
+                  ▶ 산출물 웹뷰어 열기
+                </button>
+              ` : ''}
+            </div>
+          </div>
+
+          <div class="card-summary-strip">
+            <b>산출물 특징</b>
+            <span>${item.summary}</span>
+          </div>
+
+          <div class="card-body">
+            ${item.pillars.map(pillar => `
+              <div class="pillar-box">
+                <div class="pillar-head">
+                  <span class="pillar-title">${pillar.title}</span>
+                  <span class="pillar-badge">${pillar.badge}</span>
+                </div>
+                <div class="item-list">
+                  ${pillar.items.map(subItem => `
+                    <div class="item-row">
+                      <div class="item-left">
+                        <span class="item-icon">${getTypeIcon(subItem.type)}</span>
+                        <div class="item-info">
+                          <div class="item-name" title="${subItem.name}">${subItem.name}</div>
+                          <div class="item-desc">${subItem.desc}</div>
+                        </div>
+                      </div>
+                      <div class="item-btns">
+                        ${subItem.type === 'web' ? `
+                          <button class="btn-item view-btn" onclick="openModal('${subItem.name}', '웹 산출물', '${subItem.url}')">
+                            체험하기 ▶
+                          </button>
+                          <a href="${subItem.url}" target="_blank" class="btn-item" title="새 창 열기">↗</a>
+                        ` : subItem.type === 'video' ? `
+                          <a href="${subItem.url}" target="_blank" class="btn-item view-btn">
+                            영상 재생 🎬
+                          </a>
+                        ` : subItem.type === 'pdf' ? `
+                          <a href="${subItem.url}" target="_blank" class="btn-item view-btn">
+                            PDF 열람 ↗
+                          </a>
+                        ` : subItem.type === 'link' ? `
+                          <a href="${subItem.url}" target="_blank" class="btn-item view-btn">
+                            GitHub 열기 ↗
+                          </a>
+                        ` : `
+                          <a href="${subItem.url}" download class="btn-item view-btn">
+                            다운로드 ↓
+                          </a>
+                        `}
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </article>
+      `).join('');
+    }
+
+    filterTabs.addEventListener('click', (e) => {
+      const btn = e.target.closest('.filter-btn');
+      if (!btn) return;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter = btn.dataset.filter;
+      render();
+    });
+
+    searchInput.addEventListener('input', (e) => {
+      searchQuery = e.target.value;
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>

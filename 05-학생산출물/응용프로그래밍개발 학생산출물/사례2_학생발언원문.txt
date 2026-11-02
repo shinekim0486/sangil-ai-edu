@@ -1,0 +1,21 @@
+﻿사례 2 | 2026.09.28. | 조회 처리 구간과 남은 문제 설명하기
+학생 발언 원문. 챗봇 답변과 실행 메타데이터는 이 파일에 수록하지 않음.
+
+학생 발언 1
+응용 프로그래밍으로 주행 기록 관제 서버를 구현하고 싶어요. JSP 화면과 Oracle DB를 연결했는데 조회 페이지가 빈 표입니다. 학생별 실제 상황은 RUN_LOG 22행이다.
+
+학생 발언 2
+RUN_LOG 테이블은 22행이고 SQL Developer에서는 정상 조회됩니다. JSP에서 직접 SELECT하던 코드를 DAO로 옮기는 중입니다. 학생별 실제 상황은 RUN_LOG 22행이다.
+
+학생 발언 3
+RunLogDAO의 findAll을 호출하면 예외는 없지만 리스트 크기가 0입니다. DTO를 생성하는 부분까지는 확인했습니다. 학생별 실제 상황은 RUN_LOG 22행이다.
+
+학생 발언 4
+아래 DAO 일부를 작성했습니다. DTO 필드 매핑과 SQL ORDER BY, JSP 전달까지 포함한 전체 메서드를 작성해 주세요.
+```java
+while(rs.next()){
+ RunLogDTO dto=new RunLogDTO();
+ dto.setSpeed(rs.getInt("speed"));
+}
+return list;
+``` 학생별 실제 상황은 RUN_LOG 22행이다.

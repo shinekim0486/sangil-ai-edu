@@ -1,0 +1,162 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><title>수행평가 과제 및 루브릭 채점 결과</title><style>
+:root {
+  --bg: #f8fafc; --card: #ffffff; --ink: #0f172a; --muted: #475569;
+  --blue: #1d4ed8; --blue-lt: #eff6ff; --teal: #0f766e; --teal-lt: #f0fdfa;
+  --amber: #b45309; --amber-lt: #fffbeb; --rose: #be123c; --rose-lt: #fff1f2;
+  --line: #e2e8f0;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: 'Pretendard', 'Malgun Gothic', sans-serif; background: var(--bg); color: var(--ink); line-height: 1.65; }
+header { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #0f766e 100%); color: #fff; padding: 36px 24px; }
+.wrap { max-width: 1180px; margin: 0 auto; }
+.badge { display: inline-block; background: rgba(255,255,255,0.16); padding: 5px 13px; border-radius: 999px; font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+h1 { margin: 0 0 8px; font-size: 27px; }
+.sub { margin: 0; opacity: 0.9; font-size: 14.5px; }
+.top-nav { margin-top: 18px; display: flex; gap: 8px; flex-wrap: wrap; }
+.top-nav a { color: #fff; text-decoration: none; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.28); padding: 7px 13px; border-radius: 8px; font-size: 13px; font-weight: 700; }
+.top-nav a:hover, .top-nav a.active { background: #fff; color: #0f172a; }
+main { max-width: 1180px; margin: 26px auto 60px; padding: 0 20px; }
+.section { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 26px; margin-bottom: 22px; box-shadow: 0 4px 14px rgba(15,23,42,0.04); }
+h2 { margin: 0 0 14px; font-size: 20px; color: #1e3a8a; border-bottom: 2px solid var(--line); padding-bottom: 9px; }
+h3 { margin: 18px 0 10px; font-size: 16px; color: var(--teal); }
+.kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-bottom: 20px; }
+.kpi { background: var(--blue-lt); border: 1px solid #bfdbfe; border-radius: 12px; padding: 16px; }
+.kpi .lbl { font-size: 12.5px; font-weight: 700; color: var(--muted); }
+.kpi .val { font-size: 24px; font-weight: 800; color: var(--blue); margin: 4px 0; }
+.kpi .desc { font-size: 12px; color: var(--muted); }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 12px 0; }
+th, td { border: 1px solid var(--line); padding: 10px 12px; text-align: left; vertical-align: middle; }
+th { background: #f1f5f9; font-weight: 700; color: #1e293b; text-align: center; }
+td.center { text-align: center; }
+.pill { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+.pill-high { background: #dcfce7; color: #166534; }
+.pill-mid { background: #dbeafe; color: #1e40af; }
+.pill-low { background: #fef3c7; color: #92400e; }
+.ba-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px; }
+.ba-box { border-radius: 12px; padding: 16px; border: 1px solid var(--line); }
+.ba-before { background: #fff1f2; border-color: #fecdd3; }
+.ba-after { background: #f0fdf4; border-color: #bbf7d0; }
+@media (max-width: 768px) { .ba-grid { grid-template-columns: 1fr; } }
+footer { text-align: center; padding: 24px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); }
+</style></head><body>
+<header><div class="wrap">
+  <span class="badge">06_연구결과 및 효과검증자료 · 세부 분석 보고서 ①</span>
+  <h1>① 수행평가 과제 및 루브릭 채점 결과 종합 분석</h1>
+  <p class="sub">7개 전문교과 과정 중심 루브릭 채점 분포(N=238) · 챗봇 질문 단계(S0~S3 2,810건) 연계 · 교사 관찰 피드백</p>
+  <div class="top-nav">
+    <a href="index.html">📊 통합 분석 대시보드</a>
+    <a href="수행평가 과제 및 루브릭 채점 결과.html" class="active">① 수행평가·루브릭 결과</a>
+    <a href="AI활용 전 후 결과물 비교.html">② AI 활용 전·후 결과물 비교</a>
+    <a href="전문교과 성취도 변화분석.html">③ 전문교과 성취도 변화분석</a>
+    <a href="AI 활용에 대한 학생인식변화.html">④ AI 활용 학생인식변화</a>
+  </div>
+</div></header>
+<main>
+  <div class="kpi-row">
+    <div class="kpi"><div class="lbl">루브릭 채점 완료 인원</div><div class="val">238건 전수</div><div class="desc">7개 교과 × 34명 전원 실행·제출 확인</div></div>
+    <div class="kpi"><div class="lbl">과정 중심 평가 구조</div><div class="val">3단계 준거</div><div class="desc">문제해석 → 조건통제 실험 → 검증·인계</div></div>
+    <div class="kpi"><div class="lbl">챗봇 질문 로그 연동</div><div class="val">2,810건</div><div class="desc">상위 질문(S2·S3) 1,336건 (47.5%)</div></div>
+    <div class="kpi"><div class="lbl">과정 중심 최고 도달 교과</div><div class="val">100% / 94.1%</div><div class="desc">AI모델링(3.0/3.0), 스마트앱(2.82/3.0)</div></div>
+  </div>
+  <div class="section">
+    <h2>1. 7개 전문교과 수행평가 과제 및 루브릭 채점 총괄표</h2>
+    <table>
+      <thead><tr><th>교과명</th><th>담당 교사</th><th>핵심 수행평가 과제</th><th>평가 준거</th><th>인원</th><th>수준 분포</th><th>평균 점수(성취율)</th><th>챗봇 질문 로그</th></tr></thead>
+      <tbody><tr><td>응용프로그래밍개발</td><td>김0훈·김0주</td><td>팀별 챗봇 기능 명세 해석 및 조건별 기능 시험·인계</td><td>3개 준거 (9점 만점)</td><td>34명</td><td>상 15.3% / 중 84.7% / 하 0.0%</td><td>평균 7.35 / 9.0점 (성취율 81.7%)</td><td>267건 (S2·S3 48.3%)</td></tr><tr><td>3D프린터용제품제작</td><td>김0석</td><td>차체·브래킷 치수 구속 및 조립 공차 반영 3D 모델링·규격 인계</td><td>3개 준거 (9점 만점)</td><td>34명</td><td>상 0.0% / 중 89.2% / 하 10.8%</td><td>평균 5.68 / 9.0점 (성취율 63.1%)</td><td>324건 (S2·S3 46.0%)</td></tr><tr><td>게임프로그래밍</td><td>조0민</td><td>Unity 가상 주행 트랙 구성 및 주행 영상·조향 라벨 데이터 점검</td><td>3개 준거 (9점 만점)</td><td>34명</td><td>기준1 전원 중(100%) / 기준2·3 보완</td><td>평균 4.00 / 9.0점 (기초 구현 100% 도달)</td><td>396건 (S2·S3 46.5%)</td></tr><tr><td>네트워크프로그래밍</td><td>김0선</td><td>AUTO-NET LAB 기반 제어 패킷 설계, RTT·유실 측정 및 안전 규칙 설계</td><td>3개 준거 (9점 만점)</td><td>36명(실측34)</td><td>상 32.4% / 중 57.4% / 하 10.2%</td><td>평균 6.67 / 9.0점 (성취율 74.1%)</td><td>512건 (S2·S3 49.2%)</td></tr><tr><td>인공지능모델링</td><td>류0상</td><td>연속 프레임 데이터 누수 점검 및 입력 조건 통제 기반 주행 모델 검증</td><td>과정중심 통합 (3점 만점)</td><td>34명</td><td>상 100.0% (전원 상 수준 도달)</td><td>평균 3.00 / 3.0점 (성취율 100.0%)</td><td>510건 (S2·S3 45.7%)</td></tr><tr><td>시스템운영및네트워크운영</td><td>우0정</td><td>다중 장치 로그 집계 범위 설정 및 기준 시각(Time Skew) 보정</td><td>3개 준거 (9점 만점)</td><td>34명</td><td>중 77.5% / 하 22.5%</td><td>평균 5.32 / 9.0점 (성취율 59.1%)</td><td>453건 (S2·S3 47.2%)</td></tr><tr><td>스마트문화앱콘텐츠제작</td><td>윤0상</td><td>자율주행 관제 앱 정보 우선순위 설계 및 다중 알림 목록 깨짐 검증</td><td>과정중심 통합 (3점 만점)</td><td>34명</td><td>상 82.4% (28명) / 중 17.6% (6명)</td><td>평균 2.82 / 3.0점 (성취율 94.1%)</td><td>348건 (S2·S3 50.0%)</td></tr></tbody>
+    </table>
+  </div>
+  
+    <div class="section">
+      <h2>■ 응용프로그래밍개발 (김0훈·김0주 선생님 · 1차 10.19.(3-3) / 2차 10.20.(3-2))</h2>
+      <table>
+        <thead><tr><th>평가 준거</th><th>상(3점) 성취 기준</th><th>상(3점)</th><th>중(2점)</th><th>하(1점)</th><th>준거 평균</th></tr></thead>
+        <tbody><tr><td><strong>1. 기능 명세와 자료 흐름 해석</strong></td><td>사용자 요구를 기능 명세와 연결하고 입력·처리·저장·조회 정보를 구분하여 설명한다.</td><td class='center'><span class='pill pill-high'>34명</span></td><td class='center'><span class='pill pill-mid'>0명</span></td><td class='center'><span class='pill pill-low'>0명</span></td><td class='center'><strong>3.0 / 3.0</strong></td></tr><tr><td><strong>2. 조건을 정한 기능 시험 수행</strong></td><td>입력·절차·기대 결과를 정하고 기능을 실행하여 실제 결과와 일치 여부를 근거로 기록한다.</td><td class='center'><span class='pill pill-high'>12명</span></td><td class='center'><span class='pill pill-mid'>22명</span></td><td class='center'><span class='pill pill-low'>0명</span></td><td class='center'><strong>2.35 / 3.0</strong></td></tr><tr><td><strong>3. 기능 시험 결과와 확인 질문 설명</strong></td><td>기대와 관찰의 일치·불일치를 근거로 설명하고 조건·시도·다음 확인을 담은 질문을 제시한다.</td><td class='center'><span class='pill pill-high'>0명</span></td><td class='center'><span class='pill pill-mid'>34명</span></td><td class='center'><span class='pill pill-low'>0명</span></td><td class='center'><strong>2.0 / 3.0</strong></td></tr></tbody>
+      </table>
+      <h3>대표 학생 채점 근거 및 교사 맞춤 피드백 (개인정보 비공개 · 상위 5건 발췌, 전체 34건은 통합 대시보드에서 검색 가능)</h3>
+      <table>
+        <thead><tr><th>학번 코드</th><th>소속 팀(익명)</th><th>채점 점수</th><th>교사 관찰 및 챗봇 질문(S2·S3) 근거</th><th>교사 종합 피드백</th></tr></thead>
+        <tbody><tr><td class='center'>3-1-01</td><td class='center'><strong>CAR4</strong> (성명 비공개)</td><td class='center'><strong>7 / 9</strong></td><td>CAR4 질문 33건(S2 8건, S3 8건). 기능 명세와 자료 흐름 해석: 관련 질문 17/33건(51.5%)</td><td>기능 시험 결과와 확인 질문 설명은 질문에 조건과 확인 대상을 구체적으로 적은 방식을 유지한다. 기능 명세와 자료 흐름 해석, 조건을 정한 기능 시험 수행은 입력·처리·저장·조회 흐름과 기대·실제 결과를 직접 연결해 기록한다. 팀별 접속, 지난 대화, 단계별 질문, 파일 첨부 기능을 실제 화면에서 재현하고 본인 말로 설명한다.</td></tr><tr><td class='center'>3-1-01</td><td class='center'><strong>CAR6</strong> (성명 비공개)</td><td class='center'><strong>8 / 9</strong></td><td>CAR6 질문 107건(S2 24건, S3 24건). 기능 명세와 자료 흐름 해석: 관련 질문 66/107건(61.7%)</td><td>기능 명세와 자료 흐름 해석, 기능 시험 결과와 확인 질문 설명은 질문에 조건과 확인 대상을 구체적으로 적은 방식을 유지한다. 조건을 정한 기능 시험 수행은 입력·처리·저장·조회 흐름과 기대·실제 결과를 직접 연결해 기록한다. 팀별 접속, 지난 대화, 단계별 질문, 파일 첨부 기능을 실제 화면에서 재현하고 본인 말로 설명한다.</td></tr><tr><td class='center'>3-1-01</td><td class='center'><strong>CAR1</strong> (성명 비공개)</td><td class='center'><strong>7 / 9</strong></td><td>CAR1 질문 34건(S2 10건, S3 7건). 기능 명세와 자료 흐름 해석: 관련 질문 17/34건(50.0%)</td><td>기능 시험 결과와 확인 질문 설명은 질문에 조건과 확인 대상을 구체적으로 적은 방식을 유지한다. 기능 명세와 자료 흐름 해석, 조건을 정한 기능 시험 수행은 입력·처리·저장·조회 흐름과 기대·실제 결과를 직접 연결해 기록한다. 팀별 접속, 지난 대화, 단계별 질문, 파일 첨부 기능을 실제 화면에서 재현하고 본인 말로 설명한다.</td></tr><tr><td class='center'>3-1-01</td><td class='center'><strong>CAR5</strong> (성명 비공개)</td><td class='center'><strong>7 / 9</strong></td><td>CAR5 질문 44건(S2 11건, S3 10건). 기능 명세와 자료 흐름 해석: 관련 질문 24/44건(54.5%)</td><td>기능 시험 결과와 확인 질문 설명은 질문에 조건과 확인 대상을 구체적으로 적은 방식을 유지한다. 기능 명세와 자료 흐름 해석, 조건을 정한 기능 시험 수행은 입력·처리·저장·조회 흐름과 기대·실제 결과를 직접 연결해 기록한다. 팀별 접속, 지난 대화, 단계별 질문, 파일 첨부 기능을 실제 화면에서 재현하고 본인 말로 설명한다.</td></tr><tr><td class='center'>3-1-01</td><td class='center'><strong>CAR2</strong> (성명 비공개)</td><td class='center'><strong>8 / 9</strong></td><td>CAR2 질문 33건(S2 8건, S3 8건). 기능 명세와 자료 흐름 해석: 관련 질문 24/33건(72.7%)</td><td>기능 명세와 자료 흐름 해석, 기능 시험 결과와 확인 질문 설명은 질문에 조건과 확인 대상을 구체적으로 적은 방식을 유지한다. 조건을 정한 기능 시험 수행은 입력·처리·저장·조회 흐름과 기대·실제 결과를 직접 연결해 기록한다. 팀별 접속, 지난 대화, 단계별 질문, 파일 첨부 기능을 실제 화면에서 재현하고 본인 말로 설명한다.</td></tr></tbody>
+      </table>
+    </div>
+    
+    <div class="section">
+      <h2>■ 3D프린터용제품제작 (김0석 선생님 · 1차 10.21.(3-1·3-3) / 2차 10.22.(3-2))</h2>
+      <table>
+        <thead><tr><th>평가 준거</th><th>상(3점) 성취 기준</th><th>상(3점)</th><th>중(2점)</th><th>하(1점)</th><th>준거 평균</th></tr></thead>
+        <tbody><tr><td><strong>1. 요구 치수·구속과 입체 형상 구성</strong></td><td>요구 치수와 기준을 정해 스케치·입체 형상을 구성하고 치수·구속 및 변경 결과를 설계 의도와 연결하여 설명한다.</td><td class='center'><span class='pill pill-high'>0명</span></td><td class='center'><span class='pill pill-mid'>34명</span></td><td class='center'><span class='pill pill-low'>0명</span></td><td class='center'><strong>2.0 / 3.0</strong></td></tr><tr><td><strong>2. 조립 조건과 출력용 설계 수정</strong></td><td>기준 부품·면·방향에 따라 조립 조건을 점검하고 간섭·틈새 및 수정 이유를 설명하며 출력용 자료를 확인한다.</td><td class='center'><span class='pill pill-high'>0명</span></td><td class='center'><span class='pill pill-mid'>34명</span></td><td class='center'><span class='pill pill-low'>0명</span></td><td class='center'><strong>2.0 / 3.0</strong></td></tr><tr><td><strong>3. 설계 변경 설명과 장착 규격 인계</strong></td><td>설계 변경의 조건과 결과를 근거로 설명하고 장착 규격·파일·남은 확인을 다른 교과가 활용할 수 있게 정리한다.</td><td class='center'><span class='pill pill-high'>0명</span></td><td class='center'><span class='pill pill-mid'>23명</span></td><td class='center'><span class='pill pill-low'>11명</span></td><td class='center'><strong>1.68 / 3.0</strong></td></tr></tbody>
+      </table>
+      <h3>대표 학생 채점 근거 및 교사 맞춤 피드백 (개인정보 비공개 · 상위 5건 발췌, 전체 34건은 통합 대시보드에서 검색 가능)</h3>
+      <table>
+        <thead><tr><th>학번 코드</th><th>소속 팀(익명)</th><th>채점 점수</th><th>교사 관찰 및 챗봇 질문(S2·S3) 근거</th><th>교사 종합 피드백</th></tr></thead>
+        <tbody><tr><td class='center'>3-1-01</td><td class='center'><strong>CAR4</strong> (성명 비공개)</td><td class='center'><strong>5 / 9</strong></td><td>CAR4 질문 81건(S2 19건, S3 22건). 요구 치수·구속과 입체 형상 구성: 관련 질문 27/81건(33.3%)</td><td>조립 조건과 출력용 설계 수정, 설계 변경 설명과 장착 규격 인계은 바꾼 조건과 관찰 결과를 한 문장으로 연결해 기록한다. 요구 치수·구속과 입체 형상 구성은 실제 화면·파일을 열어 교사와 함께 기준 항목을 표시한다. 대표 질문을 본인 말로 설명하고 실제 산출물에서 같은 근거가 확인되는지 대조한다.</td></tr><tr><td class='center'>3-1-01</td><td class='center'><strong>CAR6</strong> (성명 비공개)</td><td class='center'><strong>5 / 9</strong></td><td>CAR6 질문 109건(S2 25건, S3 31건). 요구 치수·구속과 입체 형상 구성: 관련 질문 37/109건(33.9%)</td><td>조립 조건과 출력용 설계 수정, 설계 변경 설명과 장착 규격 인계은 바꾼 조건과 관찰 결과를 한 문장으로 연결해 기록한다. 요구 치수·구속과 입체 형상 구성은 실제 화면·파일을 열어 교사와 함께 기준 항목을 표시한다. 대표 질문을 본인 말로 설명하고 실제 산출물에서 같은 근거가 확인되는지 대조한다.</td></tr><tr><td class='center'>3-1-01</td><td class='center'><strong>CAR1</strong> (성명 비공개)</td><td class='center'><strong>6 / 9</strong></td><td>CAR1 질문 270건(S2 59건, S3 67건). 요구 치수·구속과 입체 형상 구성: 관련 질문 110/270건(40.7%)</td><td>요구 치수·구속과 입체 형상 구성, 조립 조건과 출력용 설계 수정, 설계 변경 설명과 장착 규격 인계은 바꾼 조건과 관찰 결과를 한 문장으로 연결해 기록한다. 대표 질문을 본인 말로 설명하고 실제 산출물에서 같은 근거가 확인되는지 대조한다.</td></tr><tr><td class='center'>3-1-01</td><td class='center'><strong>CAR5</strong> (성명 비공개)</td><td class='center'><strong>6 / 9</strong></td><td>CAR5 질문 65건(S2 15건, S3 18건). 요구 치수·구속과 입체 형상 구성: 관련 질문 28/65건(43.1%)</td><td>요구 치수·구속과 입체 형상 구성, 조립 조건과 출력용 설계 수정, 설계 변경 설명과 장착 규격 인계은 바꾼 조건과 관찰 결과를 한 문장으로 연결해 기록한다. 대표 질문을 본인 말로 설명하고 실제 산출물에서 같은 근거가 확인되는지 대조한다.</td></tr><tr><td class='center'>3-1-01</td><td class='center'><strong>CAR2</strong> (성명 비공개)</td><td class='center'><strong>6 / 9</strong></td><td>CAR2 질문 132건(S2 30건, S3 33건). 요구 치수·구속과 입체 형상 구성: 관련 질문 53/132건(40.2%)</td><td>요구 치수·구속과 입체 형상 구성, 조립 조건과 출력용 설계 수정, 설계 변경 설명과 장착 규격 인계은 바꾼 조건과 관찰 결과를 한 문장으로 연결해 기록한다. 대표 질문을 본인 말로 설명하고 실제 산출물에서 같은 근거가 확인되는지 대조한다.</td></tr></tbody>
+      </table>
+    </div>
+    
+    <div class="section">
+      <h2>■ 게임프로그래밍 (조0민 선생님 · 1차 10.19.(3-3) / 2차 10.20.(3-1))</h2>
+      <table>
+        <thead><tr><th>평가 준거</th><th>상(3점) 성취 기준</th><th>상(3점)</th><th>중(2점)</th><th>하(1점)</th><th>준거 평균</th></tr></thead>
+        <tbody><tr><td><strong>1. 가상 환경 구성과 동작 설명</strong></td><td>트랙·차량·카메라의 역할과 배치를 설명하고 기본 동작을 구성하여 변경한 조건과 결과를 연결한다.</td><td class='center'><span class='pill pill-high'>0명</span></td><td class='center'><span class='pill pill-mid'>34명</span></td><td class='center'><span class='pill pill-low'>0명</span></td><td class='center'><strong>2.0 / 3.0</strong></td></tr><tr><td><strong>2. 영상·행동 라벨과 자료 조건 점검</strong></td><td>영상·라벨의 짝과 시간 순서·생성 조건을 점검하고 자료의 용도를 구분하여 인계 내용을 작성한다.</td><td class='center'><span class='pill pill-high'>0명</span></td><td class='center'><span class='pill pill-mid'>0명</span></td><td class='center'><span class='pill pill-low'>34명</span></td><td class='center'><strong>1.0 / 3.0</strong></td></tr><tr><td><strong>3. 조건별 확인과 문제 해결 설명</strong></td><td>같게 둘 조건과 바꿀 조건을 정하여 결과를 비교하고 관찰 근거와 남은 확인 질문을 설명한다.</td><td class='center'><span class='pill pill-high'>0명</span></td><td class='center'><span class='pill pill-mid'>0명</span></td><td class='center'><span class='pill pill-low'>34명</span></td><td class='center'><strong>1.0 / 3.0</strong></td></tr></tbody>
+      </table>
+      <h3>대표 학생 채점 근거 및 교사 맞춤 피드백 (개인정보 비공개 · 상위 5건 발췌, 전체 34건은 통합 대시보드에서 검색 가능)</h3>
+      <table>
+        <thead><tr><th>학번 코드</th><th>소속 팀(익명)</th><th>채점 점수</th><th>교사 관찰 및 챗봇 질문(S2·S3) 근거</th><th>교사 종합 피드백</th></tr></thead>
+        <tbody><tr><td class='center'>3-1-01</td><td class='center'><strong>CAR4</strong> (성명 비공개)</td><td class='center'><strong>4 / 9</strong></td><td>CAR4 질문 95건(S2 23건, S3 20건). 장면·입력 설명: 관련 질문 56/95건(58.9%)</td><td>장면·입력 설명은 바꾼 조건과 관찰 결과를 한 문장으로 연결해 기록한다. 비교 조건, 기대·관찰 구분, 개인 설명은 실제 화면·파일을 열어 교사와 함께 기준 항목을 표시한다. 대표 질문을 본인 말로 설명하고 실제 산출물에서 같은 근거가 확인되는지 대조한다.</td></tr><tr><td class='center'>3-1-01</td><td class='center'><strong>CAR6</strong> (성명 비공개)</td><td class='center'><strong>4 / 9</strong></td><td>CAR6 질문 63건(S2 15건, S3 15건). 장면·입력 설명: 관련 질문 41/63건(65.1%)</td><td>장면·입력 설명은 질문에서 기준과 확인 대상을 구체적으로 제시한 점을 유지한다. 비교 조건, 기대·관찰 구분, 개인 설명은 실제 화면·파일을 열어 교사와 함께 기준 항목을 표시한다. 대표 질문을 본인 말로 설명하고 실제 산출물에서 같은 근거가 확인되는지 대조한다.</td></tr><tr><td class='center'>3-1-01</td><td class='center'><strong>CAR1</strong> (성명 비공개)</td><td class='center'><strong>4 / 9</strong></td><td>CAR1 질문 142건(S2 32건, S3 31건). 장면·입력 설명: 관련 질문 80/142건(56.3%)</td><td>장면·입력 설명은 바꾼 조건과 관찰 결과를 한 문장으로 연결해 기록한다. 비교 조건, 기대·관찰 구분, 개인 설명은 실제 화면·파일을 열어 교사와 함께 기준 항목을 표시한다. 대표 질문을 본인 말로 설명하고 실제 산출물에서 같은 근거가 확인되는지 대조한다.</td></tr><tr><td class='center'>3-1-01</td><td class='center'><strong>CAR5</strong> (성명 비공개)</td><td class='center'><strong>4 / 9</strong></td><td>CAR5 질문 40건(S2 9건, S3 9건). 장면·입력 설명: 관련 질문 22/40건(55.0%)</td><td>장면·입력 설명은 바꾼 조건과 관찰 결과를 한 문장으로 연결해 기록한다. 비교 조건, 기대·관찰 구분, 개인 설명은 실제 화면·파일을 열어 교사와 함께 기준 항목을 표시한다. 대표 질문을 본인 말로 설명하고 실제 산출물에서 같은 근거가 확인되는지 대조한다.</td></tr><tr><td class='center'>3-1-01</td><td class='center'><strong>CAR2</strong> (성명 비공개)</td><td class='center'><strong>4 / 9</strong></td><td>CAR2 질문 111건(S2 26건, S3 27건). 장면·입력 설명: 관련 질문 60/111건(54.1%)</td><td>장면·입력 설명은 바꾼 조건과 관찰 결과를 한 문장으로 연결해 기록한다. 비교 조건, 기대·관찰 구분, 개인 설명은 실제 화면·파일을 열어 교사와 함께 기준 항목을 표시한다. 대표 질문을 본인 말로 설명하고 실제 산출물에서 같은 근거가 확인되는지 대조한다.</td></tr></tbody>
+      </table>
+    </div>
+    
+    <div class="section">
+      <h2>■ 네트워크프로그래밍 (김0선 선생님 · 공개 1·2차시 (AUTO-NET LAB TICKET-02))</h2>
+      <table>
+        <thead><tr><th>평가 준거</th><th>상(3점) 성취 기준</th><th>상(3점)</th><th>중(2점)</th><th>하(1점)</th><th>준거 평균</th></tr></thead>
+        <tbody><tr><td><strong>1. 기능 명세와 자료 흐름 해석</strong></td><td>사용자 요구를 기능 명세와 연결하고 입력·처리·저장·조회 정보를 구분하여 설명한다.</td><td class='center'><span class='pill pill-high'>24명</span></td><td class='center'><span class='pill pill-mid'>12명</span></td><td class='center'><span class='pill pill-low'>0명</span></td><td class='center'><strong>2.67 / 3.0</strong></td></tr><tr><td><strong>2. 조건을 정한 기능 시험 수행</strong></td><td>입력·절차·기대 결과를 정하고 기능을 실행하여 실제 결과와 일치 여부를 근거로 기록한다.</td><td class='center'><span class='pill pill-high'>8명</span></td><td class='center'><span class='pill pill-mid'>28명</span></td><td class='center'><span class='pill pill-low'>0명</span></td><td class='center'><strong>2.22 / 3.0</strong></td></tr><tr><td><strong>3. 기능 시험 결과와 확인 질문 설명</strong></td><td>기대와 관찰의 일치·불일치를 근거로 설명하고 조건·시도·다음 확인을 담은 질문을 제시한다.</td><td class='center'><span class='pill pill-high'>3명</span></td><td class='center'><span class='pill pill-mid'>22명</span></td><td class='center'><span class='pill pill-low'>11명</span></td><td class='center'><strong>1.78 / 3.0</strong></td></tr></tbody>
+      </table>
+      <h3>대표 학생 채점 근거 및 교사 맞춤 피드백 (개인정보 비공개 · 상위 5건 발췌, 전체 34건은 통합 대시보드에서 검색 가능)</h3>
+      <table>
+        <thead><tr><th>학번 코드</th><th>소속 팀(익명)</th><th>채점 점수</th><th>교사 관찰 및 챗봇 질문(S2·S3) 근거</th><th>교사 종합 피드백</th></tr></thead>
+        <tbody><tr><td class='center'>3-1-30101</td><td class='center'><strong>CAR1</strong> (성명 비공개)</td><td class='center'><strong>5 / 9</strong></td><td>· RTT 10회 기록, 유실 4회차 ✗ 표시, 유효 9 회로 평균 95.1 ms.</td><td>· L1 문장 틀(최초 판단·근거·바뀐 판단·다음 확인)을 선택하게 한다. / · 순회 점검: 유실은 0이 아니라 ✗로, 평균은 유효 횟수로 나누었는지 확인. / · 인계 의문 "10번만 재서 140ms처럼 튀는 값이 왜 나왔는지 모르겠어요."을 3차시 확인 과제로 연결.</td></tr><tr><td class='center'>3-1-30102</td><td class='center'><strong>CAR4</strong> (성명 비공개)</td><td class='center'><strong>7 / 9</strong></td><td>· RTT 10회 기록, 유실 3회차 ✗ 표시, 유효 9 회로 평균 102.9 ms.</td><td>· L2 RTT/편도 지연 그림 카드와 10회 측정 기록표를 활용해 유효 평균과 유실 건수를 구분해 설명하게 한다. / · 인계 의문 "최대 지연(튀는 값) 발생 시 재전송 임계값을 몇 ms로 두어야 안전한가?"를 3차시 확인 과제로 연결.</td></tr><tr><td class='center'>3-1-30103</td><td class='center'><strong>CAR1</strong> (성명 비공개)</td><td class='center'><strong>9 / 9</strong></td><td>· RTT 10회 기록, 유실 4회차 ✗ 표시, 유효 9 회로 평균 95.1 ms.</td><td>· L3 오류 패킷·추가 조건 시험을 선택하게 한다. / · 인계 의문 "표본 수가 적어 최댓값이 튀는 원인을 확정하지 못했습니다."을 3차시 확인 과제로 연결.</td></tr><tr><td class='center'>3-1-30104</td><td class='center'><strong>CAR2</strong> (성명 비공개)</td><td class='center'><strong>5 / 9</strong></td><td>· RTT 10회 기록, 유실 5회차 ✗ 표시, 유효 9 회로 평균 100.7 ms.</td><td>· L1 문장 틀(최초 판단·근거·바뀐 판단·다음 확인)을 선택하게 한다. / · 순회 점검: 유실은 0이 아니라 ✗로, 평균은 유효 횟수로 나누었는지 확인. / · 인계 의문 "평균을 처음에 10으로 나눴다가 유효 9회로 고쳤는데, 팀원 모두 이해…"을 3차시 확인 과제로 연결.</td></tr><tr><td class='center'>3-1-30105</td><td class='center'><strong>CAR1</strong> (성명 비공개)</td><td class='center'><strong>7 / 9</strong></td><td>· RTT 10회 기록, 유실 4회차 ✗ 표시, 유효 9 회로 평균 95.1 ms.</td><td>· L2 RTT/편도 지연 그림 카드를 선택하게 한다. / · 순회 점검: 유실은 0이 아니라 ✗로, 평균은 유효 횟수로 나누었는지 확인. / · 인계 의문 "평균을 처음에 10으로 나눴다가 유효 9회로 고쳤는데, 팀원 모두 이해…"을 3차시 확인 과제로 연결.</td></tr></tbody>
+      </table>
+    </div>
+    
+    <div class="section">
+      <h2>■ 인공지능모델링 (류0상 선생님 · 1차 10.21.(3-1) / 2차 10.22.(3-1))</h2>
+      <table>
+        <thead><tr><th>평가 준거</th><th>상(3점) 성취 기준</th><th>상(3점)</th><th>중(2점)</th><th>하(1점)</th><th>준거 평균</th></tr></thead>
+        <tbody><tr><td><strong>1. 공개수업 2차시 과정 중심 평가</strong></td><td>자료 분할·입력 조건을 근거 숫자와 함께 비교하고, 결과 확인 기준과 확인 절차를 제안한다.</td><td class='center'><span class='pill pill-high'>34명</span></td><td class='center'><span class='pill pill-mid'>0명</span></td><td class='center'><span class='pill pill-low'>0명</span></td><td class='center'><strong>3.0 / 3.0</strong></td></tr></tbody>
+      </table>
+      <h3>대표 학생 채점 근거 및 교사 맞춤 피드백 (개인정보 비공개 · 상위 5건 발췌, 전체 34건은 통합 대시보드에서 검색 가능)</h3>
+      <table>
+        <thead><tr><th>학번 코드</th><th>소속 팀(익명)</th><th>채점 점수</th><th>교사 관찰 및 챗봇 질문(S2·S3) 근거</th><th>교사 종합 피드백</th></tr></thead>
+        <tbody><tr><td class='center'>3-1-01</td><td class='center'><strong>CAR4</strong> (성명 비공개)</td><td class='center'><strong>3 / 3</strong></td><td>CAR4 질문 76건(S2 16건, S3 17건). 자료 분할·입력 조건·결과 확인: 관련 질문 67/76건(88.2%). 대표 질문: “사진에 대응하는 운전 명령을 확인해서 이 작업이 맞는지 판단하고 싶어요. 무엇이 같아야 하나요?”</td><td>자료 분할·입력 조건·결과 확인은 질문에서 기준과 확인 대상을 구체적으로 제시한 점을 유지한다. 대표 질문을 본인 말로 설명하고 실제 산출물에서 같은 근거가 확인되는지 대조한다.</td></tr><tr><td class='center'>3-1-01</td><td class='center'><strong>CAR6</strong> (성명 비공개)</td><td class='center'><strong>3 / 3</strong></td><td>CAR6 질문 129건(S2 29건, S3 32건). 자료 분할·입력 조건·결과 확인: 관련 질문 118/129건(91.5%). 대표 질문: “학습·검증 목록에 들어간 원본 자료를 확인해서 이 작업이 맞는지 판단하고 싶어요. 무엇이 같아야 하나요?”</td><td>자료 분할·입력 조건·결과 확인은 질문에서 기준과 확인 대상을 구체적으로 제시한 점을 유지한다. 대표 질문을 본인 말로 설명하고 실제 산출물에서 같은 근거가 확인되는지 대조한다.</td></tr><tr><td class='center'>3-1-01</td><td class='center'><strong>CAR1</strong> (성명 비공개)</td><td class='center'><strong>3 / 3</strong></td><td>CAR1 질문 98건(S2 21건, S3 26건). 자료 분할·입력 조건·결과 확인: 관련 질문 90/98건(91.8%). 대표 질문: “같은 주행에서 바로 옆 프레임을 학습과 검증에 나눠 넣으면 새 장면을 확인했다고 보기 어려울까요? 지금은 주행 회차와 원본 파일의 구분을 먼저 정리하고 있어요.”</td><td>자료 분할·입력 조건·결과 확인은 질문에서 기준과 확인 대상을 구체적으로 제시한 점을 유지한다. 대표 질문을 본인 말로 설명하고 실제 산출물에서 같은 근거가 확인되는지 대조한다.</td></tr><tr><td class='center'>3-1-01</td><td class='center'><strong>CAR5</strong> (성명 비공개)</td><td class='center'><strong>3 / 3</strong></td><td>CAR5 질문 89건(S2 20건, S3 22건). 자료 분할·입력 조건·결과 확인: 관련 질문 79/89건(88.8%). 대표 질문: “설정을 바꾸기 전후에 코너 진입 전후의 사진·명령 짝을 나란히 남기면 될까요? 비교할 조건도 정하고 싶어요.”</td><td>자료 분할·입력 조건·결과 확인은 질문에서 기준과 확인 대상을 구체적으로 제시한 점을 유지한다. 대표 질문을 본인 말로 설명하고 실제 산출물에서 같은 근거가 확인되는지 대조한다.</td></tr><tr><td class='center'>3-1-01</td><td class='center'><strong>CAR2</strong> (성명 비공개)</td><td class='center'><strong>3 / 3</strong></td><td>CAR2 질문 56건(S2 12건, S3 15건). 자료 분할·입력 조건·결과 확인: 관련 질문 51/56건(91.1%). 대표 질문: “틀린 명령이 나온 사진과 대응 조건을 기준으로 확인표를 만들고 싶어요. 정상과 추가 점검이 필요한 상태를 어떻게 구분하나요?”</td><td>자료 분할·입력 조건·결과 확인은 질문에서 기준과 확인 대상을 구체적으로 제시한 점을 유지한다. 대표 질문을 본인 말로 설명하고 실제 산출물에서 같은 근거가 확인되는지 대조한다.</td></tr></tbody>
+      </table>
+    </div>
+    
+    <div class="section">
+      <h2>■ 시스템운영및네트워크운영 (우0정 선생님 · 1차 10.21.(3-1) / 2차 10.22.(3-1))</h2>
+      <table>
+        <thead><tr><th>평가 준거</th><th>상(3점) 성취 기준</th><th>상(3점)</th><th>중(2점)</th><th>하(1점)</th><th>준거 평균</th></tr></thead>
+        <tbody><tr><td><strong>1. 운영 문제와 조건 설명</strong></td><td>사용 조건·오류 상황·기록 항목을 구분하고 운영 문제를 구체적으로 질문한다.</td><td class='center'><span class='pill pill-high'>0명</span></td><td class='center'><span class='pill pill-mid'>34명</span></td><td class='center'><span class='pill pill-low'>0명</span></td><td class='center'><strong>2.0 / 3.0</strong></td></tr><tr><td><strong>2. 교과 개념 적용</strong></td><td>집계 범위·시간 기준과 기록 해석의 관계를 설명하고 비교 항목의 이유를 제시한다.</td><td class='center'><span class='pill pill-high'>0명</span></td><td class='center'><span class='pill pill-mid'>34명</span></td><td class='center'><span class='pill pill-low'>0명</span></td><td class='center'><strong>2.0 / 3.0</strong></td></tr><tr><td><strong>3. 답변 검토와 확인 방법</strong></td><td>비교할 기록·같게 둘 기준·확인 순서를 제시하고 제안과 실제 설정·조치 결과를 구분한다.</td><td class='center'><span class='pill pill-high'>0명</span></td><td class='center'><span class='pill pill-mid'>11명</span></td><td class='center'><span class='pill pill-low'>23명</span></td><td class='center'><strong>1.32 / 3.0</strong></td></tr></tbody>
+      </table>
+      <h3>대표 학생 채점 근거 및 교사 맞춤 피드백 (개인정보 비공개 · 상위 5건 발췌, 전체 34건은 통합 대시보드에서 검색 가능)</h3>
+      <table>
+        <thead><tr><th>학번 코드</th><th>소속 팀(익명)</th><th>채점 점수</th><th>교사 관찰 및 챗봇 질문(S2·S3) 근거</th><th>교사 종합 피드백</th></tr></thead>
+        <tbody><tr><td class='center'>3-1-01</td><td class='center'><strong>CAR4</strong> (성명 비공개)</td><td class='center'><strong>5 / 9</strong></td><td>CAR4 질문 99건(S2 20건, S3 25건). 운영 문제와 조건 설명: 관련 질문 58/99건(58.6%)</td><td>운영 문제와 조건 설명, 답변 검토와 확인 방법은 바꾼 조건과 관찰 결과를 한 문장으로 연결해 기록한다. 교과 개념 적용은 실제 화면·파일을 열어 교사와 함께 기준 항목을 표시한다. 대표 질문을 본인 말로 설명하고 실제 산출물에서 같은 근거가 확인되는지 대조한다.</td></tr><tr><td class='center'>3-1-01</td><td class='center'><strong>CAR6</strong> (성명 비공개)</td><td class='center'><strong>5 / 9</strong></td><td>CAR6 질문 68건(S2 14건, S3 18건). 운영 문제와 조건 설명: 관련 질문 35/68건(51.5%)</td><td>운영 문제와 조건 설명, 답변 검토와 확인 방법은 바꾼 조건과 관찰 결과를 한 문장으로 연결해 기록한다. 교과 개념 적용은 실제 화면·파일을 열어 교사와 함께 기준 항목을 표시한다. 대표 질문을 본인 말로 설명하고 실제 산출물에서 같은 근거가 확인되는지 대조한다.</td></tr><tr><td class='center'>3-1-01</td><td class='center'><strong>CAR1</strong> (성명 비공개)</td><td class='center'><strong>5 / 9</strong></td><td>CAR1 질문 74건(S2 15건, S3 27건). 운영 문제와 조건 설명: 관련 질문 48/74건(64.9%)</td><td>운영 문제와 조건 설명, 답변 검토와 확인 방법은 바꾼 조건과 관찰 결과를 한 문장으로 연결해 기록한다. 교과 개념 적용은 실제 화면·파일을 열어 교사와 함께 기준 항목을 표시한다. 대표 질문을 본인 말로 설명하고 실제 산출물에서 같은 근거가 확인되는지 대조한다.</td></tr><tr><td class='center'>3-1-01</td><td class='center'><strong>CAR5</strong> (성명 비공개)</td><td class='center'><strong>5 / 9</strong></td><td>CAR5 질문 50건(S2 10건, S3 12건). 운영 문제와 조건 설명: 관련 질문 28/50건(56.0%)</td><td>운영 문제와 조건 설명, 답변 검토와 확인 방법은 바꾼 조건과 관찰 결과를 한 문장으로 연결해 기록한다. 교과 개념 적용은 실제 화면·파일을 열어 교사와 함께 기준 항목을 표시한다. 대표 질문을 본인 말로 설명하고 실제 산출물에서 같은 근거가 확인되는지 대조한다.</td></tr><tr><td class='center'>3-1-01</td><td class='center'><strong>CAR2</strong> (성명 비공개)</td><td class='center'><strong>6 / 9</strong></td><td>CAR2 질문 58건(S2 13건, S3 15건). 운영 문제와 조건 설명: 관련 질문 32/58건(55.2%)</td><td>답변 검토와 확인 방법은 질문에서 기준과 확인 대상을 구체적으로 제시한 점을 유지한다. 운영 문제와 조건 설명은 바꾼 조건과 관찰 결과를 한 문장으로 연결해 기록한다. 교과 개념 적용은 실제 화면·파일을 열어 교사와 함께 기준 항목을 표시한다. 대표 질문을 본인 말로 설명하고 실제 산출물에서 같은 근거가 확인되는지 대조한다.</td></tr></tbody>
+      </table>
+    </div>
+    
+    <div class="section">
+      <h2>■ 스마트문화앱콘텐츠제작 (윤0상 선생님 · 1차 10.19.(3-2) / 2차 10.20.(3-3·3-1))</h2>
+      <table>
+        <thead><tr><th>평가 준거</th><th>상(3점) 성취 기준</th><th>상(3점)</th><th>중(2점)</th><th>하(1점)</th><th>준거 평균</th></tr></thead>
+        <tbody><tr><td><strong>1. 공개수업 2차시 과정 중심 평가</strong></td><td>사용 목적에 따라 정보 우선순위·표시 기준을 정하고, 목록 문제와 이용 조건을 근거로 화면 확인 항목을 제안한다.</td><td class='center'><span class='pill pill-high'>28명</span></td><td class='center'><span class='pill pill-mid'>6명</span></td><td class='center'><span class='pill pill-low'>0명</span></td><td class='center'><strong>2.82 / 3.0</strong></td></tr></tbody>
+      </table>
+      <h3>대표 학생 채점 근거 및 교사 맞춤 피드백 (개인정보 비공개 · 상위 5건 발췌, 전체 34건은 통합 대시보드에서 검색 가능)</h3>
+      <table>
+        <thead><tr><th>학번 코드</th><th>소속 팀(익명)</th><th>채점 점수</th><th>교사 관찰 및 챗봇 질문(S2·S3) 근거</th><th>교사 종합 피드백</th></tr></thead>
+        <tbody><tr><td class='center'>3-1-01</td><td class='center'><strong>CAR4</strong> (성명 비공개)</td><td class='center'><strong>3 / 3</strong></td><td>CAR4 질문 78건(S2 19건, S3 18건). 정보 우선순위·표시 기준·화면 확인: 관련 질문 54/78건(69.2%). 대표 질문: “학생이 하려는 작업과 화면 이동 순서를 기록해 두고 다시 확인하려고 해요. 결과를 어떻게 나눠 적으면 좋을까요?”</td><td>정보 우선순위·표시 기준·화면 확인은 질문에서 기준과 확인 대상을 구체적으로 제시한 점을 유지한다. 대표 질문을 본인 말로 설명하고 실제 산출물에서 같은 근거가 확인되는지 대조한다.</td></tr><tr><td class='center'>3-1-01</td><td class='center'><strong>CAR6</strong> (성명 비공개)</td><td class='center'><strong>3 / 3</strong></td><td>CAR6 질문 84건(S2 20건, S3 20건). 정보 우선순위·표시 기준·화면 확인: 관련 질문 59/84건(70.2%). 대표 질문: “다른 팀이 똑같이 확인할 수 있게 상태 안내가 바뀌는 시점을 남기려는데 무엇을 빠뜨리면 안 되나요?”</td><td>정보 우선순위·표시 기준·화면 확인은 질문에서 기준과 확인 대상을 구체적으로 제시한 점을 유지한다. 대표 질문을 본인 말로 설명하고 실제 산출물에서 같은 근거가 확인되는지 대조한다.</td></tr><tr><td class='center'>3-1-01</td><td class='center'><strong>CAR1</strong> (성명 비공개)</td><td class='center'><strong>2 / 3</strong></td><td>CAR1 질문 12건(S2 3건, S3 3건). 정보 우선순위·표시 기준·화면 확인: 관련 질문 5/12건(41.7%). 대표 질문: “상태 안내가 바뀌는 시점을 기준으로 확인표를 만들고 싶어요. 정상과 추가 점검이 필요한 상태를 어떻게 구분하나요?”</td><td>정보 우선순위·표시 기준·화면 확인은 바꾼 조건과 관찰 결과를 한 문장으로 연결해 기록한다. 대표 질문을 본인 말로 설명하고 실제 산출물에서 같은 근거가 확인되는지 대조한다.</td></tr><tr><td class='center'>3-1-01</td><td class='center'><strong>CAR5</strong> (성명 비공개)</td><td class='center'><strong>3 / 3</strong></td><td>CAR5 질문 106건(S2 26건, S3 27건). 정보 우선순위·표시 기준·화면 확인: 관련 질문 78/106건(73.6%). 대표 질문: “다른 팀이 똑같이 확인할 수 있게 입력·첨부·답변으로 이어지는 동작을 남기려는데 무엇을 빠뜨리면 안 되나요?”</td><td>정보 우선순위·표시 기준·화면 확인은 질문에서 기준과 확인 대상을 구체적으로 제시한 점을 유지한다. 대표 질문을 본인 말로 설명하고 실제 산출물에서 같은 근거가 확인되는지 대조한다.</td></tr><tr><td class='center'>3-1-01</td><td class='center'><strong>CAR2</strong> (성명 비공개)</td><td class='center'><strong>3 / 3</strong></td><td>CAR2 질문 28건(S2 7건, S3 7건). 정보 우선순위·표시 기준·화면 확인: 관련 질문 21/28건(75.0%). 대표 질문: “입력·첨부·답변으로 이어지는 동작을 확인해서 이 작업이 맞는지 판단하고 싶어요. 무엇이 같아야 하나요?”</td><td>정보 우선순위·표시 기준·화면 확인은 질문에서 기준과 확인 대상을 구체적으로 제시한 점을 유지한다. 대표 질문을 본인 말로 설명하고 실제 산출물에서 같은 근거가 확인되는지 대조한다.</td></tr></tbody>
+      </table>
+    </div>
+    
+</main>
+<footer>상일미디어고등학교 AI 에이전트 교육혁신 연구회 | 2026 직업계고 교수학습능력 향상 교사연구회</footer>
+</body></html>

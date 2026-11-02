@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AUTO-NET LAB · 네트워크프로그래밍</title>
+  <script>
+  /* 세션이 없으면 기본 시연 세션(30101 · CAR2) 자동 설정 (로그아웃 시 로그인 화면 이동 가능) */
+  (function () {
+    try {
+      var s = JSON.parse(localStorage.getItem('autonet-session') || 'null');
+      if (s && /^\d{5}$/.test(s.id) && s.team) return;
+      var defSession = { id: '30101', team: 'CAR2' };
+      localStorage.setItem('autonet-session', JSON.stringify(defSession));
+      localStorage.setItem('autonet-teacher', JSON.stringify({ id: 'teacher', name: '김0선' }));
+    } catch (e) {}
+  })();
+  </script>
+  <style>
+    :root { font-family: "Pretendard", "Malgun Gothic", sans-serif; color: #e5f1ff; background: #080e1c; }
+    * { box-sizing: border-box; }
+    body { min-height: 100vh; margin: 0; display: grid; place-items: center; padding: 24px; }
+    main { width: min(760px, 100%); padding: clamp(28px, 7vw, 56px); border: 1px solid #2a3f68; border-radius: 18px; background: linear-gradient(135deg, #0d1a35, #110d2e); }
+    .eyebrow { color: #00d4ff; font: 600 .8rem "JetBrains Mono", monospace; letter-spacing: .13em; }
+    h1 { margin: .4rem 0 1rem; font-size: clamp(1.8rem, 6vw, 3rem); }
+    p { color: #a8bdd2; line-height: 1.7; }
+    nav { display: grid; gap: 12px; margin-top: 26px; }
+    a { display: block; padding: 18px 20px; border: 1px solid #2a3f68; border-radius: 12px; color: #e5f1ff; background: #101f32; font-weight: 700; text-decoration: none; }
+    a:hover, a:focus { border-color: #00d4ff; background: #142b46; }
+    a.output-link { margin-top: 18px; border-color: #34a853; background: #123525; }
+    a.output-link:hover, a.output-link:focus { border-color: #76e39f; background: #17472f; }
+    small { display: block; margin-top: 6px; color: #8fa4c8; font-weight: 400; }
+
+    .student-badge {
+      position: fixed; right: max(16px, env(safe-area-inset-right,0px)); top: max(16px, env(safe-area-inset-top,0px));
+      background: #141e33; border: 1px solid #2a3f68; border-radius: 20px;
+      padding: 6px 12px; font-family: "JetBrains Mono", monospace; font-size: 11px; color: #a8bdd2; display: flex; align-items: center; gap: 8px;
+    }
+    .student-badge button { background: none; border: none; color: #4d6190; font-size: 11px; cursor: pointer; text-decoration: underline; padding: 0; }
+    .student-badge button:hover { color: #f87171; }
+  </style>
+</head>
+<body>
+  <div class="student-badge">
+    <span id="student-badge-text"></span>
+    <button onclick="doLogout()">로그아웃</button>
+  </div>
+  <main>
+    <div class="eyebrow">AUTO-NET LAB · NETWORK PROGRAMMING</div>
+    <h1>1·2·3차시 실습</h1>
+    <p>로그인 후 1차시부터 3차시까지 순서대로 진행합니다.</p>
+    <nav aria-label="차시 진행 순서">
+      <a href="chatbot.html" style="border-color:#00d4ff;background:#102b43">AI 챗봇 · 네트워크프로그래밍 질문<small>기존 기록을 참고하며 학번·조별 질문과 답변을 저장합니다.</small></a>
+      <a href="lesson1.html">1차시 · 패킷 형식 설계<small>TICKET-01 · 6개 필드와 주행 명령 설계</small></a>
+      <a href="lesson2.html">2차시 · 지연 측정·최적화<small>TICKET-02 · RTT·유실과 전략 비교</small></a>
+      <a href="lesson3.html">3차시 · 통합 안전 시험<small>TICKET-03 · 차량 안전 규칙 검증</small></a>
+    </nav>
+    <a class="output-link" href="outputs.html">📁 학생 산출물 통합 뷰어 열기 (34명 · 110건)<small>학번별 1·2·3차시 패킷·프로토콜·안전규칙 산출물을 즉시 확인합니다.</small></a>
+    <a href="login.html" style="margin-top:10px;border-color:#4d6190;background:#0d182a">🔑 다른 학번·팀으로 로그인 변경 / 교사 모드 전환<small>학번(예: 30101) 또는 교사 계정으로 전환합니다.</small></a>
+  </main>
+
+<script>
+function doLogout() {
+  try { localStorage.removeItem('autonet-session'); } catch (e) {}
+  location.replace('login.html');
+}
+try {
+  const s = JSON.parse(localStorage.getItem('autonet-session') || 'null');
+  if (s) document.getElementById('student-badge-text').textContent = '학번 ' + s.id + ' · ' + s.team;
+} catch (e) {}
+</script>
+</body>
+</html>

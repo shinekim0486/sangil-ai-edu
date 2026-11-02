@@ -1,0 +1,13 @@
+{
+  "purpose": "팀장 교사 검토 및 Windows PC 로컬 챗봇 운영",
+  "date": "2026-10-29",
+  "code_source": "C:/dev/teacher-research-agent",
+  "reference_source": "교사연구회/02_재설계_자율주행차의 이중매핑표 및 챗봇 설계명세서",
+  "entry": "00_먼저읽기.txt",
+  "demo": "01_화면체험.cmd",
+  "actual": "02_실제챗봇실행.cmd",
+  "excluded": ["개인 API 키 및 .env", "학생 대화 DB", "학생 업로드", "실차 완성 구현", "Unity 실행본"],
+  "verified": ["동봉 Python으로 로컬 HTTP 접속", "세션 생성 및 첫 단계", "체험 모드 4턴 및 API 토큰 0", "체험 DB 분리", "소스 및 스킬 일치", "가이드 8쪽 시각 검토"],
+  "limitations": ["팀장님 PC 및 학교망은 현장에서 확인 필요", "유료 API 호출은 수행하지 않음"],
+  "index": "기존 프로젝트와 사업 공유 폴더를 사용하여 업무 색인의 원본 연결은 변경하지 않음"
+}

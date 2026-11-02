@@ -1,0 +1,2347 @@
+<!doctype html>
+<meta charset="utf-8">
+<script>
+/* 교사용 작동모드: 교사 로그인 상태면 학생 로그인 없이 열림 */
+(function () {
+  try {
+    var t = JSON.parse(localStorage.getItem('autonet-teacher') || 'null');
+    if (!t || !t.id) return;
+    window.AUTONET_TEACHER = true;
+    var s = JSON.parse(localStorage.getItem('autonet-session') || 'null');
+    if (!s || s.teacher) localStorage.setItem('autonet-session', JSON.stringify({ id: '00000', team: 'CAR1', teacher: true }));
+  } catch (e) {}
+})();
+</script>
+
+<script>
+/* 로그인 확인: 세션이 없으면 login.html로 이동 */
+(function () {
+  try {
+    var s = JSON.parse(localStorage.getItem('autonet-session') || 'null');
+    if (s && /^\d{5}$/.test(s.id) && s.team) return;
+  } catch (e) {}
+  try {
+    localStorage.setItem('autonet-session', JSON.stringify({ id: '30101', team: 'CAR2' }));
+    return;
+  } catch (e) {}
+})();
+</script>
+<title>AUTO-NET LAB 1차시</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Pretendard:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap">
+
+<style>
+/* ── Design Tokens ──────────────────────────────────────────────
+   Layout: Full-width dark terminal dashboard, step-by-step sections
+   Color: Network/comms dark — deep navy base, cyan accent, purple secondary
+   Type: JetBrains Mono for hex/data; Pretendard for UI; Space Grotesk for headers
+   ─────────────────────────────────────────────────────────────── */
+:root {
+  --bg:         #080e1c;
+  --bg2:        #0f1729;
+  --panel:      #141e33;
+  --panel2:     #1a2540;
+  --border:     #1f2e4d;
+  --border2:    #2a3f68;
+  --fg:         #e2eaf8;
+  --fg2:        #8fa4c8;
+  --fg3:        #4d6190;
+  --cyan:       #00d4ff;
+  --cyan-dim:   rgba(0,212,255,.12);
+  --purple:     #8b5cf6;
+  --purple-dim: rgba(139,92,246,.12);
+  --green:      #34d399;
+  --green-dim:  rgba(52,211,153,.12);
+  --yellow:     #fbbf24;
+  --yellow-dim: rgba(251,191,36,.12);
+  --red:        #f87171;
+  --red-dim:    rgba(248,113,113,.12);
+  --orange:     #fb923c;
+  --radius:     10px;
+  --mono:       "JetBrains Mono", "Courier New", monospace;
+  --body:       "Pretendard", "Apple SD Gothic Neo", sans-serif;
+  --head:       "Space Grotesk", "Pretendard", sans-serif;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 40px;
+}
+
+/* ── Top Nav Bar ── */
+.topbar {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 100;
+  background: rgba(8,14,28,.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 max(20px, env(safe-area-inset-left, 0px));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: 52px;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  z-index: 101;
+  background: rgba(8,14,28,.98);
+}
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--cyan);
+  letter-spacing: .04em;
+  white-space: nowrap;
+}
+.topbar-brand .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{ opacity:1; } 50%{ opacity:.35; } }
+.progress-bar-wrap {
+  flex: 1;
+  max-width: 340px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.progress-bar-bg {
+  flex: 1;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  border-radius: 2px;
+  transition: width .4s ease;
+  width: 0%;
+}
+.progress-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--fg3);
+  white-space: nowrap;
+}
+.team-badge {
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 4px 10px;
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  color: var(--fg2);
+  white-space: nowrap;
+}
+
+/* ── Page Layout ── */
+.page {
+  max-width: 820px;
+  margin: 0 auto;
+  padding-block: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* ── Ticket Card ── */
+.ticket-card {
+  background: linear-gradient(135deg, #0d1a35 0%, #110d2e 100%);
+  border: 1px solid var(--border2);
+  border-top: 3px solid var(--cyan);
+  border-radius: var(--radius);
+  padding: 28px 28px 24px;
+  position: relative;
+  overflow: hidden;
+}
+.ticket-card::before {
+  content: "";
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 180px; height: 180px;
+  background: radial-gradient(circle, rgba(0,212,255,.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.ticket-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin-bottom: 8px;
+}
+.ticket-title {
+  font-family: var(--head);
+  font-size: 26px;
+  font-weight: 700;
+  color: #fff;
+  text-wrap: balance;
+  margin: 0 0 6px;
+  line-height: 1.2;
+}
+.ticket-sub {
+  font-size: 14px;
+  color: var(--fg2);
+  margin: 0 0 18px;
+}
+.ticket-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+.meta-chip {
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--fg2);
+  display: flex; align-items: center; gap: 5px;
+}
+.meta-chip .mark { color: var(--cyan); }
+.ticket-mission {
+  margin-top: 18px;
+  padding: 14px 16px;
+  background: rgba(0,212,255,.06);
+  border-left: 3px solid var(--cyan);
+  border-radius: 0 6px 6px 0;
+  font-size: 14px;
+  color: var(--fg);
+  line-height: 1.6;
+}
+.ticket-mission strong { color: var(--cyan); }
+
+/* ── Section Blocks ── */
+.section {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: border-color .3s;
+}
+.section.active { border-color: var(--border2); }
+.section.locked { opacity: .55; pointer-events: none; }
+.section.completed { border-left: 3px solid var(--green); }
+
+.section-header {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+  border-bottom: 1px solid transparent;
+  transition: background .15s;
+}
+.section.open .section-header { border-bottom-color: var(--border); }
+.section-header:hover { background: var(--panel2); }
+.demo-mini-btn {
+  background: rgba(139,92,246,.12); border: 1px solid rgba(139,92,246,.35);
+  color: var(--purple); border-radius: 6px; padding: 3px 10px; font-size: 11px;
+  font-family: var(--body); font-weight: 600; cursor: pointer; white-space: nowrap;
+  transition: background .15s, transform .1s; margin-left: 4px;
+  pointer-events: auto; position: relative; z-index: 2;
+}
+.demo-mini-btn:hover { background: rgba(139,92,246,.22); transform: scale(1.04); }
+.step-badge {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  min-width: 42px;
+  padding: 4px 8px;
+  text-align: center;
+  border-radius: 5px;
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  color: var(--fg2);
+  letter-spacing: .04em;
+}
+.section.completed .step-badge { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+.section-title {
+  font-family: var(--body);
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--fg);
+  flex: 1;
+  min-width: 0;
+}
+.chevron {
+  color: var(--fg3);
+  font-size: 13px;
+  transition: transform .25s;
+}
+.section.open .chevron { transform: rotate(90deg); }
+.lock-icon { font-size: 13px; color: var(--fg3); }
+.check-icon { color: var(--green); font-size: 14px; }
+
+.section-body {
+  display: none;
+  padding: 20px 20px 24px;
+}
+.section.open .section-body { display: block; }
+
+/* ── Content Styles ── */
+.scenario-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 18px;
+  font-size: 14px;
+  color: var(--fg2);
+  line-height: 1.7;
+  margin-bottom: 14px;
+}
+.scenario-box .highlight { color: var(--yellow); font-weight: 600; }
+.scenario-box .error { color: var(--red); font-weight: 600; }
+
+.wireshark-demo {
+  background: #0d1117;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  font-family: var(--mono);
+  font-size: 12px;
+  margin-bottom: 14px;
+}
+.wireshark-header {
+  padding: 8px 14px;
+  background: #161b27;
+  border-bottom: 1px solid var(--border);
+  color: var(--fg2);
+  font-size: 11px;
+  display: flex; align-items: center; gap: 8px;
+}
+.ws-live-badge {
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(248,113,113,.15);border:1px solid rgba(248,113,113,.35);
+  border-radius:4px;padding:2px 8px;font-size:10px;color:var(--red);font-weight:600;
+  letter-spacing:.06em;
+}
+.ws-live-dot { width:6px;height:6px;border-radius:50%;background:var(--red);animation:pulse 1s infinite; }
+.ws-stopped-badge {
+  display:none;align-items:center;gap:5px;
+  background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.3);
+  border-radius:4px;padding:2px 8px;font-size:10px;color:var(--green);font-weight:600;
+  letter-spacing:.06em;
+}
+.ws-counter { margin-left:auto;font-size:11px;color:var(--fg3); }
+.ws-body { max-height:220px; overflow:hidden; position:relative; }
+.wireshark-row {
+  padding: 5px 14px;
+  display: grid;
+  grid-template-columns: 55px 110px 130px 130px 60px 1fr;
+  gap: 8px;
+  border-bottom: 1px solid rgba(31,46,77,.5);
+  transition: background .15s;
+  cursor: default;
+  opacity: 0;
+  transform: translateY(-8px);
+}
+.wireshark-row.row-in {
+  animation: rowAppear .3s ease forwards;
+}
+.wireshark-row.row-highlight {
+  animation: rowHighlight 1s ease forwards;
+}
+.wireshark-row.selected { background: rgba(0,212,255,.12); cursor:pointer; }
+.wireshark-row.selected:hover { background: rgba(0,212,255,.18); }
+.wireshark-row.flash { animation: rowFlash .45s ease; }
+@keyframes rowAppear {
+  0%   { opacity:0; transform:translateY(-8px); background:rgba(0,212,255,.12); }
+  60%  { opacity:1; transform:translateY(0);    background:rgba(0,212,255,.06); }
+  100% { opacity:1; transform:translateY(0);    background:transparent; }
+}
+@keyframes rowHighlight {
+  0%,50% { background: rgba(251,191,36,.18); }
+  100%   { background: rgba(0,212,255,.07); }
+}
+@keyframes rowFlash {
+  0%   { background: rgba(0,212,255,.35); transform: translateX(4px); }
+  40%  { background: rgba(0,212,255,.18); transform: translateX(-2px); }
+  100% { background: rgba(0,212,255,.07); transform: translateX(0); }
+}
+.w-no { color: var(--fg3); }
+.w-time { color: var(--fg2); }
+.w-src { color: var(--cyan); }
+.w-dst { color: var(--purple); }
+.w-len { color: var(--fg3); }
+.w-type { font-size:10px; }
+.w-type.t01 { color:var(--green); }
+.w-type.t02 { color:var(--cyan); }
+.w-type.t03 { color:var(--red); font-weight:700; }
+.w-info { color: var(--fg); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ws-col-header {
+  padding: 4px 14px;
+  display: grid;
+  grid-template-columns: 55px 110px 130px 130px 60px 1fr;
+  gap: 8px;
+  background: var(--panel2);
+  font-size: 10px;
+  color: var(--fg3);
+  border-bottom: 1px solid var(--border);
+}
+.ws-stop-btn {
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--red);color:#fff;border:none;border-radius:6px;
+  padding:7px 16px;font-size:13px;font-weight:600;font-family:var(--body);
+  cursor:pointer;transition:background .15s,transform .1s;
+}
+.ws-stop-btn:hover { background:#ef4444; transform:scale(1.03); }
+.ws-stop-btn:disabled { background:var(--panel2);color:var(--fg3);cursor:default;transform:none; }
+.ws-hint { font-size:12px;color:var(--fg3);margin-top:6px; }
+/* detail panel */
+.ws-detail-panel {
+  background:var(--bg2);border:1px solid var(--border);border-radius:8px;
+  overflow:hidden;max-height:0;opacity:0;
+  transition:max-height .4s ease, opacity .35s ease;
+  font-family:var(--mono);font-size:12px;
+}
+.ws-detail-panel.open { max-height:300px;opacity:1; }
+.ws-detail-inner { padding:14px 16px;line-height:1.9; }
+.ws-detail-row { display:flex;gap:12px;align-items:baseline;padding:3px 0;border-bottom:1px solid rgba(31,46,77,.3); }
+.ws-detail-row:last-child { border-bottom:none; }
+.ws-detail-key { color:var(--fg3);width:80px;flex-shrink:0;font-size:11px;letter-spacing:.04em; }
+.ws-detail-val { color:var(--fg);font-size:12px; }
+.ws-detail-note { color:var(--yellow);font-size:11px;margin-left:auto; }
+.ws-select-hint { font-size:12px;color:var(--fg2);margin:8px 0 0;display:none; }
+
+/* ── Packet Structure Diagram ── */
+.packet-diagram {
+  margin-bottom: 16px;
+}
+.packet-row {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+.packet-field {
+  flex: 1;
+  text-align: center;
+  padding: 10px 4px;
+  border-right: 1px solid var(--border);
+  transition: background .2s;
+  cursor: default;
+}
+.packet-field:last-child { border-right: none; }
+.packet-field:hover { background: var(--panel2); }
+.pf-name {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--cyan);
+  display: block;
+  margin-bottom: 3px;
+}
+.pf-size {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--fg3);
+  display: block;
+  margin-bottom: 2px;
+}
+.pf-val {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--fg2);
+}
+.pf-sof { background: rgba(0,212,255,.08); }
+.pf-type { background: rgba(139,92,246,.08); }
+.pf-len { background: rgba(251,191,36,.08); }
+.pf-seq { background: rgba(52,211,153,.08); }
+.pf-pay { background: rgba(251,146,60,.08); flex: 3; }
+.pf-chk { background: rgba(248,113,113,.08); }
+
+/* ── S#3 byte-map interaction ── */
+.byte-chunk {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 6px 8px 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg2);
+  cursor: pointer;
+  transition: border-color .15s, background .15s, transform .12s;
+}
+.byte-chunk:hover { border-color: var(--border2); transform: translateY(-2px); }
+.byte-chunk.done { border-color: rgba(52,211,153,.4); background: rgba(52,211,153,.06); }
+.byte-chunk.active {
+  border-color: var(--cyan);
+  background: rgba(0,212,255,.1);
+  animation: byteSelect .35s ease;
+}
+@keyframes byteSelect {
+  0%   { transform: scale(1.08); box-shadow: 0 0 0 3px rgba(0,212,255,.25); }
+  100% { transform: scale(1); box-shadow: none; }
+}
+.bc-label {
+  font-family: var(--mono); font-size: 10px; font-weight: 700;
+  color: var(--fg3); letter-spacing: .04em;
+}
+.byte-chunk.done .bc-label { color: var(--green); }
+.byte-chunk.active .bc-label { color: var(--cyan); }
+.bc-bytes { display: flex; gap: 3px; }
+.bc-b {
+  font-family: var(--mono); font-size: 12px; font-weight: 600;
+  color: var(--fg2); background: var(--panel2);
+  padding: 2px 5px; border-radius: 4px;
+}
+.byte-chunk.active .bc-b { color: var(--fg); background: rgba(0,212,255,.18); }
+.bc-sep { color: var(--fg3); font-size: 14px; align-self: center; padding-bottom: 14px; }
+
+.packet-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+.field-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 12px 14px;
+}
+.field-card-name {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cyan);
+  margin-bottom: 4px;
+}
+.field-card-desc {
+  font-size: 13px;
+  color: var(--fg2);
+  line-height: 1.5;
+}
+.field-card-example {
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--green);
+  background: var(--green-dim);
+  padding: 3px 8px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+/* ── Design Form ── */
+.design-form {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 18px;
+  margin-bottom: 14px;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.form-field label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--fg2);
+  letter-spacing: .06em;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+}
+.form-field input, .form-field select {
+  width: 100%;
+  background: var(--panel);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--fg);
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+.form-field input:focus, .form-field select:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px rgba(0,212,255,.1);
+}
+.form-field input::placeholder { color: var(--fg3); }
+
+.packet-preview {
+  font-family: var(--mono);
+  font-size: 12px;
+  background: #0d1117;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 14px;
+  color: var(--green);
+  line-height: 1.8;
+  white-space: pre-wrap;
+  word-break: break-all;
+  margin-bottom: 14px;
+}
+.preview-label { color: var(--fg3); }
+.preview-sof { color: var(--cyan); }
+.preview-type { color: var(--purple); }
+.preview-len { color: var(--yellow); }
+.preview-seq { color: var(--green); }
+.preview-pay { color: var(--orange); }
+.preview-chk { color: var(--red); }
+
+/* ── Checksum Debate ── */
+.debate-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+@media (max-width: 500px) { .debate-grid { grid-template-columns: 1fr; } }
+.debate-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.debate-card.selected-xor { border-color: var(--yellow); background: var(--yellow-dim); }
+.debate-card.selected-crc { border-color: var(--green); background: var(--green-dim); }
+.debate-method {
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.debate-card.selected-xor .debate-method { color: var(--yellow); }
+.debate-card.selected-crc .debate-method { color: var(--green); }
+.debate-pros, .debate-cons {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--fg2);
+}
+.pro { color: var(--green); }
+.con { color: var(--red); }
+
+.verdict-box {
+  background: var(--green-dim);
+  border: 1px solid var(--green);
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-size: 14px;
+  color: var(--fg);
+  display: none;
+  margin-top: 12px;
+}
+.verdict-box.show { display: block; }
+.verdict-box strong { color: var(--green); }
+
+/* ── Practical Drill ── */
+.drill-terminal {
+  background: #0d1117;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+.term-header {
+  padding: 8px 14px;
+  background: #161b27;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--fg3);
+  display: flex; align-items: center; gap: 8px;
+}
+.term-dots { display: flex; gap: 5px; }
+.term-dot { width: 10px; height: 10px; border-radius: 50%; }
+.term-body { padding: 14px 16px; font-family: var(--mono); font-size: 12.5px; line-height: 1.9; }
+.t-prompt { color: var(--cyan); }
+.t-cmd { color: var(--fg); }
+.t-resp { color: var(--green); }
+.t-warn { color: var(--yellow); }
+.t-err { color: var(--red); }
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 18px;
+  border: none;
+  border-radius: 7px;
+  font-family: var(--body);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+  white-space: nowrap;
+}
+.btn-primary {
+  background: var(--cyan);
+  color: #000;
+}
+.btn-primary:hover { background: #33dcff; transform: translateY(-1px); }
+.btn-secondary {
+  background: var(--panel2);
+  border: 1px solid var(--border2);
+  color: var(--fg);
+}
+.btn-secondary:hover { background: var(--border2); }
+.btn-success {
+  background: var(--green);
+  color: #000;
+}
+.btn-success:hover { background: #4de3ac; transform: translateY(-1px); }
+.btn-unlock {
+  background: var(--purple-dim);
+  border: 1px solid var(--purple);
+  color: var(--purple);
+}
+.btn-unlock:hover { background: var(--purple); color: #fff; }
+.btn:disabled { opacity: .4; cursor: not-allowed; transform: none !important; }
+.btn-row {
+  display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px;
+}
+
+/* ── Tag/Badge ── */
+.tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+.tag-cyan { background: var(--cyan-dim); color: var(--cyan); border: 1px solid rgba(0,212,255,.25); }
+.tag-purple { background: var(--purple-dim); color: var(--purple); border: 1px solid rgba(139,92,246,.25); }
+.tag-green { background: var(--green-dim); color: var(--green); border: 1px solid rgba(52,211,153,.25); }
+.tag-yellow { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(251,191,36,.25); }
+.tag-red { background: var(--red-dim); color: var(--red); border: 1px solid rgba(248,113,113,.25); }
+
+/* ── Info/Hint boxes ── */
+.hint-box {
+  background: var(--cyan-dim);
+  border-left: 3px solid var(--cyan);
+  border-radius: 0 6px 6px 0;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--fg);
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
+.warn-box {
+  background: var(--yellow-dim);
+  border-left: 3px solid var(--yellow);
+  border-radius: 0 6px 6px 0;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--fg);
+  margin-bottom: 12px;
+}
+
+/* ── Mentor Jump Panel ── */
+.mentor-panel {
+  background: linear-gradient(135deg, rgba(139,92,246,.1) 0%, rgba(0,212,255,.05) 100%);
+  border: 1px solid var(--purple);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  display: none;
+}
+.mentor-panel.unlocked { display: block; animation: fadeIn .4s ease; }
+@keyframes fadeIn { from{ opacity:0; transform: translateY(6px); } to{ opacity:1; transform: none; } }
+.mentor-title {
+  font-family: var(--head);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--purple);
+  margin-bottom: 8px;
+  display: flex; align-items: center; gap: 8px;
+}
+.mentor-message {
+  font-size: 14px;
+  color: var(--fg2);
+  line-height: 1.7;
+}
+.mentor-message em { color: var(--cyan); font-style: normal; font-weight: 600; }
+.mentor-chat-area { margin-top: 14px; }
+.mentor-input {
+  width: 100%; min-height: 64px; resize: vertical;
+  background: var(--bg2); border: 1px solid var(--border2); border-radius: 8px;
+  color: var(--fg); font-family: var(--body); font-size: 13px; padding: 10px 12px;
+  line-height: 1.6;
+}
+.mentor-input:focus { outline: none; border-color: var(--purple); }
+.mentor-send-row { display: flex; justify-content: flex-end; margin-top: 8px; }
+.mentor-send-btn {
+  background: var(--purple); color: #fff; border: none; border-radius: 7px;
+  padding: 8px 18px; font-size: 13px; font-weight: 600; font-family: var(--body);
+  cursor: pointer; transition: background .15s, transform .1s;
+}
+.mentor-send-btn:hover { background: #9d6ffa; transform: scale(1.03); }
+.mentor-send-btn:disabled { background: var(--panel2); color: var(--fg3); cursor: default; transform: none; }
+.mentor-reply {
+  margin-top: 12px; padding: 12px 14px;
+  background: rgba(0,212,255,.06); border: 1px solid rgba(0,212,255,.25);
+  border-radius: 8px; font-size: 13px; color: var(--fg2); line-height: 1.7;
+  display: none;
+}
+.mentor-reply.show { display: block; animation: fadeIn .4s ease; }
+.mentor-reply .tag { color: var(--cyan); font-weight: 700; font-family: var(--mono); font-size: 11px; letter-spacing: .05em; display:block; margin-bottom: 4px; }
+.mentor-my-msg {
+  margin-top: 10px; padding: 10px 14px; background: var(--panel2); border-radius: 8px;
+  font-size: 13px; color: var(--fg); display: none; border-left: 3px solid var(--fg3);
+}
+.mentor-my-msg.show { display: block; }
+
+/* ── Summary / 접점 ── */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.summary-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  text-align: center;
+}
+.summary-card-num {
+  font-family: var(--mono);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.summary-card-label { font-size: 12px; color: var(--fg2); }
+
+.output-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 18px;
+  margin-bottom: 14px;
+}
+.output-title {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cyan);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.output-content {
+  font-size: 13px;
+  color: var(--fg2);
+  line-height: 1.8;
+}
+.output-content code {
+  font-family: var(--mono);
+  font-size: 12px;
+  background: var(--panel);
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: var(--cyan);
+}
+
+.junction-card {
+  background: linear-gradient(135deg, rgba(52,211,153,.08) 0%, rgba(0,212,255,.05) 100%);
+  border: 1px solid var(--green);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  margin-top: 4px;
+  text-align: center;
+}
+.junction-label {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 8px;
+}
+.junction-title {
+  font-family: var(--head);
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 6px;
+}
+.junction-desc {
+  font-size: 13px;
+  color: var(--fg2);
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+.junction-chain {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+.jc-item {
+  padding: 5px 12px;
+  border-radius: 5px;
+  border: 1px solid var(--border2);
+  color: var(--fg2);
+}
+.jc-item.current { border-color: var(--green); color: var(--green); background: var(--green-dim); }
+.jc-item.next { border-color: var(--cyan); color: var(--cyan); }
+.jc-arrow { color: var(--fg3); }
+
+/* ── Type selector (S#4 radio) ── */
+.type-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 12px 0;
+}
+@media (max-width: 450px) { .type-grid { grid-template-columns: 1fr; } }
+.type-opt {
+  background: var(--panel);
+  border: 2px solid var(--border);
+  border-radius: 7px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: all .2s;
+  text-align: center;
+}
+.type-opt:hover { border-color: var(--border2); background: var(--panel2); }
+.type-opt.selected-drive { border-color: var(--cyan); background: var(--cyan-dim); }
+.type-opt.selected-state { border-color: var(--purple); background: var(--purple-dim); }
+.type-opt.selected-stop { border-color: var(--red); background: var(--red-dim); }
+.type-code {
+  font-family: var(--mono);
+  font-size: 16px;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 3px;
+}
+.type-opt.selected-drive .type-code { color: var(--cyan); }
+.type-opt.selected-state .type-code { color: var(--purple); }
+.type-opt.selected-stop .type-code { color: var(--red); }
+.type-name { font-size: 12px; color: var(--fg2); }
+
+/* ── Team selector ── */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(6,1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+@media (max-width: 480px) { .team-grid { grid-template-columns: repeat(3,1fr); } }
+.team-opt {
+  background: var(--panel);
+  border: 2px solid var(--border);
+  border-radius: 7px;
+  padding: 8px;
+  cursor: pointer;
+  text-align: center;
+  transition: all .18s;
+}
+.team-opt:hover { border-color: var(--cyan); }
+.team-opt.active { border-color: var(--cyan); background: var(--cyan-dim); }
+.team-code {
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--fg);
+  display: block;
+}
+.team-opt.active .team-code { color: var(--cyan); }
+
+/* ── Responsive ── */
+@media (max-width: 560px) {
+  .packet-row { overflow-x: auto; }
+  .wireshark-row { grid-template-columns: 50px 100px 100px 70px 1fr; font-size: 11px; }
+  .ticket-title { font-size: 20px; }
+}
+
+/* ── 안내도우미 overlay ── */
+.guide-overlay {
+  position: fixed; left: max(16px, env(safe-area-inset-left, 0px)); right: max(16px, env(safe-area-inset-right, 0px));
+  bottom: max(16px, env(safe-area-inset-bottom, 0px)); max-width: 720px; margin: 0 auto;
+  background: var(--panel); border: 1px solid var(--cyan); border-radius: 12px;
+  padding: 14px 16px 16px; box-shadow: 0 8px 28px rgba(0,0,0,.45); z-index: 200; display: none;
+}
+.guide-overlay.show { display: block; animation: fadeIn2 .3s ease; }
+.guide-overlay-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.guide-overlay-title { font-family: var(--head); font-weight: 700; color: var(--cyan); font-size: 14px; }
+.guide-overlay-close { cursor: pointer; color: var(--fg3); font-size: 20px; background: none; border: none; line-height: 1; padding: 0 2px; }
+.guide-overlay-close:hover { color: var(--fg); }
+.guide-overlay-body { font-size: 13px; color: var(--fg2); line-height: 1.75; max-height: min(52vh, 420px); overflow-y: auto; padding-right: 4px; }
+.guide-overlay-body b { color: var(--fg); }
+.guide-overlay-body code { font-family: var(--mono); background: rgba(0,0,0,.25); padding: 1px 5px; border-radius: 3px; color: var(--cyan); }
+.guide-overlay-body i { color: var(--purple); font-style: normal; }
+.guide-fab {
+  position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  z-index: 199; background: var(--cyan); color: #06202c; border: none; border-radius: 24px;
+  padding: 10px 16px; font-family: var(--body); font-weight: 700; font-size: 13px;
+  box-shadow: 0 4px 14px rgba(0,212,255,.35); cursor: pointer; display: flex; align-items: center; gap: 6px;
+}
+.guide-fab:hover { background: #33ddff; transform: scale(1.03); }
+@keyframes fadeIn2 { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.demo-mini-btn2 {
+  background: rgba(0,212,255,.12); border: 1px solid rgba(0,212,255,.35); color: var(--cyan);
+  border-radius: 6px; padding: 2px 8px; font-size: 11px; font-family: var(--body); cursor: pointer; white-space: nowrap;
+}
+.demo-mini-btn2:hover { background: rgba(0,212,255,.22); }
+
+
+/* ── 로그인 화면 ── */
+.login-overlay {
+  position: fixed; inset: 0; z-index: 500; background: var(--bg);
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.login-card {
+  width: min(360px, 100%); background: var(--panel); border: 1px solid var(--border2);
+  border-radius: 14px; padding: 28px 24px; box-shadow: 0 12px 40px rgba(0,0,0,.5);
+}
+.login-brand { font-family: var(--head); font-weight: 700; font-size: 18px; color: var(--cyan); margin-bottom: 4px; display:flex; align-items:center; gap:8px; }
+.login-brand .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); }
+.login-sub { font-size: 12px; color: var(--fg3); margin-bottom: 22px; }
+.login-field { margin-bottom: 14px; }
+.login-field label { display: block; font-size: 12px; color: var(--fg2); margin-bottom: 6px; }
+.login-field input {
+  width: 100%; padding: 11px 12px; border-radius: 8px; border: 1px solid var(--border2);
+  background: var(--bg2); color: var(--fg); font-family: var(--mono); font-size: 15px; letter-spacing: .04em;
+}
+.login-field input:focus { outline: none; border-color: var(--cyan); }
+.login-btn {
+  width: 100%; padding: 12px; border-radius: 8px; border: none; margin-top: 6px;
+  background: var(--cyan); color: #06202c; font-weight: 700; font-size: 14px; cursor: pointer; font-family: var(--body);
+}
+.login-btn:hover { background: #33ddff; }
+.login-error { font-size: 12px; color: var(--red); margin-top: 10px; min-height: 16px; }
+.login-hint { font-size: 11px; color: var(--fg3); margin-top: 16px; line-height: 1.6; }
+.login-hint code { color: var(--cyan); background: rgba(0,212,255,.1); padding: 1px 5px; border-radius: 3px; }
+.login-team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.login-team-opt {
+  text-align: center; padding: 9px 4px; border-radius: 7px; border: 1px solid var(--border2);
+  background: var(--bg2); color: var(--fg2); font-family: var(--mono); font-size: 13px; font-weight: 600; cursor: pointer;
+}
+.login-team-opt:hover { border-color: var(--cyan); color: var(--fg); }
+.login-team-opt.active { border-color: var(--cyan); background: var(--cyan-dim); color: var(--cyan); }
+.page { display: none; }
+.topbar { display: none; }
+body.logged-in .page, body.logged-in .topbar { display: block; }
+body.logged-in .topbar { display: flex; }
+body.logged-in .login-overlay { display: none; }
+.student-badge {
+  background: var(--panel); border: 1px solid var(--border2); border-radius: 20px;
+  padding: 6px 12px; font-family: var(--mono); font-size: 11px; color: var(--fg2);
+  display: none; align-items: center; gap: 8px; white-space: nowrap; flex-shrink: 0;
+}
+.student-badge button { background: none; border: none; color: var(--fg3); font-size: 11px; cursor: pointer; text-decoration: underline; padding: 0; }
+.student-badge button:hover { color: var(--red); }
+
+/* 로그인은 login.html에서 처리 */
+.login-overlay { display: none !important; }
+</style>
+
+<!-- 로그인 화면 -->
+<div class="login-overlay" id="login-overlay">
+  <div class="login-card">
+    <div class="login-brand"><span class="dot"></span>AUTO-NET LAB</div>
+    <div class="login-sub">1차시 · 패킷 형식 설계 — 로그인</div>
+    <div class="login-field">
+      <label>학번 (5자리)</label>
+      <input type="text" id="login-id" inputmode="numeric" maxlength="5" placeholder="예: 30101" onkeydown="if(event.key==='Enter')document.getElementById('login-pw').focus();">
+    </div>
+    <div class="login-field">
+      <label>비밀번호</label>
+      <input type="password" id="login-pw" inputmode="numeric" maxlength="5" placeholder="학번과 동일하게 입력" onkeydown="if(event.key==='Enter')document.getElementById('login-team').focus();">
+    </div>
+    <div class="login-field">
+      <label>팀 선택</label>
+      <div class="login-team-grid" id="login-team-grid">
+        <div class="login-team-opt" data-car="CAR1" onclick="selectLoginTeam('CAR1')">CAR1</div>
+        <div class="login-team-opt" data-car="CAR2" onclick="selectLoginTeam('CAR2')">CAR2</div>
+        <div class="login-team-opt" data-car="CAR3" onclick="selectLoginTeam('CAR3')">CAR3</div>
+        <div class="login-team-opt" data-car="CAR4" onclick="selectLoginTeam('CAR4')">CAR4</div>
+        <div class="login-team-opt" data-car="CAR5" onclick="selectLoginTeam('CAR5')">CAR5</div>
+        <div class="login-team-opt" data-car="CAR6" onclick="selectLoginTeam('CAR6')">CAR6</div>
+      </div>
+      <input type="hidden" id="login-team">
+    </div>
+    <button class="login-btn" onclick="doLogin()">로그인</button>
+    <div class="login-error" id="login-error"></div>
+    <div class="login-hint">비밀번호는 <code>학번과 동일</code>합니다. 예: 학번이 30101이면 비밀번호도 30101.</div>
+  </div>
+</div>
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="dot"></div>
+    AUTO-NET LAB
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-bg"><div class="progress-bar-fill" id="pbar"></div></div>
+    <div class="progress-label" id="plabel">0 / 7</div>
+  </div>
+  <div class="team-badge" id="topTeam">팀 미선택</div>
+  <div class="student-badge" id="student-badge">
+    <span id="student-badge-id"></span>
+    <button onclick="doLogout()">로그아웃</button>
+  </div>
+  <button onclick="runDemo()" style="background:rgba(0,212,255,.15);border:1px solid rgba(0,212,255,.4);color:var(--cyan);border-radius:6px;padding:4px 12px;font-size:12px;font-family:var(--mono);cursor:pointer;white-space:nowrap;flex-shrink:0;">🎬 데모</button>
+</div>
+
+<div class="page">
+
+  <!-- TICKET-01 -->
+  <div class="ticket-card">
+    <div class="ticket-eyebrow">▶ TICKET-01 · 1차시 · 50분</div>
+    <div class="ticket-title">자율주행 통신 프로토콜 설계</div>
+    <div class="ticket-sub">패킷 구조를 직접 설계하고 주행 명령을 전송한다</div>
+    <div class="ticket-meta">
+      <span class="meta-chip"><span class="mark">ROLE</span> 통신팀 신입 엔지니어</span>
+      <span class="meta-chip"><span class="mark">LEVEL</span> 1차시</span>
+      <span class="meta-chip"><span class="mark">OUT</span> packet_format_v1.md</span>
+      <span class="meta-chip"><span class="mark">점수</span> 팀별 채점</span>
+    </div>
+    <div class="ticket-mission">
+      <strong>미션:</strong> 자율주행 차량은 지금 <strong>잘못된 패킷</strong>을 받아 오작동 중입니다. 신입 엔지니어로서 <strong>올바른 패킷 형식(6개 필드)</strong>을 설계하고 주행·긴급정지 명령을 직접 전송해보세요.
+    </div>
+  </div>
+
+  <!-- S#1 문제 상황 -->
+  <div class="section open" id="sec-s1">
+    <div class="section-header" onclick="toggleSection('s1')">
+      <span class="step-badge">S#1</span>
+      <span class="section-title">문제 상황 — 차량이 오작동하고 있다</span>
+      <button class="demo-mini-btn" onclick="event.stopPropagation(); demoSection('s1')">👁 데모</button>
+      <button class="demo-mini-btn2" onclick="event.stopPropagation(); showGuide('s1')">🧭 안내</button>
+      <span class="chevron">›</span>
+    </div>
+    <div class="section-body">
+      <div class="scenario-box">
+        🚨 <span class="error">긴급 보고</span><br><br>
+        오늘 오전 자율주행 테스트 중 <span class="highlight">CAR3가 정지 명령을 무시하고 계속 주행</span>하는 사고가 발생했습니다.<br>
+        로그를 분석한 결과, <span class="highlight">패킷 헤더가 없어</span> 수신 측이 데이터 시작 위치를 찾지 못했습니다.<br><br>
+        현재 팀에서 사용 중인 프로토콜은 <span class="error">규격이 없는 임시 형식</span>입니다. 오늘 공식 규격을 만들어야 합니다.
+      </div>
+      <div class="hint-box">
+        💡 <strong>생각해보기:</strong> "패킷 헤더"가 왜 필요할까요? 편지 봉투에 수신자 주소를 쓰는 것처럼, 패킷에도 시작을 알리는 표시가 필요합니다.
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="completeStep('s1')">✓ 이해했습니다 — 다음 단계</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- S#2 Wireshark 시연 -->
+  <div class="section locked" id="sec-s2">
+    <div class="section-header" onclick="toggleSection('s2')">
+      <span class="step-badge">S#2</span>
+      <span class="section-title">Wireshark 패킷 캡처 — 실제 패킷을 눈으로 확인</span>
+      <button class="demo-mini-btn" onclick="event.stopPropagation(); demoSection('s2')">👁 데모</button>
+      <button class="demo-mini-btn2" onclick="event.stopPropagation(); showGuide('s2')">🧭 안내</button>
+      <span class="lock-icon" id="lock-s2">🔒</span>
+      <span class="chevron">›</span>
+    </div>
+    <div class="section-body">
+      <p style="font-size:14px;color:var(--fg2);margin:0 0 12px;">자율주행 차량이 네트워크 패킷을 주고받습니다. <strong style="color:var(--red)">■ 멈춤</strong> 버튼을 눌러 캡처를 중단하고, 패킷 행을 클릭해 상세 분석하세요.</p>
+      <div class="wireshark-demo" id="ws-demo">
+        <div class="wireshark-header" id="ws-header">
+          <span id="ws-live" class="ws-live-badge"><span class="ws-live-dot"></span>LIVE</span>
+          <span id="ws-stopped" class="ws-stopped-badge">● STOPPED</span>
+          <span style="margin-left:6px">Wireshark 3.6 · autonet-lab.pcap</span>
+          <span class="ws-counter" id="ws-count">0 패킷</span>
+        </div>
+        <div class="ws-col-header">
+          <div>No.</div><div>Time</div><div>Source</div><div>Dest</div><div>Len</div><div>Info</div>
+        </div>
+        <div class="ws-body" id="ws-body"></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+        <button class="ws-stop-btn" id="ws-stop-btn" onclick="wsStop()">■ 멈춤</button>
+        <span class="ws-hint" id="ws-hint">패킷이 캡처되는 중입니다...</span>
+      </div>
+      <p class="ws-select-hint" id="ws-select-hint">👆 위 패킷 행을 클릭하면 상세 분석이 표시됩니다.</p>
+      <div class="ws-detail-panel" id="ws-detail">
+        <div class="ws-detail-inner">
+          <div style="color:var(--fg3);font-size:10px;letter-spacing:.08em;margin-bottom:8px;">▼ 패킷 상세 분석</div>
+          <div id="ws-parsed"></div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="completeStep('s2')" id="btn-s2-done" disabled>✓ 패킷 구조 파악 완료</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- S#3 패킷 구조 설명 -->
+  <div class="section locked" id="sec-s3">
+    <div class="section-header" onclick="toggleSection('s3')">
+      <span class="step-badge">S#3</span>
+      <span class="section-title">패킷 구조 — 6개 필드 규격 확인</span>
+      <button class="demo-mini-btn" onclick="event.stopPropagation(); demoSection('s3')">👁 데모</button>
+      <button class="demo-mini-btn2" onclick="event.stopPropagation(); showGuide('s3')">🧭 안내</button>
+      <span class="lock-icon" id="lock-s3">🔒</span>
+      <span class="chevron">›</span>
+    </div>
+    <div class="section-body">
+      <p style="font-size:14px;color:var(--fg2);margin:0 0 14px;">S#2에서 캡처한 실제 패킷입니다. <strong style="color:var(--cyan)">각 바이트 묶음을 클릭</strong>해서 어떤 필드인지 직접 확인하세요. 6개를 모두 탐색하면 완료됩니다.</p>
+
+      <!-- 바이트 원본 표시 -->
+      <div style="background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:16px;font-family:var(--mono);font-size:11px;color:var(--fg3);">
+        <span style="color:var(--fg3);letter-spacing:.06em;">RAW PACKET · 12 bytes · </span>
+        <span style="color:var(--fg2);">AA 55 01 00 02 00 00 00 01 3C F0 A3</span>
+      </div>
+
+      <!-- 인터랙티브 바이트 맵 -->
+      <div id="byteMap" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;align-items:flex-end;">
+        <div class="byte-chunk" data-field="sof" onclick="selectField('sof')">
+          <div class="bc-label">?</div>
+          <div class="bc-bytes"><span class="bc-b">AA</span><span class="bc-b">55</span></div>
+        </div>
+        <div class="bc-sep">|</div>
+        <div class="byte-chunk" data-field="type" onclick="selectField('type')">
+          <div class="bc-label">?</div>
+          <div class="bc-bytes"><span class="bc-b">01</span></div>
+        </div>
+        <div class="bc-sep">|</div>
+        <div class="byte-chunk" data-field="length" onclick="selectField('length')">
+          <div class="bc-label">?</div>
+          <div class="bc-bytes"><span class="bc-b">00</span><span class="bc-b">02</span></div>
+        </div>
+        <div class="bc-sep">|</div>
+        <div class="byte-chunk" data-field="seq" onclick="selectField('seq')">
+          <div class="bc-label">?</div>
+          <div class="bc-bytes"><span class="bc-b">00</span><span class="bc-b">00</span><span class="bc-b">00</span><span class="bc-b">01</span></div>
+        </div>
+        <div class="bc-sep">|</div>
+        <div class="byte-chunk" data-field="payload" onclick="selectField('payload')">
+          <div class="bc-label">?</div>
+          <div class="bc-bytes"><span class="bc-b">3C</span><span class="bc-b">F0</span></div>
+        </div>
+        <div class="bc-sep">|</div>
+        <div class="byte-chunk" data-field="chksum" onclick="selectField('chksum')">
+          <div class="bc-label">?</div>
+          <div class="bc-bytes"><span class="bc-b">A3</span></div>
+        </div>
+      </div>
+
+      <!-- 진행 바 -->
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <div style="flex:1;height:4px;background:var(--border);border-radius:2px;">
+          <div id="s3-prog-fill" style="height:100%;width:0%;background:var(--cyan);border-radius:2px;transition:width .4s ease;"></div>
+        </div>
+        <span id="s3-prog-txt" style="font-family:var(--mono);font-size:11px;color:var(--fg3);">0 / 6</span>
+      </div>
+
+      <!-- 상세 설명 패널 -->
+      <div id="s3-detail" style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;max-height:0;opacity:0;transition:max-height .4s ease,opacity .35s ease;margin-bottom:14px;">
+        <div style="padding:14px 16px;">
+          <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:8px;">
+            <span id="s3d-name" style="font-family:var(--mono);font-size:14px;font-weight:700;"></span>
+            <span id="s3d-size" style="font-size:11px;color:var(--fg3);"></span>
+            <span id="s3d-check" style="margin-left:auto;font-size:13px;"></span>
+          </div>
+          <div id="s3d-desc" style="font-size:13px;color:var(--fg2);line-height:1.7;margin-bottom:8px;"></div>
+          <div id="s3d-ex" style="font-family:var(--mono);font-size:12px;padding:6px 10px;background:var(--panel);border-radius:6px;color:var(--green);"></div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="btn-s3-done" disabled onclick="completeStep('s3')">✓ 6개 필드 이해 완료</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- S#4 팀별 설계 실습 -->
+  <div class="section locked" id="sec-s4">
+    <div class="section-header" onclick="toggleSection('s4')">
+      <span class="step-badge">S#4</span>
+      <span class="section-title">팀별 패킷 설계 실습 — 주행 명령 패킷 완성</span>
+      <button class="demo-mini-btn" onclick="event.stopPropagation(); demoSection('s4')">👁 데모</button>
+      <button class="demo-mini-btn2" onclick="event.stopPropagation(); showGuide('s4')">🧭 안내</button>
+      <span class="lock-icon" id="lock-s4">🔒</span>
+      <span class="chevron">›</span>
+    </div>
+    <div class="section-body">
+      <p style="font-size:14px;color:var(--fg2);margin:0 0 12px;">팀의 차량이 속도 <strong>60km/h, 직진</strong>으로 주행하는 패킷을 설계하세요. 6개 필드를 모두 채우면 실시간으로 패킷이 생성됩니다.</p>
+      <div class="hint-box">
+        💡 <strong>힌트:</strong> SOF는 항상 <code>AA 55</code>, TYPE은 주행 명령이므로 <code>0x01</code>, SEQ는 첫 번째 패킷이므로 <code>00 00 00 01</code>입니다.
+      </div>
+
+      <p style="font-size:13px;font-weight:600;color:var(--fg);margin:0 0 8px;">① 명령 TYPE 선택</p>
+      <div class="type-grid">
+        <div class="type-opt" id="type-drive" onclick="selectType('drive')">
+          <span class="type-code">0x01</span>
+          <span class="type-name">주행 명령</span>
+        </div>
+        <div class="type-opt" id="type-state" onclick="selectType('state')">
+          <span class="type-code">0x02</span>
+          <span class="type-name">상태 요청</span>
+        </div>
+        <div class="type-opt" id="type-stop" onclick="selectType('stop')">
+          <span class="type-code">0x03</span>
+          <span class="type-name">긴급 정지</span>
+        </div>
+      </div>
+
+      <p style="font-size:13px;font-weight:600;color:var(--fg);margin:12px 0 8px;">② 페이로드 설계</p>
+      <div class="design-form">
+        <div class="form-grid">
+          <div class="form-field">
+            <label>속도 (HEX, 1 Byte)</label>
+            <input type="text" id="f-speed" placeholder="예: 3C (=60)" maxlength="2" oninput="updatePreview()">
+          </div>
+          <div class="form-field">
+            <label>방향 (HEX, 1 Byte)</label>
+            <input type="text" id="f-dir" placeholder="예: F0 (직진=00)" maxlength="2" oninput="updatePreview()">
+          </div>
+          <div class="form-field">
+            <label>SEQ 번호 (HEX, 4 Byte)</label>
+            <input type="text" id="f-seq" placeholder="예: 00000001" maxlength="8" oninput="updatePreview()">
+          </div>
+          <div class="form-field">
+            <label>팀 식별 코드</label>
+            <input type="text" id="f-team-code" placeholder="예: CAR1" maxlength="6" oninput="updatePreview()">
+          </div>
+        </div>
+      </div>
+
+      <p style="font-size:12px;font-family:var(--mono);color:var(--fg3);margin:0 0 6px;">▼ 실시간 패킷 미리보기</p>
+      <div class="packet-preview" id="pkt-preview">
+<span class="preview-label">SOF    : </span><span class="preview-sof">AA 55</span>
+<span class="preview-label">TYPE   : </span><span class="preview-type" id="prev-type">--</span>
+<span class="preview-label">LENGTH : </span><span class="preview-len" id="prev-len">00 00</span>
+<span class="preview-label">SEQ    : </span><span class="preview-seq" id="prev-seq">-- -- -- --</span>
+<span class="preview-label">PAYLOAD: </span><span class="preview-pay" id="prev-pay">--</span>
+<span class="preview-label">CHKSUM : </span><span class="preview-chk" id="prev-chk">??</span></div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="btn-s4-submit" onclick="submitPacketDesign()" disabled>📡 설계 완료 — 다음 단계 잠금해제</button>
+      </div>
+
+      <!-- Mentor Jump (unlocks after S4) — interactive chat -->
+      <div class="mentor-panel" id="mentor-panel">
+        <div class="mentor-title">🤖 AI 사수 (Mentor-Jump) 활성화</div>
+        <div class="mentor-message">
+          잘 설계했어요! 한 가지 물어볼게요:<br><br>
+          <em>PAYLOAD에 속도와 방향을 2바이트로 넣었는데, 나중에 가속도·브레이크 정보도 추가하려면 어떻게 해야 할까요?</em><br><br>
+          힌트: LENGTH 필드가 있는 이유를 생각해보세요. 가변 길이 PAYLOAD가 고정 길이보다 유연한 이유입니다.
+        </div>
+        <div class="mentor-chat-area">
+          <div style="font-size:11px;color:var(--fg3);margin-bottom:6px;">💡 AI 사수는 정답을 바로 알려주지 않아요. 여러분의 설명으로 말이 안 되는 상황(반례)을 계속 던질 거예요. 스스로 고쳐 말할 때까지 계속 도전해보세요.</div>
+          <textarea class="mentor-input" id="mentor-input" placeholder="팀의 생각을 적어보세요... (정답을 대신 여러분의 말로 설명해보세요)" oninput="document.getElementById('mentor-send').disabled = !this.value.trim();"></textarea>
+          <div class="mentor-send-row">
+            <button class="mentor-send-btn" id="mentor-send" disabled onclick="sendMentorReply()">💬 사수에게 전송</button>
+          </div>
+          <div class="mentor-my-msg" id="mentor-my-msg"></div>
+          <div class="mentor-reply" id="mentor-reply">
+            <span class="tag">🤖 AI 사수 응답</span>
+            <span id="mentor-reply-text"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S#5 검사합 토론 -->
+  <div class="section locked" id="sec-s5">
+    <div class="section-header" onclick="toggleSection('s5')">
+      <span class="step-badge">S#5</span>
+      <span class="section-title">검사합 토론 — XOR vs CRC-8</span>
+      <button class="demo-mini-btn" onclick="event.stopPropagation(); demoSection('s5')">👁 데모</button>
+      <button class="demo-mini-btn2" onclick="event.stopPropagation(); showGuide('s5')">🧭 안내</button>
+      <span class="lock-icon" id="lock-s5">🔒</span>
+      <span class="chevron">›</span>
+    </div>
+    <div class="section-body">
+      <p style="font-size:14px;color:var(--fg2);margin:0 0 12px;">패킷 오류를 검출하는 방법 두 가지를 비교해봅시다. 팀에서 어떤 방법이 더 낫다고 생각하나요?</p>
+      <div class="debate-grid">
+        <div class="debate-card" id="card-xor" onclick="selectDebate('xor')">
+          <div class="debate-method">XOR 검사합</div>
+          <div class="debate-pros">
+            <span class="pro">✓</span> 계산이 매우 단순<br>
+            <span class="pro">✓</span> 처리 속도 빠름<br>
+            <span class="pro">✓</span> 구현 코드 3줄
+          </div>
+          <div style="height:8px;"></div>
+          <div class="debate-cons">
+            <span class="con">✗</span> 2비트 동시 오류 미검출<br>
+            <span class="con">✗</span> 연속 오류에 취약<br>
+            <span class="con">✗</span> 오류 위치 파악 불가
+          </div>
+        </div>
+        <div class="debate-card" id="card-crc" onclick="selectDebate('crc')">
+          <div class="debate-method">CRC-8 검사합</div>
+          <div class="debate-pros">
+            <span class="pro">✓</span> 연속 오류 강력 검출<br>
+            <span class="pro">✓</span> 차량 통신 표준(CAN Bus)<br>
+            <span class="pro">✓</span> 신뢰성 높음
+          </div>
+          <div style="height:8px;"></div>
+          <div class="debate-cons">
+            <span class="con">✗</span> XOR보다 계산 복잡<br>
+            <span class="con">✗</span> 오류 교정 불가 (검출만)<br>
+            <span class="con">~</span> 3차시에 코드로 확정 예정
+          </div>
+        </div>
+      </div>
+
+      <div class="warn-box" id="xor-warn" style="display:none;">
+        ⚠ <strong>XOR 선택:</strong> 1차시에는 허용됩니다. 하지만 3차시 안전 검증 실습에서 CRC-8로 확정될 예정입니다. 이유를 기억해두세요!
+      </div>
+
+      <div class="verdict-box" id="crc-verdict">
+        ✅ <strong>CRC-8 선택:</strong> 자율주행 차량 통신은 CAN Bus 표준을 따릅니다. CRC-8은 그 표준 중 하나예요. 3차시에서 실제 코드로 구현해봅니다.
+      </div>
+
+      <div style="margin-top:14px;">
+        <p style="font-size:13px;font-weight:600;color:var(--fg);margin:0 0 8px;">팀의 판단 4칸 기록</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="form-field">
+            <label>선택한 방법</label>
+            <select id="debate-choice" onchange="updateDebateChoice()">
+              <option value="">-- 선택 --</option>
+              <option value="xor">XOR</option>
+              <option value="crc">CRC-8</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>선택 이유 (한 줄)</label>
+            <input type="text" id="debate-reason" placeholder="예: 차량 안전성 때문에">
+          </div>
+          <div class="form-field">
+            <label>XOR의 단점</label>
+            <input type="text" id="debate-xor-con" placeholder="예: 2비트 오류 미검출">
+          </div>
+          <div class="form-field">
+            <label>CRC-8 사용 분야</label>
+            <input type="text" id="debate-crc-use" placeholder="예: CAN Bus, USB">
+          </div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="completeStep('s5')">✓ 토론 완료 — 챗봇 열림</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- S#6 주행 명령 전송 -->
+  <div class="section locked" id="sec-s6">
+    <div class="section-header" onclick="toggleSection('s6')">
+      <span class="step-badge">S#6</span>
+      <span class="section-title">주행 명령 전송 실습</span>
+      <button class="demo-mini-btn" onclick="event.stopPropagation(); demoSection('s6')">👁 데모</button>
+      <button class="demo-mini-btn2" onclick="event.stopPropagation(); showGuide('s6')">🧭 안내</button>
+      <span class="lock-icon" id="lock-s6">🔒</span>
+      <span class="chevron">›</span>
+    </div>
+    <div class="section-body">
+      <p style="font-size:14px;color:var(--fg2);margin:0 0 12px;">S#4에서 설계한 패킷으로 주행 명령을 전송합니다. 터미널 출력을 확인하세요.</p>
+      <div class="drill-terminal">
+        <div class="term-header">
+          <div class="term-dots">
+            <div class="term-dot" style="background:#ff5f57;"></div>
+            <div class="term-dot" style="background:#febc2e;"></div>
+            <div class="term-dot" style="background:#28c840;"></div>
+          </div>
+          autonet-lab@CAR · 주행 명령 전송
+        </div>
+        <div class="term-body">
+<div><span class="t-prompt">$ </span><span class="t-cmd">python send_packet.py --type DRIVE --speed 0x3C --dir 0x00</span></div>
+<div><span class="t-resp">[INFO] 소켓 연결 완료: 192.168.1.20:5001</span></div>
+<div><span class="t-resp">[INFO] 패킷 생성 중...</span></div>
+<div><span class="t-resp">[PACKET] AA 55 01 00 02 00 00 00 01 3C 00 A3</span></div>
+<div><span class="t-resp">[INFO] 전송 완료 · 12 bytes · seq=1</span></div>
+<div><span class="t-resp">[ACK] CAR-ECU 응답: 주행 명령 수신 확인</span></div>
+<div><span class="t-warn">[LATENCY] 편도 제어 지연: 595ms (목표: 11.6ms)</span></div>
+<div><span class="t-resp">$</span></div>
+        </div>
+      </div>
+      <div class="warn-box">
+        ⚠ <strong>지연 시간 주목:</strong> 현재 <strong>595ms</strong> → 목표 <strong>11.6ms</strong><br>
+        지연(ms) × 0.025 = 이동 거리(cm)<br>
+        595ms × 0.025 = <strong>14.9cm 이동 후 반응</strong> — 이것이 2차시의 핵심 문제입니다!
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="completeStep('s6')">✓ 주행 명령 전송 확인</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- S#7 긴급 정지 -->
+  <div class="section locked" id="sec-s7">
+    <div class="section-header" onclick="toggleSection('s7')">
+      <span class="step-badge">S#7</span>
+      <span class="section-title">긴급 정지 실습 — TYPE 0x03</span>
+      <button class="demo-mini-btn" onclick="event.stopPropagation(); demoSection('s7')">👁 데모</button>
+      <button class="demo-mini-btn2" onclick="event.stopPropagation(); showGuide('s7')">🧭 안내</button>
+      <span class="lock-icon" id="lock-s7">🔒</span>
+      <span class="chevron">›</span>
+    </div>
+    <div class="section-body">
+      <p style="font-size:14px;color:var(--fg2);margin:0 0 12px;">TYPE 0x03 긴급정지 패킷을 전송합니다. Wireshark에서 세 TYPE이 모두 캡처되는지 확인하세요.</p>
+      <div class="drill-terminal">
+        <div class="term-header">
+          <div class="term-dots">
+            <div class="term-dot" style="background:#ff5f57;"></div>
+            <div class="term-dot" style="background:#febc2e;"></div>
+            <div class="term-dot" style="background:#28c840;"></div>
+          </div>
+          autonet-lab@CAR · 긴급 정지 전송
+        </div>
+        <div class="term-body">
+<div><span class="t-prompt">$ </span><span class="t-cmd">python send_packet.py --type STOP</span></div>
+<div><span class="t-resp">[PACKET] AA 55 03 00 00 00 00 00 03 2D</span></div>
+<div><span class="t-resp">[INFO] 긴급정지 패킷 전송 · 10 bytes · seq=3</span></div>
+<div><span class="t-warn">[ALERT] TYPE 0x03 감지 — 모터 즉시 정지 명령 전달</span></div>
+<div><span class="t-resp">[ACK] 차량 정지 확인 ✓</span></div>
+<div id="term-capture" style="display:none;"><span class="t-resp">[WIRESHARK] 캡처 완료: TYPE 0x01 · 0x02 · 0x03 모두 기록 ✓</span></div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="captureDone()">📡 Wireshark 캡처 확인</button>
+        <button class="btn btn-secondary" id="btn-s7-done" onclick="completeStep('s7')" disabled>✓ 긴급정지 실습 완료</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- S#8~S#10 정리 + 접점④ 제출 -->
+  <div class="section locked" id="sec-summary">
+    <div class="section-header" onclick="toggleSection('summary')">
+      <span class="step-badge">S#8~10</span>
+      <span class="section-title">정리 및 접점④ 산출물 제출</span>
+      <span class="lock-icon" id="lock-summary">🔒</span>
+      <span class="chevron">›</span>
+    </div>
+    <div class="section-body">
+
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-card-num" style="color:var(--cyan);" id="stat-fields">6</div>
+          <div class="summary-card-label">설계 완료 필드</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-card-num" style="color:var(--green);" id="stat-packets">3</div>
+          <div class="summary-card-label">전송한 패킷 TYPE</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-card-num" style="color:var(--yellow);" id="stat-latency">595ms</div>
+          <div class="summary-card-label">현재 편도 지연</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-card-num" style="color:var(--purple);" id="stat-goal">11.6ms</div>
+          <div class="summary-card-label">2차시 목표 지연</div>
+        </div>
+      </div>
+
+      <div class="output-box">
+        <div class="output-title">📄 산출물 — packet_format_v1.md</div>
+        <div class="output-content" id="output-content">
+          <strong style="color:var(--fg);">AUTO-NET LAB 패킷 형식 v1</strong><br><br>
+          팀: <span id="out-team" style="color:var(--cyan);">-</span><br><br>
+          <strong>필드 구성 (6개):</strong><br>
+          · SOF: <code>AA 55</code> (2B) — 패킷 시작 표시<br>
+          · TYPE: <code><span id="out-type">0x01</span></code> (1B) — 명령 종류<br>
+          · LENGTH: (2B) — PAYLOAD 크기<br>
+          · SEQ: (4B) — 순서 번호<br>
+          · PAYLOAD: (가변) — 실제 데이터<br>
+          · CHECKSUM: CRC-8 (1B) — 오류 검출<br><br>
+          <strong>TYPE 정의:</strong><br>
+          · <code>0x01</code> 주행 명령 · <code>0x02</code> 상태 요청 · <code>0x03</code> 긴급정지<br><br>
+          <strong>검사합:</strong> <span id="out-checksum">-</span> 방식 (3차시 CRC-8 확정)<br><br>
+          <strong>측정 결과:</strong> 편도 제어 지연 <code>595ms</code> — 2차시에서 최적화 예정
+        </div>
+      </div>
+
+      <div class="junction-card">
+        <div class="junction-label">접점④ — 1차시 완료</div>
+        <div class="junction-title">packet_format_v1.md 제출</div>
+        <div class="junction-desc">
+          패킷 형식 v1을 완성했습니다. 2차시에서는 RTT를 측정하고 성능 최적화 전략을 세웁니다.
+        </div>
+        <div class="junction-chain">
+          <span class="jc-item current">접점④ 1차시<br>packet_format_v1</span>
+          <span class="jc-arrow">→</span>
+          <span class="jc-item next">접점⑤ 2차시<br>net_protocol_v2</span>
+          <span class="jc-arrow">→</span>
+          <span class="jc-item">접점⑥ 3차시<br>safety_test_report</span>
+        </div>
+        <div class="btn-row" style="justify-content:center;margin-top:18px;">
+          <button class="btn btn-success" id="btn-final" onclick="submitFinal()">🎯 접점④ 제출 완료</button>
+        </div>
+        <div id="final-msg" style="display:none;margin-top:14px;padding:14px;background:var(--green-dim);border-radius:8px;text-align:center;font-size:14px;color:var(--green);">
+          ✅ <strong>1차시 완료!</strong><br>수고했습니다. packet_format_v1.md가 기록되었습니다.<br>
+          <a href="outputs.html" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:12px;padding:10px 18px;border-radius:8px;border:1px solid var(--green);color:var(--green);font-weight:700;text-decoration:none;">📁 학생 산출물 제출</a>
+          <a href="lesson2.html" style="display:inline-block;margin-top:12px;padding:10px 18px;border-radius:8px;background:var(--green);color:#071018;font-weight:700;text-decoration:none;">2차시로 이동 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<button class="guide-fab" onclick="showGuide('intro')">🧭 안내도우미</button>
+<div class="guide-overlay" id="guide-overlay">
+  <div class="guide-overlay-head">
+    <span class="guide-overlay-title" id="guide-overlay-title">안내</span>
+    <button class="guide-overlay-close" onclick="closeGuide()">✕</button>
+  </div>
+  <div class="guide-overlay-body" id="guide-overlay-body"></div>
+</div>
+</div><!-- /page -->
+
+<script>
+// ── 로그인 (학번=비밀번호) ─────────────────────────────────────
+let studentId = '';
+
+function storageKey() {
+  return 'autonet-lesson1-' + (studentId || 'guest');
+}
+
+let loginTeam = '';
+function selectLoginTeam(car) {
+  loginTeam = car;
+  document.getElementById('login-team').value = car;
+  document.querySelectorAll('.login-team-opt').forEach(el => {
+    el.classList.toggle('active', el.dataset.car === car);
+  });
+}
+
+function doLogin() {
+  const idEl = document.getElementById('login-id');
+  const pwEl = document.getElementById('login-pw');
+  const errEl = document.getElementById('login-error');
+  const id = idEl.value.trim();
+  const pw = pwEl.value.trim();
+
+  if (!/^\d{5}$/.test(id)) {
+    errEl.textContent = '학번은 5자리 숫자로 입력하세요 (예: 30101).';
+    return;
+  }
+  if (pw !== id) {
+    errEl.textContent = '비밀번호가 올바르지 않습니다. (비밀번호는 학번과 동일)';
+    pwEl.value = '';
+    pwEl.focus();
+    return;
+  }
+  if (!loginTeam) {
+    errEl.textContent = '팀을 선택해주세요.';
+    return;
+  }
+
+  errEl.textContent = '';
+  studentId = id;
+  try {
+    localStorage.setItem('autonet-lesson1-current', studentId);
+    // also write the shared session so index.html and other lessons recognize this login
+    localStorage.setItem('autonet-session', JSON.stringify({ id, team: loginTeam }));
+  } catch(e) {}
+  enterApp(loginTeam);
+}
+
+function doLogout() {
+  try {
+    localStorage.removeItem('autonet-lesson1-current');
+    localStorage.removeItem('autonet-session');
+  } catch(e) {}
+  location.replace('login.html');
+}
+
+function enterApp(teamFromLogin) {
+  document.body.classList.add('logged-in');
+  document.getElementById('student-badge').style.display = 'flex';
+  loadState();
+  // first login sets the team; returning visits keep the saved team
+  if (teamFromLogin && !state.team) {
+    state.team = teamFromLogin;
+    saveState();
+  }
+  const badgeTeam = state.team || teamFromLogin;
+  document.getElementById('student-badge-id').textContent = '학번 ' + studentId + (badgeTeam ? ' · ' + badgeTeam : '');
+  restoreProgress();
+}
+
+// Auto-login: prefer the shared session (set by index.html or another lesson),
+// fall back to this lesson's own remembered login.
+try {
+  const shared = JSON.parse(localStorage.getItem('autonet-session') || 'null');
+  if (shared && /^\d{5}$/.test(shared.id) && shared.team) {
+    studentId = shared.id;
+    loginTeam = shared.team;
+  } else {
+    const remembered = localStorage.getItem('autonet-lesson1-current');
+    if (remembered && /^\d{5}$/.test(remembered)) {
+      studentId = remembered;
+    }
+  }
+} catch(e) {}
+
+// ── State ──────────────────────────────────────────────────────
+let state = {
+  team: '',
+  type: '',
+  completedSteps: new Set(),
+  debate: '',
+};
+
+function loadState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(storageKey()) || '{}');
+    if (saved.team) state.team = saved.team;
+    if (saved.type) state.type = saved.type;
+    if (saved.completedSteps) state.completedSteps = new Set(saved.completedSteps);
+    if (saved.debate) state.debate = saved.debate;
+  } catch(e) {}
+  // re-apply restored state onto the DOM (team badge, completed sections)
+  if (state.team) {
+    document.getElementById('topTeam').textContent = state.team;
+    const fTeamCode = document.getElementById('f-team-code');
+    if (fTeamCode) fTeamCode.value = state.team;
+  }
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(storageKey(), JSON.stringify({
+      team: state.team,
+      type: state.type,
+      completedSteps: [...state.completedSteps],
+      debate: state.debate,
+    }));
+  } catch(e) {}
+}
+
+// ── Section flow ───────────────────────────────────────────────
+const STEP_ORDER = ['s1','s2','s3','s4','s5','s6','s7','summary'];
+
+function toggleSection(id) {
+  const sec = document.getElementById('sec-' + id);
+  if (sec.classList.contains('locked')) return;
+  sec.classList.toggle('open');
+}
+
+function unlockSection(id) {
+  const sec = document.getElementById('sec-' + id);
+  if (!sec) return;
+  sec.classList.remove('locked');
+  const lock = document.getElementById('lock-' + id);
+  if (lock) lock.remove();
+  // auto-open
+  sec.classList.add('open');
+}
+
+function completeStep(id) {
+  state.completedSteps.add(id);
+  saveState();
+  const sec = document.getElementById('sec-' + id);
+  sec.classList.add('completed');
+  sec.classList.remove('open');
+  const badge = sec.querySelector('.step-badge');
+  if (badge) {
+    badge.style.background = 'var(--green-dim)';
+    badge.style.borderColor = 'var(--green)';
+    badge.style.color = 'var(--green)';
+  }
+  // remove old chevron/add check
+  const chevron = sec.querySelector('.chevron');
+  if (chevron) chevron.textContent = '✓';
+
+  // unlock next
+  const idx = STEP_ORDER.indexOf(id);
+  if (idx >= 0 && idx + 1 < STEP_ORDER.length) {
+    unlockSection(STEP_ORDER[idx + 1]);
+  }
+
+  updateProgress();
+}
+
+function updateProgress() {
+  const done = state.completedSteps.size;
+  const total = 7; // s1-s7
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('pbar').style.width = pct + '%';
+  document.getElementById('plabel').textContent = done + ' / ' + total;
+}
+
+// ── Team selector (팀은 로그인 화면에서 선택됨) ─────────────────────────
+function selectTeam(car) {
+  state.team = car;
+  saveState();
+  const topTeamEl = document.getElementById('topTeam');
+  if (topTeamEl) topTeamEl.textContent = car;
+  const fTeamEl = document.getElementById('f-team-code');
+  if (fTeamEl) fTeamEl.value = car;
+  const outTeamEl = document.getElementById('out-team');
+  if (outTeamEl) outTeamEl.textContent = car;
+  updatePreview();
+}
+
+// ── TYPE selector ─────────────────────────────────────────────
+function selectType(t) {
+  state.type = t;
+  ['drive','state','stop'].forEach(x => {
+    document.getElementById('type-' + x).className = 'type-opt';
+  });
+  document.getElementById('type-' + t).classList.add('selected-' + t);
+  updatePreview();
+  checkS4Form();
+}
+
+function updateDebateChoice() {
+  const v = document.getElementById('debate-choice').value;
+  state.debate = v;
+  saveState();
+  ['xor','crc'].forEach(x => {
+    document.getElementById('card-' + x).className = 'debate-card';
+  });
+  if (v === 'xor') {
+    document.getElementById('card-xor').classList.add('selected-xor');
+    document.getElementById('xor-warn').style.display = 'block';
+    document.getElementById('crc-verdict').classList.remove('show');
+    document.getElementById('out-checksum').textContent = 'XOR';
+  } else if (v === 'crc') {
+    document.getElementById('card-crc').classList.add('selected-crc');
+    document.getElementById('crc-verdict').classList.add('show');
+    document.getElementById('xor-warn').style.display = 'none';
+    document.getElementById('out-checksum').textContent = 'CRC-8';
+  }
+}
+
+function selectDebate(x) {
+  document.getElementById('debate-choice').value = x;
+  updateDebateChoice();
+}
+
+// ── Packet preview ─────────────────────────────────────────────
+function hexPad(s, n) {
+  s = (s||'').toUpperCase().replace(/[^0-9A-F]/g,'');
+  while (s.length < n) s = '0' + s;
+  return s.substring(0, n);
+}
+
+function formatBytes(hex, n) {
+  const h = hexPad(hex, n);
+  return h.match(/.{2}/g).join(' ');
+}
+
+function updatePreview() {
+  const typeMap = { drive: '01', state: '02', stop: '03' };
+  const typeHex = typeMap[state.type] || '--';
+  const spd = hexPad(document.getElementById('f-speed').value, 2);
+  const dir = hexPad(document.getElementById('f-dir').value, 2);
+  const seq = hexPad(document.getElementById('f-seq').value || '1', 8);
+  const payBytes = (spd !== '--' && dir !== '--') ? spd + ' ' + dir : '-- --';
+  const lenVal = (spd !== '--' && dir !== '--') ? '00 02' : '00 00';
+
+  document.getElementById('prev-type').textContent = typeHex === '--' ? '--' : '0x' + typeHex;
+  document.getElementById('prev-len').textContent = lenVal;
+  document.getElementById('prev-seq').textContent = formatBytes(seq, 8);
+  document.getElementById('prev-pay').textContent = payBytes;
+  document.getElementById('prev-chk').textContent = '??';
+
+  document.getElementById('out-type').textContent = typeHex === '--' ? '0x01' : '0x' + typeHex;
+
+  checkS4Form();
+}
+
+function checkS4Form() {
+  const spd = document.getElementById('f-speed').value.trim();
+  const dir = document.getElementById('f-dir').value.trim();
+  const seq = document.getElementById('f-seq').value.trim();
+  const ok = spd && dir && seq && state.type;
+  document.getElementById('btn-s4-submit').disabled = !ok;
+}
+
+function submitPacketDesign() {
+  document.getElementById('mentor-panel').classList.add('unlocked');
+  completeStep('s4');
+}
+
+// ── Wireshark Live Capture Simulator ──────────────────────────
+const WS_PACKETS = [
+  { no:'001', time:'0.000000', src:'192.168.1.10', dst:'192.168.1.20', len:'12 B', typeClass:'t01', typeLabel:'주행',  info:'AA 55 01 00 02 00 00 00 01 3C F0 A3',
+    detail:{ type:'0x01  주행 명령', sof:'AA 55', len:'00 02', seq:'00 00 00 01', payload:'3C F0', chksum:'A3', note:'속도 0x3C (60 km/h), 방향 0xF0' } },
+  { no:'002', time:'0.012450', src:'192.168.1.20', dst:'192.168.1.10', len:'14 B', typeClass:'t02', typeLabel:'상태',  info:'AA 55 02 00 04 00 00 00 02 00 64 00 64 B7',
+    detail:{ type:'0x02  상태 요청', sof:'AA 55', len:'00 04', seq:'00 00 00 02', payload:'00 64 00 64', chksum:'B7', note:'4가지 센서 상태 요청' } },
+  { no:'003', time:'0.025100', src:'192.168.1.10', dst:'192.168.1.20', len:'10 B', typeClass:'t03', typeLabel:'긴급',  info:'AA 55 03 00 00 00 00 00 03 2D',
+    detail:{ type:'0x03  긴급정지 ⚠', sof:'AA 55', len:'00 00', seq:'00 00 00 03', payload:'(없음)', chksum:'2D', note:'PAYLOAD 없음 — 즉시 전체 정지' } },
+  { no:'004', time:'0.038200', src:'192.168.1.20', dst:'192.168.1.10', len:'12 B', typeClass:'t01', typeLabel:'주행',  info:'AA 55 01 00 02 00 00 00 04 50 32 C1',
+    detail:{ type:'0x01  주행 명령', sof:'AA 55', len:'00 02', seq:'00 00 00 04', payload:'50 32', chksum:'C1', note:'속도 0x50 (80 km/h), 방향 0x32' } },
+  { no:'005', time:'0.051300', src:'192.168.1.10', dst:'192.168.1.20', len:'12 B', typeClass:'t01', typeLabel:'주행',  info:'AA 55 01 00 02 00 00 00 05 28 F0 6E',
+    detail:{ type:'0x01  주행 명령', sof:'AA 55', len:'00 02', seq:'00 00 00 05', payload:'28 F0', chksum:'6E', note:'속도 0x28 (40 km/h), 방향 0xF0' } },
+  { no:'006', time:'0.063700', src:'192.168.1.20', dst:'192.168.1.10', len:'14 B', typeClass:'t02', typeLabel:'상태',  info:'AA 55 02 00 04 00 00 00 06 01 5A 00 F0 4C',
+    detail:{ type:'0x02  상태 요청', sof:'AA 55', len:'00 04', seq:'00 00 00 06', payload:'01 5A 00 F0', chksum:'4C', note:'라이다+카메라 상태 요청' } },
+];
+
+let wsTimer = null;
+let wsIdx = 0;
+let wsStopped = false;
+let wsSelected = null;
+
+function wsAddRow(pkt) {
+  const body = document.getElementById('ws-body');
+  const div = document.createElement('div');
+  div.className = 'wireshark-row';
+  div.dataset.idx = pkt.no;
+  div.innerHTML =
+    '<div class="w-no">' + pkt.no + '</div>' +
+    '<div class="w-time">' + pkt.time + '</div>' +
+    '<div class="w-src">' + pkt.src + '</div>' +
+    '<div class="w-dst">' + pkt.dst + '</div>' +
+    '<div class="w-len">' + pkt.len + '</div>' +
+    '<div class="w-info">' + pkt.info + '</div>';
+  div.onclick = () => { if (wsStopped) wsSelect(div, pkt); };
+  body.insertBefore(div, body.firstChild); // 위로 쌓기
+  void div.offsetWidth;
+  div.classList.add('row-in');
+  document.getElementById('ws-count').textContent = body.children.length + ' 패킷';
+}
+
+function wsStart() {
+  wsIdx = 0; wsTimer = setInterval(() => {
+    if (wsIdx >= WS_PACKETS.length) { wsIdx = 0; } // 반복
+    wsAddRow(WS_PACKETS[wsIdx++]);
+  }, 850);
+}
+
+function wsStop() {
+  if (wsStopped) return;
+  wsStopped = true;
+  clearInterval(wsTimer);
+  document.getElementById('ws-stop-btn').disabled = true;
+  document.getElementById('ws-live').style.display = 'none';
+  document.getElementById('ws-stopped').style.display = 'inline-flex';
+  document.getElementById('ws-hint').innerHTML = '<span style="color:var(--green)">캡처 중단됨. 위 패킷 행을 클릭해 상세 분석하세요.</span>';
+  document.getElementById('ws-select-hint').style.display = 'block';
+  // make rows clickable cursor
+  document.querySelectorAll('#ws-body .wireshark-row').forEach((r, i) => {
+    r.style.cursor = 'pointer';
+    const pkt = WS_PACKETS.find(p => p.no === r.dataset.idx);
+    if (pkt) r.onclick = () => wsSelect(r, pkt);
+  });
+}
+
+function wsSelect(rowEl, pkt) {
+  document.querySelectorAll('#ws-body .wireshark-row').forEach(r => r.classList.remove('selected','flash'));
+  rowEl.classList.add('selected');
+  void rowEl.offsetWidth;
+  rowEl.classList.add('flash');
+  rowEl.addEventListener('animationend', () => rowEl.classList.remove('flash'), { once:true });
+  wsSelected = pkt;
+
+  const d = pkt.detail;
+  const tc = pkt.typeClass;
+  const typeColor = tc==='t01' ? 'var(--green)' : tc==='t02' ? 'var(--cyan)' : 'var(--red)';
+  document.getElementById('ws-parsed').innerHTML =
+    '<div class="ws-detail-row"><span class="ws-detail-key">TYPE</span><span class="ws-detail-val" style="color:'+typeColor+';font-weight:600">'+d.type+'</span></div>' +
+    '<div class="ws-detail-row"><span class="ws-detail-key">SOF</span><span class="ws-detail-val">'+d.sof+'</span><span class="ws-detail-note">패킷 시작 마커</span></div>' +
+    '<div class="ws-detail-row"><span class="ws-detail-key">LENGTH</span><span class="ws-detail-val">'+d.len+'</span><span class="ws-detail-note">PAYLOAD 바이트 수</span></div>' +
+    '<div class="ws-detail-row"><span class="ws-detail-key">SEQ</span><span class="ws-detail-val">'+d.seq+'</span><span class="ws-detail-note">순서 번호</span></div>' +
+    '<div class="ws-detail-row"><span class="ws-detail-key">PAYLOAD</span><span class="ws-detail-val" style="color:var(--orange)">'+d.payload+'</span><span class="ws-detail-note">'+d.note+'</span></div>' +
+    '<div class="ws-detail-row"><span class="ws-detail-key">CHKSUM</span><span class="ws-detail-val" style="color:var(--red)">'+d.chksum+'</span><span class="ws-detail-note">CRC-8 오류 검출</span></div>';
+
+  const panel = document.getElementById('ws-detail');
+  panel.classList.remove('open');
+  void panel.offsetWidth;
+  panel.classList.add('open');
+  // enable complete btn
+  document.getElementById('btn-s2-done').disabled = false;
+}
+
+// auto-start when section unlocks
+(function wsInit(){
+  const sec = document.getElementById('sec-s2');
+  const observer = new MutationObserver(() => {
+    if (!sec.classList.contains('locked') && !wsTimer && !wsStopped) {
+      wsStart();
+      observer.disconnect();
+    }
+  });
+  observer.observe(sec, { attributes: true, attributeFilter: ['class'] });
+  // also start if already unlocked
+  if (!sec.classList.contains('locked')) wsStart();
+})();
+
+// ── S#3 byte-map ──────────────────────────────────────────
+const S3_FIELDS = {
+  sof:     { name: 'SOF — Start Of Frame', size: '2 Byte', desc: '패킷의 시작을 알리는 고정 마법 숫자. 수신 측은 이 값을 찾아 패킷 시작을 감지합니다.', ex: '고정값: AA 55' },
+  type:    { name: 'TYPE — 명령 종류', size: '1 Byte', desc: '어떤 명령인지 구분합니다. 0x01=주행, 0x02=상태 요청, 0x03=긴급정지', ex: '이 패킷: 0x01 (주행 명령)' },
+  length:  { name: 'LENGTH — 페이로드 길이', size: '2 Byte', desc: 'PAYLOAD가 몇 바이트인지 알려줍니다. 수신 측이 데이터를 정확히 읽기 위해 필요합니다.', ex: '00 02 = 2바이트' },
+  seq:     { name: 'SEQ — 순서 번호', size: '4 Byte', desc: '패킷마다 1씩 증가하는 번호. 패킷 순서가 맞는지, 빠진 것이 없는지 확인합니다.', ex: '00 00 00 01 = 1번째 패킷' },
+  payload: { name: 'PAYLOAD — 실제 데이터', size: 'LENGTH만큼', desc: '주행 속도, 방향 등 실제 명령 데이터가 들어갑니다. LENGTH만큼의 바이트로 구성됩니다.', ex: '3C=속도 60, F0=방향 240°' },
+  chksum:  { name: 'CHECKSUM — 오류 검출', size: '1 Byte', desc: '전송 중 데이터 손상 여부를 확인합니다. 수신 측이 직접 계산해서 비교합니다.', ex: 'A3 — CRC-8 알고리즘 (3차시 확정)' },
+};
+const s3Seen = new Set();
+
+function selectField(key) {
+  document.querySelectorAll('#byteMap .byte-chunk').forEach(c => c.classList.remove('active'));
+  const chunk = document.querySelector('#byteMap .byte-chunk[data-field="'+key+'"]');
+  chunk.classList.add('active');
+
+  const d = S3_FIELDS[key];
+  document.getElementById('s3d-name').textContent = d.name;
+  document.getElementById('s3d-size').textContent = d.size;
+  document.getElementById('s3d-ex').textContent = d.ex;
+  document.getElementById('s3d-desc').textContent = d.desc;
+
+  if (!s3Seen.has(key)) {
+    s3Seen.add(key);
+    chunk.classList.add('done');
+    chunk.querySelector('.bc-label').textContent = key.toUpperCase();
+    document.getElementById('s3d-check').textContent = '🆕 처음 확인';
+  } else {
+    document.getElementById('s3d-check').textContent = '✓ 확인됨';
+  }
+
+  const panel = document.getElementById('s3-detail');
+  panel.style.maxHeight = '0'; panel.style.opacity = '0';
+  requestAnimationFrame(() => { panel.style.maxHeight = '200px'; panel.style.opacity = '1'; });
+
+  const n = s3Seen.size;
+  document.getElementById('s3-prog-fill').style.width = (n/6*100) + '%';
+  document.getElementById('s3-prog-txt').textContent = n + ' / 6';
+  if (n >= 6) document.getElementById('btn-s3-done').disabled = false;
+}
+
+// ── Demo mode ─────────────────────────────────────────────
+// ── Mentor chat ────────────────────────────────────────
+// 소크라테스식 튜터: 정의는 먼저 안 알려주고, 학생의 설명으로 설명되지 않는 반례만 계속 담지요. 스스로 고쳐 말할 때까지 정의는 말해주지 않습니다.
+const MENTOR_RIGHT_KEYWORDS = ['가변','다르','바낌','바뀌','유연','늘어','줄어','크기가 다','길이가 다'];
+const MENTOR_COUNTEREXAMPLES = [
+  '음— 그 설명으로는 안 풀리는 게 있어요. S#2에서 본 상태 요청 패킷(TYPE 0x02)은 PAYLOAD가 4바이트(00 64 00 64)였어요. 그런데 주행 명령(TYPE 0x01)은 2바이트였죠. 왜 패킷마다 PAYLOAD 크기가 다를까요?',
+  '다시 생각해봐요. 긴급정지 패킷(TYPE 0x03)은 PAYLOAD가 아예 없었어요(0바이트). PAYLOAD 길이가 항상 고정이었다면, 이런 패킷이 가능했을까요?',
+  '한 가지 더 물어볼게요. PAYLOAD 크기가 항상 똑같다면, 수신 측은 매 패킷마다 몇 바이트를 읽어야 할지 어떻게 알 수 있을까요? LENGTH 필드가 없어도 괜찮을까요?',
+  '힌트를 좀 좌혀볼게요. "길이가 ___이기 때문에 LENGTH가 필요하다" 라는 문장을 완성해보면 어떨까요?',
+];
+let mentorAttempts = 0;
+let mentorSolved = false;
+
+function sendMentorReply() {
+  if (mentorSolved) return;
+  const input = document.getElementById('mentor-input');
+  const txt = input.value.trim();
+  if (!txt) return;
+  document.getElementById('mentor-my-msg').textContent = '나: ' + txt;
+  document.getElementById('mentor-my-msg').classList.add('show');
+
+  const correct = MENTOR_RIGHT_KEYWORDS.some(k => txt.includes(k));
+  const tagEl = document.querySelector('#mentor-reply .tag');
+  let reply;
+
+  if (correct) {
+    mentorSolved = true;
+    tagEl.textContent = '✅ AI 사수 — 인정!';
+    tagEl.style.color = 'var(--green)';
+    reply = '정확해요! PAYLOAD가 패킷마다 다른 길이(가변 길이)를 가질 수 있기 때문에, 수신 측이 몇 바이트를 읽어야 할지 알려주는 LENGTH 필드가 꿈 필요한 거예요. 2차시에서 이 유연성이 성능 최적화 전략과 어떻게 연결되는지 배우게 됩니다.';
+    document.getElementById('mentor-input').disabled = true;
+    document.getElementById('mentor-send').textContent = '✓ 이해 완료';
+  } else {
+    tagEl.textContent = '🤖 AI 사수 — 반례 하나';
+    tagEl.style.color = 'var(--cyan)';
+    reply = MENTOR_COUNTEREXAMPLES[Math.min(mentorAttempts, MENTOR_COUNTEREXAMPLES.length - 1)];
+    mentorAttempts++;
+  }
+
+  document.getElementById('mentor-reply-text').textContent = reply;
+  const panel = document.getElementById('mentor-reply');
+  panel.classList.remove('show');
+  void panel.offsetWidth;
+  panel.classList.add('show');
+
+  input.value = '';
+  document.getElementById('mentor-send').disabled = true;
+}
+
+// ── Per-section preview demo ──────────────────────────────────
+function ensureOpen(id) {
+  const sec = document.getElementById('sec-' + id);
+  if (!sec) return null;
+  sec.classList.remove('locked');
+  sec.classList.add('open');
+  const lock = document.getElementById('lock-' + id);
+  if (lock) lock.textContent = '👁';
+  sec.scrollIntoView({ behavior:'smooth', block:'start' });
+  return sec;
+}
+
+function demoSection(id) {
+  const sec = ensureOpen(id);
+  if (!sec) return;
+
+  if (id === 's1') {
+    // just reveal; nothing to animate
+    return;
+  }
+
+  if (id === 's2') {
+    if (!wsTimer && !wsStopped) { wsStart(); }
+    else if (wsStopped) {
+      wsStopped = false; wsIdx = 0; clearInterval(wsTimer); wsTimer = null;
+      document.getElementById('ws-body').innerHTML = '';
+      document.getElementById('ws-count').textContent = '0 패킷';
+      document.getElementById('ws-stop-btn').disabled = false;
+      document.getElementById('ws-live').style.display = 'inline-flex';
+      document.getElementById('ws-stopped').style.display = 'none';
+      document.getElementById('ws-select-hint').style.display = 'none';
+      document.getElementById('ws-detail').classList.remove('open');
+      wsStart();
+    }
+    setTimeout(() => {
+      wsStop();
+      setTimeout(() => {
+        const firstRow = document.querySelector('#ws-body .wireshark-row');
+        if (firstRow) firstRow.click();
+      }, 500);
+    }, 2800);
+    return;
+  }
+
+  if (id === 's3') {
+    const order = ['sof','type','length','seq','payload','chksum'];
+    order.forEach((key, i) => {
+      setTimeout(() => selectField(key), i * 700);
+    });
+    return;
+  }
+
+  if (id === 's4') {
+    setTimeout(() => selectType('drive'), 200);
+    setTimeout(() => { document.getElementById('f-speed').value = '3C'; updatePreview(); }, 700);
+    setTimeout(() => { document.getElementById('f-dir').value = '00'; updatePreview(); }, 1200);
+    setTimeout(() => { document.getElementById('f-seq').value = '00000001'; updatePreview(); }, 1700);
+    setTimeout(() => { document.getElementById('f-team-code').value = state.team || 'CAR1'; }, 2000);
+    return;
+  }
+
+  if (id === 's5') {
+    setTimeout(() => selectDebate('crc'), 200);
+    setTimeout(() => {
+      const sel = document.getElementById('debate-choice');
+      sel.value = 'crc';
+      updateDebateChoice();
+    }, 500);
+    setTimeout(() => { document.getElementById('debate-reason').value = '차량 안전성 때문에'; }, 900);
+    setTimeout(() => { document.getElementById('debate-xor-con').value = '2비트 오류 미검출'; }, 1200);
+    setTimeout(() => { document.getElementById('debate-crc-use').value = 'CAN Bus, USB'; }, 1500);
+    return;
+  }
+
+  if (id === 's6' || id === 's7') {
+    // terminal already static; just scroll+highlight
+    const term = sec.querySelector('.drill-terminal');
+    if (term) {
+      term.style.boxShadow = '0 0 0 2px var(--cyan)';
+      setTimeout(() => { term.style.boxShadow = 'none'; }, 1200);
+    }
+    return;
+  }
+}
+
+function runDemo() {
+  ['s1','s2','s3','s4','s5','s6','s7'].forEach(id => {
+    const sec = document.getElementById('sec-'+id);
+    if (sec) { sec.classList.remove('locked'); sec.classList.add('unlocked'); }
+    const lock = document.getElementById('lock-'+id);
+    if (lock) lock.textContent = '✅';
+  });
+  ['s1','s3','s4','s5','s6','s7'].forEach(id => {
+    const body = document.querySelector('#sec-'+id+' .section-body');
+    if (body) body.style.display = 'none';
+  });
+  const s2body = document.querySelector('#sec-s2 .section-body');
+  if (s2body) s2body.style.display = 'block';
+  document.getElementById('sec-s2').scrollIntoView({ behavior:'smooth', block:'start' });
+  clearInterval(wsTimer); wsTimer = null;
+  wsStopped = false; wsIdx = 0;
+  document.getElementById('ws-body').innerHTML = '';
+  document.getElementById('ws-count').textContent = '0 패킷';
+  document.getElementById('ws-stop-btn').disabled = false;
+  document.getElementById('ws-live').style.display = 'inline-flex';
+  document.getElementById('ws-stopped').style.display = 'none';
+  document.getElementById('ws-hint').textContent = '패킷이 캡처되는 중입니다...';
+  document.getElementById('ws-select-hint').style.display = 'none';
+  document.getElementById('ws-detail').classList.remove('open');
+  document.getElementById('btn-s2-done').disabled = true;
+  wsStart();
+}
+
+// ── Capture done ───────────────────────────────────────────────
+function captureDone() {
+  document.getElementById('term-capture').style.display = 'block';
+  document.getElementById('btn-s7-done').disabled = false;
+}
+
+// ── Final submit ───────────────────────────────────────────────
+function submitFinal() {
+  document.getElementById('btn-final').disabled = true;
+  document.getElementById('btn-final').textContent = '✅ 제출 완료';
+  document.getElementById('final-msg').style.display = 'block';
+  // mark summary complete
+  const sec = document.getElementById('sec-summary');
+  sec.classList.add('completed');
+  updateProgress();
+}
+
+// ── Init on load ───────────────────────────────────────────────
+const GUIDE_TEXT = {
+  intro: {
+    title: '🧭 안내도우미 — 전체 사용법',
+    body: '화면에 <b>잠금(🔒)</b> 표시가 있는 칸은 아직 열 수 없습니다. 바로 위 단계를 완료해야 자동으로 열립니다.<br><br>' +
+          '각 S# 제목 옆의 <b>🧭 안내</b> 버튼을 누르면 그 단계에서 무엇을, 어떤 순서로 클릭해야 하는지 알려줍니다.<br>' +
+          '막히는 칸이 있으면 그 칸 옆의 🧭 안내를 눌러보세요.'
+  },
+  s1: {
+    title: '🧭 S#1 안내 — 문제 상황',
+    body: '이 단계는 상황을 읽고 이해하는 단계입니다. 특별히 입력할 내용은 없습니다.<br><br>' +
+          '시나리오 박스를 읽고 <b>"왜 패킷 헤더가 없으면 수신 측이 데이터 시작 위치를 못 찾는지"</b>를 팀과 짧게 이야기해보세요.<br>' +
+          '아래 <b>"다음 단계로"</b> 버튼을 누르면 S#2(Wireshark 캡처)가 열립니다.'
+  },
+  s2: {
+    title: '🧭 S#2 안내 — Wireshark 패킷 캡처',
+    body: '화면에 표시된 16진수(Hex) 패킷 덤프에서 <b>AA 55</b>(SOF)로 시작하는 패킷을 찾아보세요.<br><br>' +
+          '그다음 1바이트가 <b>TYPE</b>입니다. 캡처된 프레임 중 TYPE이 01(주행), 02(상태요청), 03(긴급정지) 세 가지 모두 나오는지 확인하고, 각각 몇 번째 프레임인지 적어보세요.<br><br>' +
+          '⚠ <b>포트 필터는 TYPE을 거르지 않습니다</b> — 필터를 걸어도 01·02·03이 섞여서 모두 보이는 것이 정상입니다.<br><br>' +
+          '필요한 입력을 모두 채우면 완료 버튼이 열립니다.'
+  },
+  s3: {
+    title: '🧭 S#3 안내 — 패킷 구조 6개 필드',
+    body: '표에 나온 <b>SOF·TYPE·LENGTH·SEQ·PAYLOAD·CHECKSUM</b> 6개 필드 각각의 역할을 확인합니다.<br><br>' +
+          '헷갈리기 쉬운 두 가지:<br>' +
+          '· <b>LENGTH</b>는 패킷 전체 길이가 아니라 <b>PAYLOAD만의 바이트 수</b>입니다.<br>' +
+          '· <b>SEQ</b>는 보낸 시각이 아니라 <b>몇 번째로 보낸 패킷인지</b>를 나타내는 순서 번호입니다 (1 다음은 2).<br><br>' +
+          '퀴즈나 확인 질문에 올바르게 답하면 다음 단계가 열립니다.'
+  },
+  s4: {
+    title: '🧭 S#4 안내 — 팀별 패킷 설계 실습',
+    body: '우리 팀의 주행 명령 패킷을 직접 설계합니다. 다음 값을 순서대로 입력하세요.<br><br>' +
+          '· <b>TYPE</b>: 0x01(주행) / 0x02(상태요청) / 0x03(긴급정지) 중 하나<br>' +
+          '· <b>LENGTH</b>: PAYLOAD의 바이트 수만 (예: 속도·방향 2바이트면 00 02)<br>' +
+          '· <b>SEQ</b>: 몇 번째 패킷인지 순서 번호<br>' +
+          '· <b>PAYLOAD</b>: 실제 명령 값 (예: 속도 50 → 32 00)<br><br>' +
+          '예시 입력: <i>"TYPE=01, LENGTH=00 02, SEQ=01, PAYLOAD=속도 50(32 00)"</i><br><br>' +
+          '모든 필드를 채우면 완료 버튼이 열리고 S#5(검사합 토론)로 넘어갑니다.'
+  },
+  s5: {
+    title: '🧭 S#5 안내 — 검사합 토론 (XOR vs CRC-8)',
+    body: '두 검사합 방식을 비교합니다.<br><br>' +
+          '· <b>XOR</b>: 계산이 빠르지만, 같은 비트 자리가 두 번 바뀌면 오류를 못 잡습니다.<br>' +
+          '· <b>CRC-8</b>: 연속·다중 비트 오류까지 비교적 잘 잡지만 계산이 조금 더 필요합니다.<br><br>' +
+          '"CRC와 XOR을 둘 다 쓰면 안전하지 않을까?"라는 생각이 들 수 있지만, 바이트와 계산이 늘면 전송 시간도 늘어납니다 — 이 영향은 2차시에서 직접 측정합니다.<br><br>' +
+          '판단 칸에 팀이 선택한 방식과 이유를 한 줄로 적으면 완료 버튼이 열립니다.'
+  },
+  s6: {
+    title: '🧭 S#6 안내 — 주행 명령 전송 실습',
+    body: 'S#4에서 설계한 TYPE 0x01(주행) 패킷을 실제로 전송해보는 단계입니다.<br><br>' +
+          '전송 버튼을 누르고, 화면에 전송 성공 표시(또는 응답)가 나타나는지 확인하세요.<br>' +
+          '잘 안 되면 TYPE·LENGTH·PAYLOAD 값이 S#4에서 적은 값과 정확히 같은지 다시 확인해보세요.'
+  },
+  s7: {
+    title: '🧭 S#7 안내 — 긴급 정지 실습 (TYPE 0x03)',
+    body: '이번에는 TYPE 0x03(긴급정지) 패킷을 전송합니다.<br><br>' +
+          'TICKET-01의 핵심 문제(정지 명령이 늦게 도착해 사고가 나는 상황)와 직접 연결되는 명령입니다.<br>' +
+          '전송 후 응답을 확인하고, 마지막으로 <b>packet_format_v1.md</b>에 지금까지의 설계·전송 결과를 정리해 제출하세요.'
+  },
+};
+
+function showGuide(key) {
+  const g = GUIDE_TEXT[key];
+  if (!g) return;
+  document.getElementById('guide-overlay-title').textContent = g.title;
+  document.getElementById('guide-overlay-body').innerHTML = g.body;
+  const overlay = document.getElementById('guide-overlay');
+  overlay.classList.remove('show');
+  void overlay.offsetWidth;
+  overlay.classList.add('show');
+}
+function closeGuide() {
+  document.getElementById('guide-overlay').classList.remove('show');
+}
+
+function restoreProgress() {
+  // Restore team
+  if (state.team) selectTeam(state.team);
+
+  // Restore type
+  if (state.type) selectType(state.type);
+
+  // Restore completed steps and unlock chain
+  const allSteps = ['s1','s2','s3','s4','s5','s6','s7','summary'];
+  for (let i = 0; i < allSteps.length; i++) {
+    const id = allSteps[i];
+    if (i === 0) { unlockSection(id); }
+    if (state.completedSteps.has(id)) {
+      const sec = document.getElementById('sec-' + id);
+      sec.classList.add('completed');
+      sec.classList.remove('open');
+      const badge = sec.querySelector('.step-badge');
+      if (badge) { badge.style.background='var(--green-dim)'; badge.style.borderColor='var(--green)'; badge.style.color='var(--green)'; }
+      const chevron = sec.querySelector('.chevron');
+      if (chevron) chevron.textContent = '✓';
+      // unlock next
+      if (i + 1 < allSteps.length) unlockSection(allSteps[i + 1]);
+    }
+  }
+
+  // Restore debate
+  if (state.debate) {
+    document.getElementById('debate-choice').value = state.debate;
+    updateDebateChoice();
+  }
+
+  updateProgress();
+}
+
+if (studentId) enterApp(loginTeam);
+</script>
+<script>
+(function () {
+  if (!window.AUTONET_TEACHER) return;
+  var page = decodeURIComponent(location.pathname.split('/').pop() || '');
+  var bar = document.createElement('div');
+  bar.id = 'teacher-bar';
+  bar.innerHTML =
+    '<b>교사용 작동모드</b><span>모든 단계 열림 · 학생 기록 저장 안 함</span>' +
+    '<nav>' +
+    ['lesson1.html|1차시', 'lesson2.html|2차시', 'lesson3.html|3차시', 'outputs.html|학생 산출물']
+      .map(function (x) { var p = x.split('|'); return '<a href="' + p[0] + '"' + (p[0] === page ? ' aria-current="page"' : '') + '>' + p[1] + '</a>'; }).join('') +
+    '<button type="button" id="teacher-bar-out">교사 로그아웃</button></nav>';
+  var css = document.createElement('style');
+  css.textContent = '#teacher-bar{position:sticky;top:0;z-index:9999;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:8px max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px));background:#2a1d08;border-bottom:1px solid #ffb547;color:#ffe2b0;font:13px/1.4 "Noto Sans KR","Malgun Gothic",sans-serif}' +
+    '#teacher-bar b{color:#ffb547}#teacher-bar span{color:#d9b98a;font-size:12px}#teacher-bar nav{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto}' +
+    '#teacher-bar a,#teacher-bar button{all:unset;cursor:pointer;padding:4px 10px;border:1px solid #6b5228;border-radius:6px;color:#ffe2b0;font-size:12px}' +
+    '#teacher-bar a[aria-current]{background:#ffb547;color:#2a1a00;border-color:#ffb547}#teacher-bar a:focus-visible,#teacher-bar button:focus-visible{outline:2px solid #ffb547}';
+  document.head.appendChild(css);
+  document.body.insertBefore(bar, document.body.firstChild);
+  document.getElementById('teacher-bar-out').onclick = function () {
+    try { localStorage.removeItem('autonet-teacher'); localStorage.removeItem('autonet-session'); } catch (e) {}
+    location.replace('login.html');
+  };
+  function openAll() {
+    document.querySelectorAll('.section.locked').forEach(function (sec) {
+      var id = sec.id.replace('sec-', '');
+      if (typeof unlockSection === 'function') unlockSection(id); else sec.classList.remove('locked');
+    });
+    document.querySelectorAll('.student-badge #student-badge-id, #student-badge-id').forEach(function (el) { el.textContent = '교사 모드'; });
+  }
+  openAll(); setTimeout(openAll, 300);
+  try { if (typeof saveState === 'function') window.saveState = function () {}; } catch (e) {}
+})();
+</script>

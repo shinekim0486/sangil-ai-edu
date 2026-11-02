@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>네트워크프로그래밍 · 학생 산출물 전시관</title>
+  <link rel="stylesheet" href="gallery.css">
+  <script src="gallery-data.js" defer></script>
+  <script src="gallery.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#collection">산출물 목록으로 이동</a>
+  <header class="topbar"><a class="brand" href="index.html"><span class="brand-icon" aria-hidden="true">N</span> AUTO-NET LAB <span class="brand-sub">학생 산출물 아카이브</span></a><span class="offline"><i></i> OFFLINE READY</span></header>
+  <main>
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-copy"><span class="eyebrow">NETWORK PROGRAMMING / STUDENT SHOWCASE</span><h1 id="page-title">연결을 설계하고,<br><span>배움의 과정을 기록하다.</span></h1><p>패킷 설계에서 지연 측정, 안전 프로토콜까지.<br>세 학급의 네트워크프로그래밍 학습 결과를 한곳에서 살펴보세요.</p><a class="hero-link" href="#collection">산출물 둘러보기 <span aria-hidden="true">↘</span></a></div>
+      <div class="network-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><span class="node node-a">01 <b>PACKET</b></span><span class="node node-b">02 <b>NETWORK</b></span><span class="node node-c">03 <b>SAFETY</b></span><div class="network-center">N<span>CONNECTED LEARNING</span></div><span class="art-caption">DESIGN → MEASURE → REFINE</span></div>
+    </section>
+    <section class="stats" aria-label="전체 산출물 현황"><div><strong id="stat-docs">—</strong><span>전체 산출물</span></div><div><strong id="stat-students">—</strong><span>학생 코드</span></div><div><strong id="stat-classes">—</strong><span>학급 폴더</span></div><div><strong>3</strong><span>학습 단계</span></div></section>
+    <section class="collection" id="collection" aria-labelledby="collection-title">
+      <div class="section-heading"><div><span class="eyebrow">THE COLLECTION</span><h2 id="collection-title">학생 산출물</h2></div><p>작은 설계와 실험이 모여 만드는 배움의 기록</p></div>
+      <div class="toolbar"><label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="학번, 팀, 키워드로 검색" aria-label="학번, 팀, 제목, 본문 검색"><kbd aria-hidden="true">/</kbd></label><label class="sort-label">정렬<select id="sort"><option value="student">학번순</option><option value="stage">학습 단계순</option><option value="name">파일명순</option></select></label></div>
+      <div class="filters"><div class="filter-row"><span class="filter-label">학급 폴더</span><div class="chips" id="class-filters" role="group" aria-label="학급 폴더 선택"></div></div><div class="filter-row"><span class="filter-label">학습 단계</span><div class="chips" id="stage-filters" role="group" aria-label="학습 단계 선택"></div></div><div class="filter-row"><label class="filter-label" for="team">팀</label><select id="team"><option value="all">전체 팀</option></select><button class="reset" id="reset" type="button">필터 초기화 ↺</button></div></div>
+      <div class="result-line"><p id="result-count" role="status" aria-live="polite"></p><span>카드를 선택하면 문서를 열람할 수 있습니다.</span></div>
+      <div class="grid" id="cards"></div><div class="empty" id="empty" hidden><strong>검색 결과가 없습니다.</strong><p>검색어나 필터를 변경해 주세요.</p><button type="button" id="empty-reset">전체 산출물 보기</button></div>
+      <p class="source-note">학급 분류는 원본 폴더 기준입니다. 일부 문서의 학생 코드상 학급과 다를 수 있으며, 내용은 수정 없이 원문 그대로 제공합니다.</p>
+    </section>
+  </main>
+  <footer><strong>AUTO-NET LAB</strong><span>네트워크프로그래밍 학생 산출물 전시관 · 인터넷 연결 없이 열람 가능</span><a href="사용안내.txt" download>사용 안내 ↓</a></footer>
+  <dialog id="viewer" aria-labelledby="viewer-title"><div class="viewer-header"><div><span class="eyebrow" id="viewer-meta"></span><h2 id="viewer-title"></h2></div><button id="close-viewer" class="icon-button" type="button" aria-label="문서 닫기">✕</button></div><div class="viewer-tools"><span id="viewer-file"></span><a id="download" download>원본 다운로드 ↓</a><button id="print" type="button">인쇄</button></div><article id="document" class="document"></article></dialog>
+  <noscript>문서 검색과 열람을 위해 브라우저의 JavaScript를 활성화해 주세요. 원본 문서는 학급별 폴더에서 열 수 있습니다.</noscript>
+</body>
+</html>

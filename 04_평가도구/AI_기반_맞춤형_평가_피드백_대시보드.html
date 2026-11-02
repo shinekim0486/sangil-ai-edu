@@ -1,0 +1,774 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 기반 맞춤형 평가 및 피드백 통합 대시보드 | AI 에이전트 교육혁신 연구회</title>
+<style>
+  :root {
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --ink: #0f172a;
+    --muted: #475569;
+    --primary: #1e40af;
+    --primary-lt: #eff6ff;
+    --teal: #0f766e;
+    --teal-lt: #f0fdfa;
+    --amber: #b45309;
+    --amber-lt: #fffbeb;
+    --rose: #be123c;
+    --rose-lt: #fff1f2;
+    --emerald: #15803d;
+    --emerald-lt: #f0fdf4;
+    --line: #e2e8f0;
+    --shadow: 0 4px 18px rgba(15,23,42,0.06);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Pretendard', 'Malgun Gothic', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+  }
+  header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #0f766e 100%);
+    color: #fff;
+    padding: 32px 24px 26px;
+    border-bottom: 4px solid #38bdf8;
+  }
+  .wrap { max-width: 1360px; margin: 0 auto; }
+  .top-meta { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; }
+  .badge-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3);
+    padding: 5px 14px; border-radius: 999px; font-size: 13px; font-weight: 700;
+  }
+  .header-links { display: flex; gap: 8px; flex-wrap: wrap; }
+  .header-links a {
+    color: #fff; text-decoration: none; background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.25); padding: 6px 12px; border-radius: 8px;
+    font-size: 12.5px; font-weight: 700; transition: background 0.15s;
+  }
+  .header-links a:hover { background: #fff; color: #0f172a; }
+  h1 { margin: 0 0 6px; font-size: 27px; letter-spacing: -0.02em; }
+  .sub-desc { margin: 0; opacity: 0.92; font-size: 14.5px; }
+
+  /* KPI Cards */
+  .kpi-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 14px; margin-top: 20px;
+  }
+  .kpi-card {
+    background: rgba(255,255,255,0.12); backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.22); border-radius: 14px; padding: 15px 18px;
+  }
+  .kpi-card .k-title { font-size: 12px; opacity: 0.85; font-weight: 700; }
+  .kpi-card .k-value { font-size: 26px; font-weight: 800; color: #38bdf8; margin: 4px 0; }
+  .kpi-card .k-desc { font-size: 12px; opacity: 0.9; }
+
+  /* Navigation Bar */
+  .nav-strip {
+    background: #fff; border-bottom: 1px solid var(--line);
+    position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 10px rgba(15,23,42,0.04);
+  }
+  .nav-inner {
+    max-width: 1360px; margin: 0 auto; display: flex; gap: 8px; padding: 10px 20px; overflow-x: auto;
+  }
+  .tab-btn {
+    border: 1px solid var(--line); background: #f8fafc; color: var(--ink);
+    padding: 10px 18px; border-radius: 10px; font-size: 13.5px; font-weight: 800;
+    cursor: pointer; white-space: nowrap; transition: all 0.15s;
+  }
+  .tab-btn:hover { background: var(--primary-lt); border-color: #93c5fd; color: var(--primary); }
+  .tab-btn.active {
+    background: var(--primary); color: #fff; border-color: var(--primary);
+    box-shadow: 0 4px 12px rgba(30,64,175,0.25);
+  }
+
+  main { max-width: 1360px; margin: 24px auto 60px; padding: 0 20px; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .panel-card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+    padding: 24px; margin-bottom: 22px; box-shadow: var(--shadow);
+  }
+  .panel-card h2 {
+    margin: 0 0 16px; font-size: 20px; color: #1e3a8a;
+    border-bottom: 2px solid var(--line); padding-bottom: 10px;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+  }
+
+  /* Two Column Interactive Layout */
+  .engine-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  @media (max-width: 980px) { .engine-layout { grid-template-columns: 1fr; } }
+
+  .engine-control-box {
+    background: #f8fafc; border: 1px solid var(--line); border-radius: 14px; padding: 20px;
+  }
+  .control-group { margin-bottom: 18px; }
+  .control-group label {
+    display: block; font-size: 13.5px; font-weight: 800; margin-bottom: 6px; color: #1e293b;
+  }
+  .control-group select, .control-group input[type="text"] {
+    width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1;
+    font-size: 14px; font-family: inherit;
+  }
+
+  .slider-item {
+    background: #fff; border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px 16px; margin-bottom: 12px;
+  }
+  .slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .slider-header span.area-name { font-size: 14px; font-weight: 800; color: #0f172a; }
+  .slider-header span.area-score {
+    font-size: 16px; font-weight: 900; color: var(--primary);
+    background: var(--primary-lt); padding: 2px 10px; border-radius: 999px;
+  }
+  input[type="range"] {
+    width: 100%; height: 8px; border-radius: 5px; outline: none; accent-color: var(--primary); cursor: pointer;
+  }
+  .score-ruler { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  /* Output Feedback Card */
+  .feedback-display-box {
+    background: #fff; border: 2px solid #bfdbfe; border-radius: 14px; padding: 22px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .score-badge-bar {
+    display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 16px;
+    padding-bottom: 14px; border-bottom: 1px solid var(--line);
+  }
+  .badge-total { font-size: 32px; font-weight: 900; color: #1e40af; }
+  .badge-grade {
+    font-size: 15px; font-weight: 800; padding: 5px 12px; border-radius: 8px;
+    background: #dbeafe; color: #1e40af;
+  }
+  .badge-type {
+    font-size: 13px; font-weight: 700; padding: 5px 12px; border-radius: 8px;
+    background: #f1f5f9; color: #334155;
+  }
+  .badge-danger {
+    background: #ffe4e6 !important; color: #be123c !important; border: 1px solid #fecdd3;
+  }
+
+  .fb-section { margin-bottom: 14px; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; }
+  .fb-praise { background: #f0fdf4; border-left: 4px solid var(--emerald); }
+  .fb-defect { background: #fff1f2; border-left: 4px solid var(--rose); }
+  .fb-action { background: #eff6ff; border-left: 4px solid var(--primary); }
+  .fb-danger-quest { background: #fffbeb; border: 2px dashed #f59e0b; }
+
+  .fb-title { font-weight: 800; font-size: 14px; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+  .prompt-snippet {
+    background: #1e293b; color: #f8fafc; padding: 10px 14px; border-radius: 8px;
+    font-family: monospace; font-size: 12.5px; margin-top: 8px; position: relative;
+  }
+  .btn-copy {
+    position: absolute; right: 8px; top: 8px; background: #334155; color: #fff;
+    border: none; border-radius: 6px; padding: 4px 8px; font-size: 11px; cursor: pointer; font-weight: 700;
+  }
+  .btn-copy:hover { background: #475569; }
+
+  /* Table styling */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+  th, td { border: 1px solid var(--line); padding: 9px 12px; text-align: left; vertical-align: middle; }
+  th { background: #f8fafc; font-weight: 800; color: #1e293b; text-align: center; }
+  td.center { text-align: center; }
+  tr:hover td { background: #f8fafc; }
+
+  /* Evidence Badges */
+  .pill { display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
+  .pill-real { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+  .pill-mock { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+  .pill-est { background: #e0e7ff; color: #3730a3; border: 1px solid #c7d2fe; }
+
+  .btn-export {
+    display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px;
+    border-radius: 8px; font-size: 13px; font-weight: 800; text-decoration: none;
+    border: 1px solid var(--line); background: #fff; color: var(--ink); cursor: pointer;
+  }
+  .btn-export:hover { background: #f8fafc; }
+  .btn-primary-action { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+  footer {
+    text-align: center; padding: 30px 20px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="top-meta">
+      <span class="badge-tag">2026 상일미디어고등학교 AI 에이전트 교육혁신 연구회</span>
+      <div class="header-links">
+        <a href="../index.html">🏠 전체 포털</a>
+        <a href="수행평가루브릭/index.html">📋 수행평가 루브릭</a>
+        <a href="../05-학생산출물/index.html">📂 학생산출물 뷰어</a>
+        <a href="../06_연구결과및 효과검증자료/index.html">📊 연구결과 대시보드</a>
+        <a href="../07_성과확산및 현장적용 자료/확산용 산출물/index.html">📘 확산용 산출물</a>
+        <a href="AI_기반_맞춤형_피드백_설계안.docx" style="background:#2563eb; color:#fff; border-color:#2563eb;">📥 설계안(.docx)</a>
+      </div>
+    </div>
+    <h1>AI 기반 전문교과 맞춤형 평가 및 자동 피드백 통합 대시보드</h1>
+    <p class="sub-desc">
+      공통 100점 루브릭(4대 평가요소) · 3단계 질문·검토 연계 추론 엔진 · 40점 미만 최소성취수준 안전망 · 자료 감사 증거상태 투명 관리
+    </p>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="k-title">공통 100점 루브릭 체계</div>
+        <div class="k-value">4개 평가 영역</div>
+        <div class="k-desc">문제정의 25점 / AI협업 30점 / 검증 25점 / 완성도 20점</div>
+      </div>
+      <div class="kpi-card">
+        <div class="k-title">자동 피드백 추론 엔진</div>
+        <div class="k-value">4단계 처방 카드</div>
+        <div class="k-desc">강점 인정 ➔ 오개념 진단 ➔ 행동 가이드 ➔ 회복 퀘스트</div>
+      </div>
+      <div class="kpi-card">
+        <div class="k-title">최소 성취수준 관리</div>
+        <div class="k-value">40점 미만 안전망</div>
+        <div class="k-desc">단계별 회복 퀘스트 및 1:1 재평가 스캐폴딩 자동 연동</div>
+      </div>
+      <div class="kpi-card">
+        <div class="k-title">증거 상태(Evidence State)</div>
+        <div class="k-value">전수 실측 100%</div>
+        <div class="k-desc">7개 전 교과 34명 전수 실측 데이터 100% 반영</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="nav-strip">
+  <div class="nav-inner">
+    <button class="tab-btn active" onclick="switchMainTab('tab-engine', this)">⚡ AI 자동 피드백 생성 엔진 (시뮬레이터)</button>
+    <button class="tab-btn" onclick="switchMainTab('tab-rubric-eval', this)">📋 공통 100점 루브릭 평가 관리</button>
+    <button class="tab-btn" onclick="switchMainTab('tab-ba-compare', this)">🔄 AI 활용 전·후 결과물 비교 (Before vs After)</button>
+    <button class="tab-btn" onclick="switchMainTab('tab-audit-view', this)">🔍 4대 연구성과 및 자료 감사 뷰어</button>
+  </div>
+</nav>
+
+<main>
+  <!-- ===================================================================== -->
+  <!-- TAB 1: AI 자동 피드백 생성 엔진 & 진단 시뮬레이터 -->
+  <!-- ===================================================================== -->
+  <section id="tab-engine" class="tab-panel active">
+    <div class="panel-card">
+      <h2>
+        <span>⚡ AI 맞춤형 피드백 생성 엔진 (Feedback Inference Simulator)</span>
+        <span style="font-size:13px;color:var(--muted);font-weight:normal;">
+          ※ 학생 코드를 선택하거나 슬라이더를 조정하면 진단 결과와 1:1 피드백이 실시간 생성됩니다.
+        </span>
+      </h2>
+
+      <div class="engine-layout">
+        <!-- Left: Input & Sliders -->
+        <div class="engine-control-box">
+          <div class="control-group">
+            <label>1. 교과 선택</label>
+            <select id="selSubject" onchange="onSubjectChange()">
+              <option value="net">네트워크프로그래밍 (김0선) [실측 34명 전수 대응]</option>
+              <option value="app" selected>응용프로그래밍개발 (김0훈·김0주) [실측 34명 전수]</option>
+              <option value="3d">3D프린터용제품제작 (김0석) [실측 34명 전수]</option>
+              <option value="game">게임프로그래밍 (조0민) [실측 34명 전수]</option>
+              <option value="ai">인공지능모델링 (류0상) [실측 34명 전수]</option>
+              <option value="sys">시스템운영및네트워크운영 (우0정) [실측 34명 전수]</option>
+              <option value="smart">스마트문화앱콘텐츠제작 (윤0상) [실측 34명 전수 대응]</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label>2. 학생(익명 코드) 프리셋 불러오기</label>
+            <select id="selStudentPreset" onchange="applyStudentPreset()">
+              <option value="custom">-- 직접 점수 조절 (Custom) --</option>
+              <option value="p_leader">30101 (CAR1) - 유형 A: 융합형 에이전트 리더 (총점 92점 / 상 수준)</option>
+              <option value="p_verifier">30102 (CAR2) - 유형 B: 꼼꼼한 검증가 (총점 79점 / 중 수준)</option>
+              <option value="p_blind">30104 (CAR4) - 유형 C: 맹목적 AI 수용자 (총점 68점 / 전공검증 결함)</option>
+              <option value="p_danger">30207 (CAR5) - 유형 D: 최소성취수준 위험군 (총점 38점 / 40점 미만 고위험)</option>
+            </select>
+          </div>
+
+          <hr style="border:none;border-top:1px solid #cbd5e1;margin:18px 0;">
+
+          <!-- Sliders -->
+          <div class="slider-item">
+            <div class="slider-header">
+              <span class="area-name">영역 1. 문제 정의 및 프롬프트 설계</span>
+              <span class="area-score" id="valA1">22 / 25점</span>
+            </div>
+            <input type="range" id="rngA1" min="0" max="25" value="22" oninput="updateEvaluation()">
+            <div class="score-ruler"><span>0점 (단편적 요청)</span><span>15점 (조건 누락)</span><span>25점 (완벽 구조화)</span></div>
+          </div>
+
+          <div class="slider-item">
+            <div class="slider-header">
+              <span class="area-name">영역 2. AI 에이전트 협업 및 산출물 구현</span>
+              <span class="area-score" id="valA2">26 / 30점</span>
+            </div>
+            <input type="range" id="rngA2" min="0" max="30" value="26" oninput="updateEvaluation()">
+            <div class="score-ruler"><span>0점 (단순 복붙/미완성)</span><span>18점 (기본 기능만)</span><span>30점 (예외 처리 완비)</span></div>
+          </div>
+
+          <div class="slider-item">
+            <div class="slider-header">
+              <span class="area-name">영역 3. 전공 지식 기반 오류 검증·디버깅</span>
+              <span class="area-score" id="valA3">18 / 25점</span>
+            </div>
+            <input type="range" id="rngA3" min="0" max="25" value="18" oninput="updateEvaluation()">
+            <div class="score-ruler"><span>0점 (검증 생략/맹신)</span><span>15점 (다중변인 혼합)</span><span>25점 (단일변인 실측)</span></div>
+          </div>
+
+          <div class="slider-item">
+            <div class="slider-header">
+              <span class="area-name">영역 4. 최종 결과물 완성도 및 발표</span>
+              <span class="area-score" id="valA4">16 / 20점</span>
+            </div>
+            <input type="range" id="rngA4" min="0" max="20" value="16" oninput="updateEvaluation()">
+            <div class="score-ruler"><span>0점 (자료 누락)</span><span>12점 (인계 설명 부족)</span><span>20점 (재현 가능 명세)</span></div>
+          </div>
+
+          <div class="control-group" style="margin-top:14px;">
+            <label>챗봇 질문 수준(로그 기반)</label>
+            <select id="selChatbotLevel" onchange="updateEvaluation()">
+              <option value="S3">S3: 검증·추론 (실측 오차·경계조건 수치 포함 질문)</option>
+              <option value="S2" selected>S2: 구체화 (과제 환경·목표 수치를 명시한 질문)</option>
+              <option value="S1">S1: 상황 제시 (증상만 제시하고 원인은 미제시)</option>
+              <option value="S0">S0: 단순 요청 ("코드 짜줘", "정답 알려줘" 식의 단답형)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Right: Real-time Feedback Card -->
+        <div class="feedback-display-box" id="feedbackCardBox">
+          <div>
+            <div class="score-badge-bar">
+              <div>
+                <span style="font-size:12px;color:var(--muted);font-weight:700;">종합 평가 점수</span>
+                <div class="badge-total" id="dispTotalScore">82점</div>
+              </div>
+              <div style="flex:1;">
+                <span class="badge-grade" id="dispGrade">B등급 (우수)</span>
+                <span class="badge-type" id="dispType">유형 A: 융합형 에이전트 리더</span>
+                <div id="dispDangerBadge" style="display:none;margin-top:6px;">
+                  <span class="pill pill-mock badge-danger" style="font-size:12px;">⚠️ 최소 성취수준 미도달 위험군 (40점 미만)</span>
+                </div>
+              </div>
+              <button class="btn-export" onclick="copyFeedbackText()">📋 피드백 복사</button>
+            </div>
+
+            <!-- Feedback Content Sections -->
+            <div id="feedbackContent">
+              <div class="fb-section fb-praise">
+                <div class="fb-title">🌟 1. 강점 및 성취 인정 (Positive Affirmation)</div>
+                <div id="fbPraiseText">과제 목표에 맞추어 챗봇 프롬프트를 체계적으로 작성하였으며, 기본 기능 구현을 안정적으로 완수했습니다.</div>
+              </div>
+
+              <div class="fb-section fb-defect">
+                <div class="fb-title">🔍 2. 핵심 결함 및 오개념 진단 (Root Cause Diagnosis)</div>
+                <div id="fbDefectText">실제 측정한 수치(mm, ms, %) 대조가 부족하며, 한 번에 여러 조건을 동시에 변경하여 무엇 때문에 결과가 달라졌는지 설명이 미흡합니다.</div>
+              </div>
+
+              <div class="fb-section fb-action">
+                <div class="fb-title">🚀 3. 다음 행동 및 후속 프롬프트 가이드 (Actionable Prescription)</div>
+                <div id="fbActionText">아래 맞춤형 프롬프트를 복사하여 챗봇에게 후속 질문을 진행하고 실측값을 다시 대조하세요:</div>
+                <div class="prompt-snippet" id="fbPromptSnippet">
+                  <span id="promptText">[프롬프트 예시 로딩 중...]</span>
+                  <button class="btn-copy" onclick="copySnippet()">복사</button>
+                </div>
+              </div>
+
+              <div class="fb-section fb-danger-quest" id="fbDangerBox" style="display:none;">
+                <div class="fb-title" style="color:#b45309;">⚠️ 4. [최소 성취수준 보장] 3단계 회복 퀘스트 (Safety Net Quest)</div>
+                <div id="fbDangerText">
+                  1단계: 기초 개념 카드(K1·K2) 학습 ➔ 2단계: 교사 제공 기본 템플릿 실측 ➔ 3단계: 4칸 활동지 작성 후 재평가 응시
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;">
+            <span>AI 에이전트 교육혁신 연구회 자동 피드백 엔진 v2.0</span>
+            <button class="btn-export btn-primary-action" onclick="window.print()">🖨️ 학생 전달용 인쇄</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- TAB 2: 공통 100점 루브릭 평가 관리 -->
+  <!-- ===================================================================== -->
+  <section id="tab-rubric-eval" class="tab-panel">
+    <div class="panel-card">
+      <h2>
+        <span>📋 공통 100점 루브릭 기준표 및 평가 현황 (7개 교과 표준화)</span>
+        <a class="btn-export" href="AI_기반_맞춤형_피드백_설계안.md" target="_blank">📄 설계안 원문(MD) 열기</a>
+      </h2>
+      <table>
+        <thead>
+          <tr>
+            <th>평가 요소</th>
+            <th>배점</th>
+            <th>상 수준 (80~100%)</th>
+            <th>중 수준 (60~79%)</th>
+            <th>하 수준 (0~59%)</th>
+            <th>기본점수 기준</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1. 문제 정의 및 프롬프트 설계</strong></td>
+            <td class="center"><strong>25점</strong></td>
+            <td>과제 목표와 직무 제약(치수·지연·형식)을 구조화하고 3가지 필수 조건을 담은 프롬프트를 작성함 (21~25점)</td>
+            <td>과제 목표는 이해했으나 환경 제약 수치나 단일 변인 통제 조건 중 일부가 누락됨 (15~20점)</td>
+            <td>"코드 짜줘", "정답 알려줘" 식의 단편적 질문을 하며 문제 상황을 분해하지 못함 (0~14점)</td>
+            <td class="center">착수 시 10점</td>
+          </tr>
+          <tr>
+            <td><strong>2. AI 에이전트 협업 및 산출물 구현</strong></td>
+            <td class="center"><strong>30점</strong></td>
+            <td>AI 제안을 단계적으로 적용하며, 예외 상황(경계값, 다중 입력 등)을 처리하는 산출물을 완성함 (25~30점)</td>
+            <td>AI 제안으로 기본 기능은 구현했으나, 경계 조건이나 예외 처리 기능이 일부 미흡함 (18~24점)</td>
+            <td>AI 코드를 무비판적으로 복사하여 실행 오류가 발생하거나 산출물이 미완성 상태임 (0~17점)</td>
+            <td class="center">코드 착수 시 12점</td>
+          </tr>
+          <tr>
+            <td><strong>3. 전공 지식 기반 오류 검증·디버깅</strong></td>
+            <td class="center"><strong>25점</strong></td>
+            <td>고정 조건과 바꾼 조건을 분리(단일 변인 통제)하여 실험하고, 실측 수치(mm, ms, %)로 AI 답을 검증함 (21~25점)</td>
+            <td>실험·측정을 수행했으나 여러 조건을 동시에 바꾸어 정확한 원인 추론이 다소 부족함 (15~20점)</td>
+            <td>실측 대조 없이 AI의 설명을 그대로 믿거나, 에러 로그 전체를 재질의하는 데 그침 (0~14점)</td>
+            <td class="center">실험 1회 시 10점</td>
+          </tr>
+          <tr>
+            <td><strong>4. 최종 결과물 완성도 및 발표</strong></td>
+            <td class="center"><strong>20점</strong></td>
+            <td>다음 교과/팀이 재현할 수 있는 인계 명세서와 검증 근거를 문서화하고 논리적으로 설명함 (17~20점)</td>
+            <td>결과물은 완성되었으나 인계 명세서의 검증 수치나 실패 재현 조건 설명이 일부 누락됨 (12~16점)</td>
+            <td>산출물 파일이 누락되거나 본인의 수정 근거를 말로 설명하지 못함 (0~11점)</td>
+            <td class="center">제출 시 8점</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin-top:22px;color:var(--primary);">🎯 성취 수준별 조치 가이드라인</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:14px;margin-top:10px;">
+        <div style="background:#eff6ff;padding:16px;border-radius:12px;border:1px solid #bfdbfe;">
+          <strong style="color:#1e40af;">A/B 등급 (80~100점): 심화 도전</strong>
+          <p style="margin:6px 0 0;font-size:13px;color:var(--muted);">
+            타 교과 산출물 인계 총괄 역할 부여 및 예외·장애 상황(통신 두절, 센서 오류) 극복 심화 프롬프트 퀘스트 수행.
+          </p>
+        </div>
+        <div style="background:#f0fdf4;padding:16px;border-radius:12px;border:1px solid #bbf7d0;">
+          <strong style="color:#166534;">C/D 등급 (60~79점): 피드백 처방</strong>
+          <p style="margin:6px 0 0;font-size:13px;color:var(--muted);">
+            단일 변인 통제 활동지 재점검 및 챗봇에게 제약 조건(수치)을 포함하여 2차 질문하는 프롬프트 카드 훈련.
+          </p>
+        </div>
+        <div style="background:#fff1f2;padding:16px;border-radius:12px;border:1px solid #fecdd3;">
+          <strong style="color:#be123c;">E 등급 (40점 미만): 최소 성취수준 안전망</strong>
+          <p style="margin:6px 0 0;font-size:13px;color:var(--muted);">
+            교사 1:1 스캐폴딩, 기초 개념 카드(K1·K2) 복습, 기본 템플릿 실측 퀘스트 완료 후 재평가 기회 보장.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- TAB 3: AI 활용 전·후 결과물 비교 (Before vs After) -->
+  <!-- ===================================================================== -->
+  <section id="tab-ba-compare" class="tab-panel">
+    <div class="panel-card">
+      <h2>
+        <span>🔄 동일 과제 AI 활용 전(Before) vs 후(After) 산출물 대조</span>
+        <span class="pill pill-real">7개 전문교과 실측 사례</span>
+      </h2>
+      <p style="color:var(--muted);font-size:13.5px;margin-top:0;">
+        학생들이 AI 제안을 단순 복사하던 1단계 초기 산출물(Before)에서, 단일 변인 통제 및 실측을 통해 수정한 최종 산출물(After)로의 전환 사례입니다.
+      </p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px;">
+        <div style="background:#fff1f2;border:1px solid #fecdd3;border-radius:14px;padding:18px;">
+          <h3 style="color:#be123c;margin:0 0 10px;">❌ AI 단순 수용 / 1단계 초안 (Before)</h3>
+          <ul style="padding-left:20px;font-size:13.5px;margin:0;line-height:1.75;">
+            <li><strong>응용프로그래밍개발:</strong> 챗봇 기본 CRUD 코드 복사 및 단순 실행 ➔ 자료 흐름 미구분 및 팀코드·파일 예외 시험 누락</li>
+            <li><strong>3D프린터용제품제작:</strong> 공차(+0.5mm) 없이 명목 치수 그대로 출력 ➔ 카메라 조립 시 플라스틱 파손</li>
+            <li><strong>게임프로그래밍:</strong> 화면 해상도·시야각 고정 없이 이미지 캡처 ➔ 차선 인식이 주행 중 흔들림</li>
+            <li><strong>네트워크프로그래밍:</strong> 챗봇 코드 그대로 실행 후 평균 RTT만 기재 (유실 패킷을 0ms로 합산 왜곡)</li>
+            <li><strong>인공지능모델링:</strong> 연속 프레임 랜덤 분할 ➔ PC 검증 정확도 96%였으나 실차 주행 시 직진 편향 발생</li>
+            <li><strong>시스템운영및 네트워크운영:</strong> 장치 간 시각 오차(+2.0초) 무시 ➔ 사고 발생 시간 전후 순서가 뒤바뀜</li>
+            <li><strong>스마트문화앱콘텐츠제작:</strong> 항목 많은 센서 상단 배치 ➔ 긴급 정지 알림이 화면 아래로 밀려남</li>
+          </ul>
+        </div>
+
+        <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;padding:18px;">
+          <h3 style="color:#15803d;margin:0 0 10px;">✅ 3단계 질문·실측 검증 후 산출물 (After)</h3>
+          <ul style="padding-left:20px;font-size:13.5px;margin:0;line-height:1.75;">
+            <li><strong>응용프로그래밍개발:</strong> 기능 명세 4단계 분해 및 팀별 조건 1개씩 통제한 기능 시험표·실패 재현 인계서 완성</li>
+            <li><strong>3D프린터용제품제작:</strong> 조립 공차 +0.5mm 반영 및 Fusion 360 간섭 검사(Interference 0건) 확인</li>
+            <li><strong>게임프로그래밍:</strong> 128×96 ROI 통제 및 조향각 라벨(14종) 정규화 표본 완성</li>
+            <li><strong>네트워크프로그래밍:</strong> 10회 유효 RTT 분리 및 타임아웃 100ms 재전송 안전 규칙(v3) 명세 완성</li>
+            <li><strong>인공지능모델링:</strong> 주행 회차(run_id) 기준 시간순 분할 ➔ 우회전 데이터 과적합 해결 및 실차 주행 통과</li>
+            <li><strong>시스템운영및 네트워크운영:</strong> 기준 시계(Reference Clock) 정립 및 Time Skew 보정 후 타임라인 재정렬</li>
+            <li><strong>스마트문화앱콘텐츠제작:</strong> 1순위 긴급 경고 상단 고정 + 0.9초 이내 인지 반응형 웹 대시보드 완성</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- TAB 4: 4대 연구성과 및 자료 감사 뷰어 -->
+  <!-- ===================================================================== -->
+  <section id="tab-audit-view" class="tab-panel">
+    <div class="panel-card">
+      <h2>
+        <span>🔍 4대 연구성과 및 자료 감사(Audit) 현황</span>
+        <span class="pill pill-real">로드맵 감사 기준 100% 반영</span>
+      </h2>
+
+      <div style="background:#f8fafc;padding:16px;border-radius:12px;border:1px solid var(--line);margin-bottom:18px;font-size:13.5px;">
+        <strong>📌 자료 감사 및 증거 상태(Evidence State) 원칙:</strong>
+        <div style="margin-top:6px;display:flex;gap:14px;flex-wrap:wrap;">
+          <span><span class="pill pill-real">전수 실측 응답</span> : 7개 전문교과 전원 (34명 전수 대응 완료)</span>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>연구성과 영역</th>
+            <th>사전 기준선 (Baseline)</th>
+            <th>사후 검증 지표</th>
+            <th>증거 상태</th>
+            <th>연구회 조치 및 관리 기준</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1. 수행평가 루브릭</strong></td>
+            <td>1단계 초기 점수 (과제 착수)</td>
+            <td>공통 100점 루브릭 최종 산출물 점수</td>
+            <td class="center"><span class="pill pill-real">실제 채점 연동</span></td>
+            <td>238건 전수 과정 중심 루브릭 채점 원장 보관 및 개인정보 비공개 관리</td>
+          </tr>
+          <tr>
+            <td><strong>2. AI 활용 전·후 결과물</strong></td>
+            <td>AI 단순 생성 초안 (Before)</td>
+            <td>단일 변인 실험·실측 후 산출물 (After)</td>
+            <td class="center"><span class="pill pill-real">전후 파일 대조</span></td>
+            <td>7개 교과별 학생 산출물 뷰어 및 수정 이유·측정값 기록 인덱스 구축</td>
+          </tr>
+          <tr>
+            <td><strong>3. 전문교과 성취도</strong></td>
+            <td>특화 문항(S1~S7) 사전 2.73점</td>
+            <td>사후 3.38점 (+0.64점, dz=0.84)</td>
+            <td class="center"><span class="pill pill-real">대응표본 t-검정</span></td>
+            <td>개념 확인 문항(K1·K2) 정답률 상승 및 성취 수준(A~E) 통합 관리</td>
+          </tr>
+          <tr>
+            <td><strong>4. AI 학생인식 변화</strong></td>
+            <td>공통 13문항 사전 2.98점</td>
+            <td>사후 3.47점 (+0.49점, p&lt;.001)</td>
+            <td class="center"><span class="pill pill-real">7개 교과 전수</span></td>
+            <td>Q8 무비판 수용 감소(−0.59점, KPI-3 달성) 및 7개 전 교과 실측 검증 완료</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<footer>
+  상일미디어고등학교 AI 에이전트 교육혁신 연구회 | 2026 직업계고 교수학습능력 향상 교사연구회<br>
+  AI 기반 맞춤형 평가·피드백 시스템 (공통 100점 루브릭 &amp; 3단계 질문·검토 연계)
+</footer>
+
+<script>
+// Tab Switching
+function switchMainTab(tabId, btnEl) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  const target = document.getElementById(tabId);
+  if (target) target.classList.add('active');
+  if (btnEl) btnEl.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Preset Data
+const PRESETS = {
+  p_leader: { a1: 24, a2: 28, a3: 23, a4: 17, level: 'S3' },
+  p_verifier: { a1: 17, a2: 22, a3: 23, a4: 17, level: 'S3' },
+  p_blind: { a1: 22, a2: 22, a3: 11, a4: 13, level: 'S1' },
+  p_danger: { a1: 10, a2: 12, a3: 9, a4: 7, level: 'S0' }
+};
+
+// Subject Context Data
+const SUBJECT_PROMPTS = {
+  net: {
+    name: "네트워크프로그래밍",
+    actionGood: "10회 측정한 RTT에서 유실을 제외한 유효 평균값과 최대 지연시간을 분리해 챗봇에게 재전송 안전 임계값을 문의하세요.",
+    actionPrompt: "현재 제어 패킷을 10회 전송하여 유효 9회 평균 RTT 62ms, 최대 148ms가 측정되었습니다. 유실 패킷을 제외하고 급제동 명령을 안전하게 보장할 타임아웃 임계값(ms)을 계산해 줘."
+  },
+  app: {
+    name: "응용프로그래밍개발",
+    actionGood: "기능 명세를 입력·처리·저장·조회 4단계로 분해하고, 경계 조건(빈 파일, 팀코드 불일치) 테스트를 챗봇에게 질문하세요.",
+    actionPrompt: "현재 Flask 로그인 및 세션 처리 코드에서 사용자 세션이 만료되거나 빈 파일이 업로드되었을 때의 예외 처리 루틴을 단위 테스트 코드 형태로 제안해 줘."
+  },
+  '3d': {
+    name: "3D프린터용제품제작",
+    actionGood: "배터리 실측 치수에 조립 여유값(+0.5mm)을 적용하여 간섭이 발생하는지 Fusion 360에서 확인 후 보정을 질문하세요.",
+    actionPrompt: "배터리 실측 치수 30mm에 조립 공차 +0.5mm를 반영하려 합니다. 3D 프린터의 수축률을 감안하여 카메라 브래킷 결합부의 치수 공차를 어떻게 설정해야 간섭 없이 장착될까요?"
+  },
+  game: {
+    name: "게임프로그래밍",
+    actionGood: "카메라 시야각(FOV)과 해상도(128x96)를 통제하여 가상 주행 트랙에서 수집된 라벨의 편향을 분석하도록 요청하세요.",
+    actionPrompt: "Unity 가상 주행 환경에서 카메라 높이 15cm, 각도 -10도로 설정했을 때 직진 구간에만 데이터가 80% 편중되어 있습니다. 좌/우회전 조향각 라벨을 균등하게 수집하기 위한 스크립트 수정안을 제안해 줘."
+  },
+  ai: {
+    name: "인공지능모델링",
+    actionGood: "연속 프레임 데이터 누수를 방지하기 위해 주행 회차(run_id) 기준 분할을 적용하고 전/후 검증 정확도를 대조하세요.",
+    actionPrompt: "연속된 주행 프레임을 랜덤 분할하면 검증 정확도가 96%로 과대평가됩니다. 데이터 누수(Leakage)를 방지하기 위해 주행 회차별로 시간순 분할하는 Python 코드를 작성해 줘."
+  },
+  sys: {
+    name: "시스템운영및네트워크운영",
+    actionGood: "기준 장치를 선정하고 장치 간 시각 오차(+2.0초)를 보정한 후 로그 타임라인을 재정렬하도록 질의하세요.",
+    actionPrompt: "차량 제어기와 중계 서버의 타임스탬프가 2.0초 어긋나 사건 순서가 거꾸로 보입니다. 기준 장치 시각을 기준으로 두 로그의 시간차를 보정하여 타임라인을 정렬하는 규칙을 설명해 줘."
+  },
+  smart: {
+    name: "스마트문화앱콘텐츠제작",
+    actionGood: "위험도 기준 1순위 긴급 경고 상단 고정 및 다중 차량 알림 묶음(그룹화) UI 규칙을 점검하세요.",
+    actionPrompt: "동일 차량에서 연속으로 알림이 발생할 때 화면이 밀려나는 문제를 해결하고 싶습니다. 긴급 정지 배너를 상단에 고정하고 일반 알림은 차량 ID별로 묶어 표시하는 반응형 UI 코드를 알려 줘."
+  }
+};
+
+function onSubjectChange() {
+  updateEvaluation();
+}
+
+function applyStudentPreset() {
+  const pKey = document.getElementById('selStudentPreset').value;
+  if (pKey === 'custom') return;
+  const p = PRESETS[pKey];
+  if (!p) return;
+  document.getElementById('rngA1').value = p.a1;
+  document.getElementById('rngA2').value = p.a2;
+  document.getElementById('rngA3').value = p.a3;
+  document.getElementById('rngA4').value = p.a4;
+  document.getElementById('selChatbotLevel').value = p.level;
+  updateEvaluation();
+}
+
+function updateEvaluation() {
+  const a1 = parseInt(document.getElementById('rngA1').value);
+  const a2 = parseInt(document.getElementById('rngA2').value);
+  const a3 = parseInt(document.getElementById('rngA3').value);
+  const a4 = parseInt(document.getElementById('rngA4').value);
+  const level = document.getElementById('selChatbotLevel').value;
+  const subjKey = document.getElementById('selSubject').value;
+  const subj = SUBJECT_PROMPTS[subjKey] || SUBJECT_PROMPTS['app'];
+
+  // Update Score Displays
+  document.getElementById('valA1').textContent = `${a1} / 25점`;
+  document.getElementById('valA2').textContent = `${a2} / 30점`;
+  document.getElementById('valA3').textContent = `${a3} / 25점`;
+  document.getElementById('valA4').textContent = `${a4} / 20점`;
+
+  const total = a1 + a2 + a3 + a4;
+  document.getElementById('dispTotalScore').textContent = `${total}점`;
+
+  // Grade & Danger logic
+  let grade = "E등급 (미달)";
+  let isDanger = false;
+  if (total >= 90) grade = "A등급 (탁월)";
+  else if (total >= 80) grade = "B등급 (우수)";
+  else if (total >= 70) grade = "C등급 (보통)";
+  else if (total >= 60) grade = "D등급 (기초)";
+  else {
+    grade = "E등급 (보완)";
+    if (total < 40) isDanger = true;
+  }
+  document.getElementById('dispGrade').textContent = grade;
+
+  // Student Type Logic
+  let studentType = "유형 A: 융합형 에이전트 리더";
+  if (total < 40 || (a1 <= 12 && a3 <= 12)) {
+    studentType = "유형 D: 기초 집중 지원군 (최소성취수준 관리)";
+  } else if (a1 >= 20 && a3 < 16) {
+    studentType = "유형 C: 맹목적 AI 수용자 (실측 검증 취약)";
+  } else if (a1 < 16 && a3 >= 18) {
+    studentType = "유형 B: 꼼꼼한 검증가 (프롬프트 스캐폴딩 필요)";
+  }
+  document.getElementById('dispType').textContent = studentType;
+
+  // Praise Text
+  let praise = `과제 목표를 이해하고 AI 도구를 활용하여 실습에 성실히 참여하고 있습니다. (${subj.name})`;
+  if (a1 >= 20 && a2 >= 24) {
+    praise = `과제 제약 조건을 프롬프트에 명확히 구조화하였으며, AI 제안을 바탕으로 기본 구현을 매우 신속하고 완성도 높게 이끌어냈습니다.`;
+  } else if (a3 >= 20) {
+    praise = `AI 제안을 무작정 믿지 않고, 직접 실험 및 실측 수치를 통해 이상 유무를 대조하려는 전공자다운 비판적 검증 태도가 돋보입니다.`;
+  }
+  document.getElementById('fbPraiseText').textContent = praise;
+
+  // Defect Text
+  let defect = "";
+  if (a3 < 16) {
+    defect = `AI가 생성한 결과를 그대로 신뢰하여 실제 환경의 제약(지연시간, 공차, 데이터 편향 등)과 실측 대조하는 과정이 부족합니다. 단일 변인 통제 활동지 작성이 필요합니다.`;
+  } else if (a1 < 16) {
+    defect = `챗봇 질문 시 환경 조건과 제약 수치를 충분히 제공하지 않아(질문 수준: ${level}), AI가 모호하거나 일반적인 답변만 내놓고 있습니다.`;
+  } else if (a2 < 20) {
+    defect = `정상 조건 1건만 시험하고 예외 상황(경계값 입력, 통신 지연, 데이터 유실)에 대한 산출물 구현 처리가 누락되었습니다.`;
+  } else {
+    defect = `전반적으로 우수하나, 다른 교과 팀원이 산출물을 재현할 수 있도록 인계 명세서의 실패 확인 기준을 조금 더 구체화할 필요가 있습니다.`;
+  }
+  document.getElementById('fbDefectText').textContent = defect;
+
+  // Action Text & Prompt Snippet
+  document.getElementById('fbActionText').textContent = subj.actionGood;
+  document.getElementById('promptText').textContent = subj.actionPrompt;
+
+  // Danger Box
+  const dangerBox = document.getElementById('fbDangerBox');
+  const dangerBadge = document.getElementById('dispDangerBadge');
+  if (isDanger) {
+    dangerBox.style.display = 'block';
+    dangerBadge.style.display = 'block';
+    document.getElementById('dispGrade').className = "badge-grade badge-danger";
+  } else {
+    dangerBox.style.display = 'none';
+    dangerBadge.style.display = 'none';
+    document.getElementById('dispGrade').className = "badge-grade";
+  }
+}
+
+function copySnippet() {
+  const t = document.getElementById('promptText').textContent;
+  navigator.clipboard.writeText(t).then(() => {
+    alert("프롬프트가 클립보드에 복사되었습니다! 챗봇에 붙여넣어 활용하세요.");
+  });
+}
+
+function copyFeedbackText() {
+  const total = document.getElementById('dispTotalScore').textContent;
+  const grade = document.getElementById('dispGrade').textContent;
+  const studentType = document.getElementById('dispType').textContent;
+  const praise = document.getElementById('fbPraiseText').textContent;
+  const defect = document.getElementById('fbDefectText').textContent;
+  const action = document.getElementById('fbActionText').textContent;
+  const prompt = document.getElementById('promptText').textContent;
+
+  const fullText = `[AI 맞춤형 평가 피드백 리포트]\n- 종합 점수: ${total} (${grade})\n- 학생 유형: ${studentType}\n\n1. 성취 인정:\n${praise}\n\n2. 핵심 결함 진단:\n${defect}\n\n3. 다음 행동 가이드:\n${action}\n\n[추천 후속 질문 프롬프트]:\n${prompt}`;
+  navigator.clipboard.writeText(fullText).then(() => {
+    alert("피드백 리포트 전체가 클립보드에 복사되었습니다. 학생 활동지나 피드백 시트에 붙여넣을 수 있습니다.");
+  });
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  updateEvaluation();
+});
+</script>
+</body>
+</html>

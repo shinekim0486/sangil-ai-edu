@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7차시 · 입력 조건을 맞추고 확인 절차 세우기</title>
+<!--
+================================================================================
+  수업 슬라이드 표준 템플릿 (실습 중심)
+  정본 위치: 10_실행도구/Claude_강의자료_작업공간/templates/수업슬라이드_템플릿.html
+  기준 문서: skills/강의자료-빌더/skill.md «수업 시간 배분 기준 ⭐ 실습 중심»
+  참고 완성본: 20_연도별운영/2026학년도/2학기/02_수업자료/docker/01회차
+
+  ── 이 템플릿을 쓰는 법 ────────────────────────────────────────────────────
+  1. 이 파일을 회차 폴더로 복사하고 파일명을 {학년}_{과목}_{단원명}.html 로 바꾼다.
+  2. 아래 <div id="deck"> 안의 슬라이드 예시를 실제 내용으로 채운다.
+  3. 예시 슬라이드는 유형별 견본이다. 필요한 것만 남기고 나머지는 지운다.
+
+  ── 절대 규칙 ─────────────────────────────────────────────────────────────
+  · 실습이 전체의 80% 이상. 이론 전용 슬라이드를 만들지 않는다.
+  · 개념 설명은 실습 슬라이드 안의 <div class="why"> 박스에만 넣는다.
+  · 실습 하나는 3~5단계로 쪼개 각각 슬라이드 1장으로 만든다.
+  · 여러 줄 명령어 금지. 백슬래시(\)는 Bash 문법이라 PowerShell에서 실패한다.
+  · 16:9 / 1920x1080 기준. 한 슬라이드에서 스크롤이 생기면 슬라이드를 나눈다.
+    (코드 블록 내부의 가로 스크롤만 허용)
+
+  ── 2026-09-09 추가 (교사 확정 — «앞으로 이렇게 계속») ────────────────────
+  · 배율 200%. 
+  .img-pair { display:flex; gap:.6rem; align-items:flex-start; }
+  .img-pair figure { margin:0; text-align:center; font-size:.74rem; color:#555; }
+  .img-pair img { width:7.5rem; image-rendering:pixelated; border:2px solid #cfd8dc; border-radius:6px; display:block; margin-bottom:.15rem; }
+  .qrow td:first-child { width:5.2rem; font-weight:bold; background:#e3f2fd; }
+  .mark-b { background:#bbdefb; padding:0 3px; border-radius:3px; }
+  .mark-g { background:#c8e6c9; padding:0 3px; border-radius:3px; }
+  .mark-y { background:#fff59d; padding:0 3px; border-radius:3px; }
+</style> 앞의 «200% 배율» 블록을 지우지 않는다.
+    새 덱을 만들면 반드시 헤드리스 크롬 1920×1080 으로 재고,
+    넘치는 장에만 <div class="slide" style="zoom:0.9"> 로 맞춘다.
+    목표: 넘침 0장 · 채움 평균 70% 대.
+  · 명령을 다루는 회차는 코드 블록을 네 가지로 나눈다 (.cmd/.file/.out/.ex).
+    .cmd 는 «붙여넣으면 그대로 실행»이 계약이다 — 주석·프롬프트·자리표시(이름) 금지.
+    표지 다음에 «이 자료의 상자 네 가지» 안내 장을 한 장 넣는다.
+  · 조작 화면은 그림으로 보여 준다 — 창 배치도(.ide) · 프롬프트 해부 ·
+    폴더 트리(.tree) · 대화상자 목업(.dlg) · «이렇게 나오면 성공» 터미널(.term).
+    단계마다 무엇이 보이면 성공인지 화살표로 짚는다.
+  · 막혔을 때 펴 보는 «첫걸음» 안내서를 과목 00_공통/ 에 두고
+    오른쪽 아래 고정 링크(.help-btn)로 모든 회차에서 열리게 한다.
+
+  ── 과목별 테마 (2026-08-14 교사 확정) ────────────────────────────────────
+  · java   → 다크 테마   ★ 아래 «다크 테마 오버라이드» 블록을 반드시 붙인다
+  · docker → 라이트 (기본)
+  · html   → 라이트 (기본)
+  다크로 만들 때는 이 파일 맨 아래 주석의 오버라이드 CSS를 
+  .img-pair { display:flex; gap:.6rem; align-items:flex-start; }
+  .img-pair figure { margin:0; text-align:center; font-size:.74rem; color:#555; }
+  .img-pair img { width:7.5rem; image-rendering:pixelated; border:2px solid #cfd8dc; border-radius:6px; display:block; margin-bottom:.15rem; }
+  .qrow td:first-child { width:5.2rem; font-weight:bold; background:#e3f2fd; }
+  .mark-b { background:#bbdefb; padding:0 3px; border-radius:3px; }
+  .mark-g { background:#c8e6c9; padding:0 3px; border-radius:3px; }
+  .mark-y { background:#fff59d; padding:0 3px; border-radius:3px; }
+</style> 직전에
+  통째로 붙여넣기만 하면 된다. 구조·클래스는 손대지 않는다.
+================================================================================
+-->
+<style>
+  :root {
+    --primary: #1a73e8;
+    --primary-dark: #0d47a1;
+    --green: #2e7d32;   --green-light: #e8f5e9;
+    --yellow: #f57f17;  --yellow-light: #fffde7;
+    --red: #c62828;     --red-light: #ffebee;
+    --purple: #6a1b9a;  --purple-light: #f3e5f5;
+    --code-bg: #1e1e2e;
+    --text: #1e2235;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 100%; height: 100%; overflow: hidden;
+    font-family: 'Malgun Gothic', '맑은 고딕', 'Segoe UI', sans-serif;
+    background: #111; color: var(--text);
+  }
+
+  #deck { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+  .slide {
+    position: absolute; inset: 0;
+    display: none; flex-direction: column;
+    padding: 26px 52px 50px;
+    background: #fff;
+    opacity: 0; transition: opacity .2s ease;
+    overflow: hidden;
+  }
+  .slide.active { display: flex; opacity: 1; }
+
+  h1 { font-size: 1.65rem; color: var(--primary-dark); margin-bottom: .3rem; }
+  h3 { font-size: .98rem; margin-bottom: .2rem; }
+  p, li { font-size: .91rem; line-height: 1.55; }
+  ul, ol { padding-left: 1.2rem; margin: .25rem 0; }
+  li { margin: .1rem 0; }
+  .lead { color: #666; font-size: .87rem; margin-bottom: .5rem; }
+
+  /* ===== 실습 단계 배너 — 모든 실습 슬라이드 상단에 필수 ===== */
+  .prac-bar { display: flex; align-items: center; gap: .5rem; margin-bottom: .3rem; }
+  .prac-tag {
+    display: inline-block; background: var(--green); color: #fff;
+    border-radius: 5px; padding: 2px 12px; font-size: .8rem; font-weight: bold;
+  }
+  .prac-tag.b { background: var(--primary); }   /* 실습 B 수정하기 */
+  .prac-tag.c { background: var(--red); }       /* 실습 C 오류 체험 */
+  .prac-tag.d { background: var(--purple); }    /* 실습 D 만들어보기 */
+  .prac-tag.intro { background: #607d8b; }      /* 도입·정리 */
+  .time-chip {
+    margin-left: auto; background: #eceff1; color: #546e7a;
+    border-radius: 12px; padding: 2px 12px; font-size: .78rem; font-weight: bold;
+  }
+  .step-chip {
+    background: #fff; border: 2px solid var(--green); color: var(--green);
+    border-radius: 12px; padding: 1px 10px; font-size: .76rem; font-weight: bold;
+  }
+  .step-chip.b { border-color: var(--primary); color: var(--primary); }
+  .step-chip.c { border-color: var(--red); color: var(--red); }
+  .step-chip.d { border-color: var(--purple); color: var(--purple); }
+
+  /* ===== 💡 「잠깐 —」 설명 박스 : 이 수업의 이론은 전부 여기 들어간다 ===== */
+  .why {
+    background: linear-gradient(180deg, #fffdf3 0%, #fff9e0 100%);
+    border: 2px solid var(--yellow);
+    border-radius: 10px; padding: .6rem .85rem; margin: .35rem 0;
+  }
+  .why-title {
+    font-size: .84rem; font-weight: bold; color: #e65100;
+    margin-bottom: .3rem; display: flex; align-items: center; gap: .3rem;
+  }
+  .why p, .why li { font-size: .88rem; }
+
+  pre {
+    background: var(--code-bg); color: #cdd6f4;
+    border-radius: 8px; padding: .55rem .8rem;
+    font-family: 'D2Coding', 'Consolas', monospace;
+    font-size: .79rem; line-height: 1.48; overflow-x: auto;
+    white-space: pre; margin: .28rem 0;
+  }
+  code {
+    font-family: 'D2Coding', 'Consolas', monospace; font-size: .88em;
+    background: #e8eaf6; padding: 1px 5px; border-radius: 3px;
+  }
+  pre code { background: none; padding: 0; font-size: inherit; }
+  .kw { color: #cba6f7; font-weight: bold; }  /* 키워드 */
+  .cm { color: #6a9955; }                     /* 주석 */
+  .st { color: #a6e3a1; }                     /* 문자열·성공 출력 */
+  .nm { color: #fab387; }                     /* 숫자·명령어 이름 */
+  .hl { color: #f9e2af; font-weight: bold; }  /* 강조 */
+  .err { color: #f38ba8; }                    /* 오류 메시지 */
+  .cached { color: #89dceb; font-weight: bold; }
+
+  .box       { border-radius: 8px; padding: .5rem .8rem; margin: .28rem 0; font-size: .88rem; }
+  .box-blue  { background: #e3f2fd; border-left: 4px solid var(--primary); }
+  .box-green { background: var(--green-light); border-left: 4px solid var(--green); }
+  .box-yellow{ background: var(--yellow-light); border-left: 4px solid var(--yellow); }
+  .box-red   { background: var(--red-light); border-left: 4px solid var(--red); }
+  .box-purple{ background: var(--purple-light); border-left: 4px solid var(--purple); }
+
+  .cols   { display: grid; gap: .9rem; }
+  .cols-2 { grid-template-columns: 1fr 1fr; }
+  .cols-4 { grid-template-columns: repeat(4, 1fr); }
+  .cols-4060 { grid-template-columns: 42fr 58fr; }
+  .cols-6040 { grid-template-columns: 58fr 42fr; }
+  .grow { flex: 1; min-height: 0; }
+  .mt-auto { margin-top: auto; }
+
+  table { width: 100%; border-collapse: collapse; margin: .28rem 0; font-size: .84rem; }
+  th { background: var(--primary); color: #fff; padding: .32rem .5rem; text-align: left; }
+  td { padding: .28rem .5rem; border-bottom: 1px solid #e0e0e0; vertical-align: top; }
+  tr:nth-child(even) td { background: #f5f5f5; }
+
+  .badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; border-radius: 50%;
+    font-size: .7rem; font-weight: bold; color: #fff;
+    background: var(--primary); flex-shrink: 0; margin-right: .3rem;
+  }
+  .badge-green { background: var(--green); }
+  .badge-red { background: var(--red); }
+  .badge-purple { background: var(--purple); }
+  .badge-yellow { background: var(--yellow); }
+  .step-row { display: flex; align-items: flex-start; gap: .3rem; margin: .22rem 0; font-size: .87rem; }
+
+  .cmd-tag {
+    display: inline-block; background: var(--primary); color: #fff;
+    border-radius: 4px; padding: 1px 7px;
+    font-family: 'D2Coding', 'Consolas', monospace;
+    font-size: .76rem; font-weight: bold;
+  }
+
+  #progress-bar { position: fixed; bottom: 0; left: 0; height: 4px; background: var(--primary); transition: width .3s ease; z-index: 100; }
+  #slide-num { position: fixed; bottom: 9px; right: 15px; font-size: .7rem; color: #999; }
+  .nav-btn { position: fixed; bottom: 13px; background: rgba(0,0,0,.15); color: #fff; border: none; border-radius: 20px; padding: 4px 14px; cursor: pointer; font-size: .78rem; }
+  .nav-btn:hover { background: rgba(0,0,0,.35); }
+  #btn-prev { left: 15px; }
+  #btn-next { left: 78px; }
+
+  /* ===== 표지 ===== */
+  .slide-cover { background: linear-gradient(135deg, #0d47a1 0%, #1a73e8 60%, #0db7ed 100%) !important; color: #fff; }
+  .slide-cover h1 { color: #fff; font-size: 2.1rem; margin-bottom: .22rem; }
+  .slide-cover .subtitle { color: rgba(255,255,255,.8); font-size: .98rem; margin-bottom: .22rem; }
+  .slide-cover .meta { color: rgba(255,255,255,.6); font-size: .82rem; margin-bottom: 1rem; }
+  .cover-icon { position: absolute; right: 52px; top: 24px; font-size: 5.2rem; opacity: .18; user-select: none; pointer-events: none; }
+  .goal-list-cover li { font-size: .82rem; color: rgba(255,255,255,.78); margin: .15rem 0; list-style: none; }
+  .goal-label { display: inline-block; border-radius: 3px; padding: 1px 6px; font-size: .68rem; font-weight: bold; margin-right: 5px; }
+  .label-understand { background: rgba(255,255,255,.25); color: #fff; }
+  .label-apply { background: rgba(46,125,50,.8); color: #fff; }
+  .label-analyze { background: rgba(245,127,23,.85); color: #fff; }
+
+  /* ===== 흐름도 ===== */
+  .flow-row { display: flex; align-items: center; gap: .3rem; margin: .35rem 0; }
+  .flow-box { flex: 1; border-radius: 8px; padding: .42rem .4rem; text-align: center; font-weight: bold; font-size: .84rem; color: #fff; }
+  .flow-box small { display: block; font-weight: normal; font-size: .7rem; opacity: .85; margin-top: 2px; }
+  .flow-arrow { font-size: 1rem; color: #aaa; flex-shrink: 0; }
+
+  /* ===== 회차 목록 (정리 슬라이드) ===== */
+  .lesson-item { display: flex; align-items: center; gap: .4rem; padding: .26rem .6rem; border-radius: 6px; font-size: .82rem; margin-bottom: 3px; }
+  .lesson-tag { border-radius: 4px; padding: 1px 7px; font-size: .69rem; font-weight: bold; color: #fff; flex-shrink: 0; }
+
+  /* ===== 실습 로드맵 카드 (도입 슬라이드) ===== */
+  .road-card { border-radius: 10px; padding: .55rem .65rem; color: #fff; display: flex; flex-direction: column; gap: .12rem; }
+  .road-card .t { font-weight: bold; font-size: .92rem; }
+  .road-card .m { font-size: .76rem; opacity: .9; }
+  .road-card .tm { font-size: .73rem; opacity: .8; margin-top: auto; }
+
+  details { margin: .22rem 0; }
+  summary { cursor: pointer; font-size: .83rem; font-weight: bold; color: var(--primary); padding: .22rem .4rem; background: #e3f2fd; border-radius: 4px; list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: '▶ '; font-size: .7rem; }
+
+  /* 인공지능 모델링 — 라이트 테마 */  /* ===== 코드 복사 버튼 ===== */
+  pre { position: relative; }
+  .copy-btn {
+    position: absolute; top: 5px; right: 5px;
+    background: rgba(255,255,255,.12); color: #cdd6f4;
+    border: 1px solid rgba(255,255,255,.22); border-radius: 5px;
+    padding: 1px 9px; font-size: .68rem; cursor: pointer;
+    font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+    opacity: 0; transition: opacity .15s;
+  }
+  pre:hover .copy-btn, .copy-btn:focus { opacity: 1; }
+  .copy-btn:hover { background: rgba(255,255,255,.26); }
+  .copy-btn.done { background: #2e7d32; color: #fff; border-color: #2e7d32; opacity: 1; }
+
+  /* ══════════════════════════════════════════════════════════════
+     ⭐ 코드 블록 네 가지 — 명령을 다루는 회차에서 쓴다 (2026-09-09 교사 확정)
+     학생이 «어디까지가 명령이고 어디부터가 결과인지» 헷갈려 틀리는 일을 없앤다.
+       .cmd  파란색 — 붙여넣으면 그대로 실행된다. 주석·프롬프트·줄바꿈(\) 금지
+       .file 보라색 — 명령 창이 아니라 메모장에 넣을 «파일 내용»
+       .out  회색  — 화면에 나오는 것. 치는 게 아니다 (복사 버튼 없음)
+       .ex   주황색 — 지난 회차 예시. 그때 재료가 있어야 도니 지금은 치지 않는다
+     ★ 첫 슬라이드 다음에 «이 자료의 상자 네 가지» 안내 장을 한 장 넣는다.
+     ★ 복사 버튼은 .cmd 와 .file 에만 붙는다 (아래 스크립트의 선택자).
+     ══════════════════════════════════════════════════════════════ */
+  pre.cmd, pre.file, pre.out, pre.ex { padding-top: 1.5rem; }
+  pre.cmd::before, pre.file::before, pre.out::before, pre.ex::before {
+    position: absolute; top: 5px; left: 8px;
+    font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+    font-size: .66rem; font-weight: bold;
+    border-radius: 4px; padding: 0 7px; letter-spacing: .2px;
+  }
+  pre.cmd  { border-left: 4px solid #4fc3f7; }
+  pre.file { border-left: 4px solid #ce93d8; }
+  pre.out  { border-left: 4px solid #78909c; opacity: .95; }
+  pre.ex   { border-left: 4px solid #ffb74d; }
+  pre.cmd::before  { content: '▶ 명령 — 그대로 붙여넣어 실행'; background: #1565c0; color: #fff; }
+  pre.file::before { content: '📄 파일 내용 — 메모장에 붙여넣기'; background: #6a1b9a; color: #fff; }
+  pre.out::before  { content: '🖥 화면에 나오는 것 — 치지 않는다'; background: #455a64; color: #fff; }
+  pre.ex::before   { content: '📖 지난 회차 예시 — 지금은 치지 않는다'; background: #e65100; color: #fff; }
+
+  /* ══════════════════════════════════════════════════════════════
+     ⭐ 200% 배율 (2026-09-07 java 에서 시작 · 2026-09-09 전 과목 표준)
+     ★ 이 템플릿은 글자 크기가 «인라인 style 까지» 전부 rem 이라
+       루트 글꼴 하나만 바꾸면 본문·표·코드가 통째로 같은 비율로 커진다.
+       개별 font-size 를 손대지 말 것. 되돌리려면 아래를 16px 로만 바꾼다.
+     ── 이 블록을 빼면 1920×1080 에서 화면이 절반도 안 찬다 (실측 평균 36%).
+        넣으면 평균 70% 대가 된다. java·docker 전 회차가 이 값으로 맞춰져 있다.
+     ══════════════════════════════════════════════════════════════ */
+  html { font-size: min(3.2vh, 1.66vw); }   /* 1920x1080 에서 32px = 200% */
+
+  /* 화면 조작 UI 는 «내용»이 아니므로 배율을 따라 키우지 않는다.
+     (키우면 이전·다음 버튼이 서로 겹친다 — 위치가 고정 px 이기 때문) */
+  .nav-btn   { font-size: 13px; padding: 4px 14px; }
+  #btn-prev  { left: 15px; }
+  #btn-next  { left: 84px; }
+  #slide-num { font-size: 12px; bottom: 9px; right: 15px; }
+  .copy-btn  { font-size: 11px; padding: 1px 9px; top: 5px; right: 5px; }
+  #progress-bar { height: 4px; }
+
+  /* 상자는 «내용 분량»만큼만 차지하고, 제목 바로 아래부터 위에서 아래로 쌓는다. */
+  .cols.grow {
+    grid-auto-rows: min-content;
+    align-items: start;
+    align-content: start;
+  }
+
+  /* 번호 동그라미는 지름이 고정 px 이라 글자만 커지면 숫자가 원 밖으로 나간다. */
+  .badge { width: 1.25rem; height: 1.25rem; }
+
+  /* 여백도 rem 이라야 배율이 화면을 따라간다.
+     px 로 남겨 두면 작은 화면(노트북·프로젝터)에서 여백만 상대적으로 커져
+     내용이 아래로 밀려 잘린다. 값은 16px 기준 원래 px 를 그대로 옮긴 것이다. */
+  .slide { padding: 1.625rem 3.25rem 3.125rem; }
+  .cover-icon, .cover-whale { right: 3.25rem; top: 1.5rem; }
+
+  .cols > div { min-width: 0; }
+  pre.cmd, pre.out, pre.ex { white-space: pre-wrap; word-break: break-all; }
+
+  .img-pair { display:flex; gap:.6rem; align-items:flex-start; }
+  .img-pair figure { margin:0; text-align:center; font-size:.74rem; color:#555; }
+  .img-pair img { width:7.5rem; image-rendering:pixelated; border:2px solid #cfd8dc; border-radius:6px; display:block; margin-bottom:.15rem; }
+  .qrow td:first-child { width:5.2rem; font-weight:bold; background:#e3f2fd; }
+  .mark-b { background:#bbdefb; padding:0 3px; border-radius:3px; }
+  .mark-g { background:#c8e6c9; padding:0 3px; border-radius:3px; }
+  .mark-y { background:#fff59d; padding:0 3px; border-radius:3px; }
+</style>
+
+<body>
+<div id="deck">
+
+  <div class="slide slide-cover active">
+    <div class="cover-icon">✅</div>
+    <div style="margin-top:auto; margin-bottom:auto;">
+      <div style="font-size:.82rem; opacity:.7; margin-bottom:.35rem;">문제 정의 · 학습 자료 · 결과 확인 · 입력 조건 ②</div>
+      <h1>입력 조건을 맞추고 확인 절차 세우기</h1>
+      <div class="subtitle">누구에게 맞출까? — 모델이 배운 조건에 맞춘다</div>
+      <div class="meta">인공지능 모델링 3학년 &nbsp;|&nbsp; 7차시 / 7 &nbsp;|&nbsp; 50분 &nbsp;|&nbsp; <strong>실습 42분</strong></div>
+      <ul class="goal-list-cover"><li><span class="goal-label label-apply">적용</span>실행 사진의 크기 · 색 순서 · 값 범위를 학습 조건에 한 조건씩 맞춘다</li><li><span class="goal-label label-analyze">분석</span>조건을 하나씩 바꿀 때마다 결과를 기록하고 판정 기준으로 판단한다</li><li><span class="goal-label label-understand">이해</span>확인 절차 4단계를 세우고 챗봇 답과 대조한다 (사후 평가)</li></ul>
+      <div style="margin-top:1rem; font-size:.84rem; color:rgba(255,255,255,.75);">📌 명령은 <strong style="color:#fff;">파란 상자만</strong> 그대로 붙여넣습니다. 오늘 활동지 4·5번과 설문은 <strong style="color:#fff;">사후 평가</strong>입니다.</div>
+    </div>
+  </div>
+
+  <div class="slide">
+    <div class="prac-bar"><span class="prac-tag intro">안내</span><span class="time-chip">1분</span></div>
+    <h1>이 자료의 상자 네 가지</h1>
+    <div class="cols cols-2 grow">
+      <div>
+<pre class="cmd">print(round(m.score(prep(c['X']), c['y']), 3))</pre>
+        <div class="box box-blue" style="font-size:.84rem;"><strong>파란 상자 = 명령</strong> — 복사해서 Jupyter 셀에 붙여넣고 <b>Shift + Enter</b>. 한 줄 그대로 실행됩니다.</div>
+<pre class="file">이 차시에는 파일 내용 상자가 없습니다</pre>
+        <div class="box box-purple" style="font-size:.84rem;"><strong>보라 상자 = 파일 내용</strong> — 메모장에 붙여넣는 것.</div>
+      </div>
+      <div>
+<pre class="out">0.983</pre>
+        <div class="box" style="background:#eceff1; border-left:4px solid #455a64; font-size:.84rem;"><strong>회색 상자 = 화면에 나오는 것</strong> — 치지 않습니다. 내 화면과 비교만.</div>
+<pre class="ex">def prep(img): …   ← 실행 사진을 학습 조건으로</pre>
+        <div class="box" style="background:#fff3e0; border-left:4px solid #e65100; font-size:.84rem;"><strong>주황 상자 = 요약·예시</strong> — 지금 치지 않습니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide">
+    <div class="prac-bar"><span class="prac-tag intro">도입</span><span class="time-chip">3분</span></div>
+    <h1>세 가지가 다르다 — 무엇부터, 어디에 맞출까?</h1>
+    <div class="cols cols-4060">
+      <div>
+        <div class="box box-red"><strong>❓ 오늘의 문제</strong><br><span style="font-size:.85rem;">6차시 비교표: 크기 · 색 순서 · 값 범위가 다르다. 모델을 다시 학습할까, 실행 사진을 바꿀까?</span></div>
+        <div class="box box-blue" style="font-size:.85rem;"><strong>오늘의 재료</strong> — <code>train_frames.npz</code> · <code>car_frames.npz</code> · 6차시 활동지 · 통합 챗봇 · 사후 설문</div>
+      </div>
+      <div>
+        <div class="box box-green"><strong>오늘의 답</strong> — 모델이 <b>배운 조건(학습 때)</b>을 기준으로, 실행 사진을 <b>한 조건씩</b> 맞추고 매번 확인한다.</div>
+        <div class="box box-purple"><strong>🎯 오늘 끝나면 생기는 것</strong><br><span style="font-size:.85rem;">한 조건씩 맞추기 표 · 판정 기준 · 확인 절차 (활동지 2~5번 — 4·5번 사후 평가)</span></div>
+      </div>
+    </div>
+    <div class="cols" style="grid-template-columns:repeat(3,1fr); margin-top:.5rem;"><div class="road-card" style="background:var(--primary); min-height:90px;"><div class="t">B · 바꿔 보기</div><div class="m">한 조건씩 → 세 조건 모두</div><div class="tm">16분</div></div><div class="road-card" style="background:var(--red); min-height:90px;"><div class="t">C · 오류 체험</div><div class="m">÷255를 두 번</div><div class="tm">6분</div></div><div class="road-card" style="background:var(--purple); min-height:90px;"><div class="t">D · 만들어보기</div><div class="m">확인 절차 · 챗봇 대조</div><div class="tm">20분 · 제출</div></div></div>
+    <div class="box box-red mt-auto"><strong>⚠️ 지금 바로</strong> — 바탕화면 <code>인모실습</code> 폴더에서 Jupyter Notebook을 열고 새 노트북을 만든다. 6차시 노트북이 닫혔다면 아래 「준비」 명령부터.</div>
+  </div>
+
+  <div class="slide">
+    <div class="prac-bar"><span class="prac-tag b">실습 B · 바꿔 보기</span><span class="step-chip b">1단계 / 3</span><span class="time-chip">4분</span></div>
+    <h1>준비 — 6차시 상태로 되돌리기</h1>
+    <div class="cols cols-6040 grow"><div><pre class="cmd">import numpy as np; import pandas as pd; from sklearn.neighbors import KNeighborsClassifier; from sklearn.model_selection import train_test_split; d = np.load('train_frames.npz'); c = np.load('car_frames.npz'); X = (d['X'] / 255).reshape(300, -1); Xtr, Xva, ytr, yva = train_test_split(X, d['y'], test_size=0.2, random_state=42); m = KNeighborsClassifier(n_neighbors=5).fit(Xtr, ytr); small = c['X'][:, ::2, ::2]; print(round(m.score(Xva, yva), 3), small.shape)</pre><pre class="out">0.983 (60, 24, 32, 3)</pre></div><div><div class="why"><div class="why-title">💡 잠깐 — 왜 다시 실행하나요?</div><p>노트북을 닫으면 변수(m, c, small …)가 사라집니다. 한 줄로 6차시 끝 상태를 다시 만듭니다.</p></div><div class="box box-green mt-auto" style="font-size:.85rem;">✅ 0.983 (60, 24, 32, 3) 이면 성공</div></div></div>
+  </div>
+
+  <div class="slide" style="zoom:0.9">
+    <div class="prac-bar"><span class="prac-tag b">실습 B · 바꿔 보기</span><span class="step-chip b">2단계 / 3</span><span class="time-chip">6분</span></div>
+    <h1>한 조건씩 맞춰 보기 → 활동지 2번</h1>
+    <div class="cols cols-6040 grow"><div><div style="font-size:.8rem;font-weight:bold;">① 크기 + 값 범위만 (색 순서는 그대로)</div><pre class="cmd">print(round(m.score((small / 255).reshape(60, -1), c['y']), 3))</pre><pre class="out">0.15</pre><div style="font-size:.8rem;font-weight:bold;">② 크기 + 색 순서만 (값 범위는 그대로)</div><pre class="cmd">print(round(m.score(small[..., ::-1].reshape(60, -1), c['y']), 3))</pre><pre class="out">0.65</pre><table style=""><tr><th>맞춘 조건</th><th>결과</th></tr><tr><td>크기만 (6차시)</td><td>0.55 (전부 straight)</td></tr><tr><td>크기 + 값 범위</td><td><b>0.15</b></td></tr><tr><td>크기 + 색 순서</td><td>0.65</td></tr><tr><td>세 조건 모두</td><td>? (다음 단계)</td></tr></table></div><div><div class="why"><div class="why-title">💡 잠깐 — 하나만 맞췄더니 더 나빠졌다?</div><p>값 범위만 맞추자 0.55 → 0.15. 색이 뒤집힌 채 범위만 맞으니, 모델이 엉뚱한 사진과 「비슷하다」고 판단했습니다.</p><p>그래서 <b>한 조건 바꿀 때마다 결과를 기록</b>합니다 — 어느 조건이 어떤 영향을 주는지 보입니다.</p></div></div></div>
+  </div>
+
+  <div class="slide">
+    <div class="prac-bar"><span class="prac-tag b">실습 B · 바꿔 보기</span><span class="step-chip b">3단계 / 3</span><span class="time-chip">6분</span></div>
+    <h1>세 조건을 함수 하나로 — prep</h1>
+    <div class="cols cols-6040 grow"><div><pre class="cmd">def prep(img): return (img[:, ::2, ::2, ::-1] / 255).reshape(len(img), -1)</pre><pre class="cmd">print(round(m.score(prep(c['X']), c['y']), 3))</pre><pre class="out">0.983</pre><pre class="cmd">print(pd.crosstab(c['y'], m.predict(prep(c['X'])), rownames=['정답'], colnames=['예측']))</pre><pre class="out">예측        left  right  straight
+정답                             
+left        16      0         0
+right        0     11         0
+straight     1      0        32</pre></div><div><div class="img-pair"><figure><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAADwCAIAAAD+Tyo8AAAMA0lEQVR4nO3dW27j6BVFYYoidaPEsgudWQWZSx6TzCIDCpD5dKN0v5AUlRFkCTBRQO3G+l5/2KJJbutl45zZv/7x9+L/67oOTp/PJ5yO4winVVXD6TD0+LMVnD4eDzht229wejjs4XSxWOJVzeGU7xVf8z//9l84Zf/+z1/htOvoc/nv5b+onM3glN+Ny/UKp5vNBk4XC3qvHg96n4dhgNO6prduPqfT1+sFp0VBp7fbHU5L/L2SfmkGWApmgKVgBlgKZoClYAZYCmaApWAGWApmgKVg1RVbL6vVCk7LkrpH3KbiDhB3rcaRmivbZgunfU9XxT2t55OaOkVB3aOmoTvJjbcp+Cn0Pf1F8zl3y6hN1Y/U09pud3CKN/LNVZ1OJzita+ppfX5+wOnhcIBTvpML/NzxRXeyweaZ38BSMAMsBTPAUjADLAUzwFIwAywFM8BSMAMsBTPAUrBqvaaeB8896nvqDy2XNFFpuaRm0pQJUk/sAPFvxkFOb9o2I34uT0XabBr64Am407ZYLOCUZ0St1/QEb7cbnF4uZzjlqVddR92yz89PvCqaL8XXzO2x4/EIpxU3sfjNgTO/gaVoBlgKZoClYAZYCmaApWAGWApmgKVgBlgKZoClYNV+v4fjtm3hdDaj/PMmON4ixx0gnorEP1uWdM3c0+JWDM9b4s+9XC74uV83w3IZz+Ja4nZC7i21O3pzOuzw8aa/oqAm1h27VjybittUPE1tvV7DaVnSUxh6mon1wGfkN7AUzABLwQywFMwAS8EMsBTMAEvBDLAUzABLwQywFKzabKhBMo7UEWE86Wc+p4lKpxPNTOJpWyX2w3hGFM9bWtQ0QarHPYDjSH2ab9h4m2IY6ClUFTWT7g9qNeGQr+J6o62X/LncW5rP6flyX+rVY5cO24E8P4zntPE11/he8f5Qv4GlYAZYCmaApWAGWApmgKVgBlgKZoClYAZYCmaApWAVz7XiNhXPtXo+v96Y2e22+JupH8YzsZ48qQtnJg04MYtnYvHfyz2eKfhz+QnijxZNQxsVeWLW6fQDTnnm2XZLn8tPgXtpPBGN3zrGuzj5XvG+Rb+BpWAGWApmgKVgBlgKZoClYAZYCmaApWAGWApmgKVgVY974lYrapC8cCzSONIpfy7PTOItgTzl64VX9cQZYDyr6X6nNlXTbOCUZ3FNwb2lw/5AP4t9OO4P8RQo7lrxE+S+FG825B2R6zU9oxtO+SoKejfOZ5rx1u529Ll3us9+A0vBDLAUzABLwQywFMwAS8EMsBTMAEvBDLAUzABLwao3M5Nwb9oTJ2Y9cf5QWVIXZ4mb4HAt3puteW96LXhVqxVtReRpTF1HzTNuCE3RY8drix0gbp7VNXWeHjh7jGee8fbJPbbHuB3Ib3vf0zQ13k7Ip28mdT3pc7nF5TewFMwAS8EMsBTMAEvBDLAUzABLwQywFMwAS8EMsBSs4u7R+KIZUdwuahpq2/BUpBd/LrZ8eKPijucP4ZwnnsZ0vdLMpHezmr6++Y7NsE31eNzhlPcP8rY+nqZ2vV7g9HA4wim3uHg3ZVXRU+AGGD99/lx+J/lOco78BpaCGWApmAGWghlgKZgBloIZYCmYAZaCGWApmAGWglULnNYzm1GPh3stlwu1bbhP82ZS14Kueb+nz12vafPdiNsJ3809otPlEqeLYctnCt7zyBOzeN/iEyc58Z3kyVVT3g1uUw04p43bVFN+8x0nsfGbw/PS/AaWghlgKZgBloIZYCmYAZaCGWApmAGWghlgKZgBloJVFe6Y4yYW7wFcLKi5wtvr5tg+4ZlY7a6FU+7xcH+oKOhuzOd0zacT7ZhrW5rUNQV3vNabDZxy8+xwoC2BK2yelTgR7XikmVhVRT/Lu/x42yY/X+5pcbfsXUuPk0Jzy/wGloIZYCmYAZaCGWApmAGWghlgKZgBloIZYCmYAZaCVdwR4fYJ97S4QcKzmiqc1NX11MQqnnRVbDaj/2g8A2wYqOPFWxG5A/Tz8Fyr85nuc8l7Dzuap7XBBhj30njPI7+xjO8Gv+3vprh9vWvFuwv9BpaCGWApmAGWghlgKZgBloIZYCmYAZaCGWApmAGWglXHI0024p4Wb/rjHYLcmOF5S01DPR7uePGeuBk2onhW03bbwCn3aTrsLU3BWxFPp9OE3033arWid4Mndb27V9R5etyp1VTjO9l11Dz7+PiEU75mnpi1xJ7WzO2E0p+VAZaCGWApmAGWghlgKZgBloIZYCmYAZaCGWApWMX72mY494ibKzwlaLVawen379/h9Ha7wunrRZ2YcaROzGpFd2OOO/WGgdpFPc7x4quagrf1bbdbOL1cLnDKs6m4e1SWdCe5xcWtNZ5cxQs1Pz4+4PRw2MPpcknvM18z9x2v+AT9BpaCGWApmAGWghlgKZgBloIZYCmYAZaCGWApmAGWglUFNld4clXbtnDK05i4ezSlxcWNKO7E7HbUTOJWE2/c49Of18Ti6VPcteKG0ONBd3Ic6XMXC/rN/PS5adfjxKz15uuTurgfxhsGucP3xJTN587Ekv6kDLAUzABLwQywFMwAS8EMsBTMAEvBDLAUzABLwarXSL0Wnl3EPa3bjbop73pa3Kaia2bc4uJmEv8sT2PinXpVRfOlfh7uWo34btQ1XXPfU7fsfqcWV4mT2JqG2nJ9T+/kfr+H07b9Bqfc0+Knzz2844G2Xn580lZEv4GlYAZYCmaApWAGWApmgKVgBlgKZoClYAZYCmaApWBVjdOJBpxONKVP83xSy4d7S0Xx9QlSy+USTnme1vV6g1NuJnGPZxh+VhOL/16eEDZl/yB3vLqOGm+bTQOnPH1qvaa2XNNQI4pncZUlfdvVNTb8zvT3/vaX3+CU3zq/gaVgBlgKZoClYAZYCmaApWAGWApmgKVgBlgKZoClYNUw4KymCe2iF27cOx4PcLpYUH+IJwzxX9R1HZwul9SnWSxqOOVtfVwe4988BfeHeJITnzYN9aVOJ5rzxNsJeVcjvxu8u5C3BL7bxkgNMP6LeHrcjx8/4JS3IvoNLAUzwFIwAywFM8BSMAMsBTPAUjADLAUzwFIwAywFq8oZZfjx4N4SdWKeBbVPeBNc39PncueJu1Ztu4NTntRVVdTj4ZYP/6ts25aOJ+A5T2w+p4u+Xq9wynstt1tqF/3++x9wyg2wdxszab4U74jk/t/lQneDO15lSdfMs8f8BpaCGWApmAGWghlgKZgBloIZYCmYAZaCGWApmAGWglWrNXViijvNAZrjvCWsxBQ4bulNJ6Yo6Ie5EcU9LZ7G9MQ/qca5Vvy5x+MJTqcYR+qW8dSrM+7U4/tc4SlPgdput3DK48U2+D7fscM3jjTjjVtcfCd5U+flQle1wr6j38BSMAMsBTPAUjADLAUzwFIwAywFM8BSMAMsBTPAUrCKJxuxK3ZTeGLW8Ujb69Zr2hK4xrYNzxDixswJG1Fz7FrxNCa+G1MmV7HrlZ7RFudLLZc0yYnbctwAux2//uYMA/WleEsgt7jqmp4v73nkp3/HRuPHB82H4zltfgNLwQywFMwAS8EMsBTMAEvBDLAUzABLwQywFMwAS8EqnvM0w/bJasWNGfrN379/winveuNZTcNArabdjvYArjfU8Rp6+otKnALV488OP62J9fn5Aad8Vc8nn1IjincINhs6PZ/PX/7Zy4XeDe5adR09BZ5rtd3S1ssOZ3Hxts03/TA4k/SLM8BSMAMsBTPAUjADLAUzwFIwAywFM8BSMAMsBavKOWWY5/Ewnl1Uzqj1ssDpU1Ouips6byZXYbes3Wzwc6ldxA2wKeqaZkTN5zTXqudNjjh7jDteVU2fO8POE33qu5lYPBGNZ61xX4qnXvU93ckbzi3btdTx8htYCmaApWAGWApmgKVgBlgKZoClYAZYCmaApWAGWApWrVa0B5DnWr351TgjiqdtPbDX0mxpKtL1Sg2w5ZLaNtw94p2Jh/0eTttvtIHufqcuzhTnE+5brOgZFQX1lvj5ck+L8X5Jnk3F/T9+n2vsh/EMsK6jnhZ3vBa4BXIc8W7AmaRfnAGWghlgKZgBloIZYCmYAZaCGWApmAGWghlgKdj/AH9VLDb/fjBDAAAAAElFTkSuQmCC" alt="학습 사진">학습 사진</figure><figure><img src="data:image/png;base64,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" alt="맞춘 차 사진">맞춘 차 사진</figure></div><div class="why"><div class="why-title">💡 잠깐 — prep 한 줄 읽기</div><p><code>[:, ::2, ::2]</code> 크기 → <code>[..., ::-1]</code> BGR→RGB → <code>/ 255</code> 값 범위 → <code>reshape</code> 한 줄로.</p><p>학습 때 한 처리를 <b>같은 순서로</b> 한 번에 — 매번 손으로 하지 않는다.</p></div><div class="box box-green mt-auto" style="font-size:.85rem;">✅ 0.983 — PC 검증과 같은 수준. 활동지 2번 마지막 줄에</div></div></div>
+  </div>
+
+  <div class="slide">
+    <div class="prac-bar"><span class="prac-tag c">실습 C · 오류 체험</span><span class="step-chip c">오류 1 / 1</span><span class="time-chip">6분</span></div>
+    <h1>일부러 틀리기 — ÷255를 두 번</h1>
+    <div class="cols cols-2 grow"><div><pre class="cmd">print(round(m.score(prep(c['X']) / 255, c['y']), 3))</pre><pre class="out">0.267</pre><div class="box box-yellow" style="font-size:.85rem;"><strong>🤔 30초만 스스로 읽어봅시다</strong> — 해설은 그다음에.</div><table style=""><tr><th>단서</th><th>뜻</th></tr><tr><td>prep(…) / 255</td><td>prep 안에서 이미 ÷255 했는데 <b>또</b> 나눴다</td></tr><tr><td>0.267</td><td>값이 0~0.004로 쪼그라들어 전부 left</td></tr></table></div><div><div class="box box-green " style="font-size:.85rem;"><strong>확인</strong> — 맞춘 뒤 범위를 다시 본다</div><pre class="cmd">print(round(prep(c['X']).min(), 2), round(prep(c['X']).max(), 2), round(X.min(), 2), round(X.max(), 2))</pre><pre class="out">0.07 0.98 0.07 0.99</pre><div class="box box-blue mt-auto" style="font-size:.85rem;">결론 — 맞춘 뒤에는 <b>실행 값 범위 ≈ 학습 값 범위</b>(0.07~0.98 vs 0.07~0.99)인지 다시 확인</div></div></div>
+  </div>
+
+  <div class="slide">
+    <div class="prac-bar"><span class="prac-tag d">실습 D · 만들어보기</span><span class="step-chip d">1단계 / 1</span><span class="time-chip">20분</span></div>
+    <h1>확인 절차 4단계 세우고 챗봇 답과 대조 (사후 평가)</h1>
+    <div class="cols cols-6040 grow"><div><div class="box box-green"><strong>확인 절차 4단계</strong><div class="step-row"><span class="badge badge-green">1</span><span><b>학습 입력 조건 기록</b> — 크기 · 색 순서 · 값 범위 · 자료형</span></div><div class="step-row"><span class="badge badge-green">2</span><span><b>실행 입력 측정</b> — 같은 항목을 차 사진에서 잰다</span></div><div class="step-row"><span class="badge badge-green">3</span><span><b>한 조건씩 맞추고 다시 예측</b> — 바꿀 때마다 결과 기록</span></div><div class="step-row"><span class="badge badge-green">4</span><span><b>판정 · 기록</b> — 기준(예: 실행 정확도 0.95 이상, 라벨별 틀린 개수 확인)으로 판단</span></div></div><div class="step-row"><span class="badge badge-purple">1</span><span>판정 기준(숫자)을 활동지 3번에 쓴다</span></div><div class="step-row"><span class="badge badge-purple">2</span><span>조건을 담아 챗봇에 묻는다: 「차에서 매번 손으로 맞추지 않으려면?」</span></div><div class="step-row"><span class="badge badge-purple">3</span><span>답을 <b>제안 / 확인 방법 / 아직 안 함</b>으로 나눠 4단계와 대조 (활동지 4·5번)</span></div></div><div><div class="box box-yellow " style="font-size:.85rem;"><b>힌트 1</b> — 4단계 중 ② ④를 빠뜨리기 쉽다</div><div class="box box-yellow " style="font-size:.85rem;"><b>힌트 2</b> — 챗봇이 준 코드는 「아직 안 함」(차에서 실행해 확인 전)</div><div class="box box-yellow " style="font-size:.85rem;"><b>힌트 3</b> — 판정 기준은 숫자로</div><div class="box box-purple mt-auto" style="font-size:.85rem;">📌 활동지 4·5번 <b>제출 (사후 평가)</b> · 끝나면 사후 설문</div></div></div>
+  </div>
+
+  <div class="slide">
+    <div class="prac-bar"><span class="prac-tag intro">정리</span><span class="time-chip">4분</span></div>
+    <h1>정리 &amp; 다음 시간</h1>
+    <div class="cols cols-6040 grow">
+      <div>
+        <pre class="ex">def prep(img): return (img[:, ::2, ::2, ::-1] / 255).reshape(len(img), -1)</pre>
+        <div class="box box-green">
+          <strong>꼭 기억할 것</strong>
+          <div class="step-row"><span class="badge badge-green">1</span><span>기준은 <b>모델이 배운 조건</b> — 실행 입력을 학습 조건에 맞춘다</span></div><div class="step-row"><span class="badge badge-green">2</span><span><b>한 조건씩</b> 맞추고 매번 결과를 기록한다</span></div><div class="step-row"><span class="badge badge-green">3</span><span>맞춘 뒤 <b>다시 확인</b>한다 (범위 · 정확도 · 라벨별)</span></div>
+        </div>
+        
+      </div>
+      <div>
+        <h3>7차시 진행 상황</h3>
+        <div class="lesson-item" style="background:#eceff1; padding:.25rem .5rem;"><span class="lesson-tag" style="background:#90a4ae;">1</span><span>영상 문제를 목표·자료·조건으로 질문 ①</span></div><div class="lesson-item" style="background:#eceff1; padding:.25rem .5rem;"><span class="lesson-tag" style="background:#90a4ae;">2</span><span>조건과 시도를 바꿔 다시 질문 ②</span></div><div class="lesson-item" style="background:#eceff1; padding:.25rem .5rem;"><span class="lesson-tag" style="background:#90a4ae;">3</span><span>인식 오류를 자료·입력 조건으로 나눠 질문 ③</span></div><div class="lesson-item" style="background:#eceff1; padding:.25rem .5rem;"><span class="lesson-tag" style="background:#90a4ae;">4</span><span>학습용·확인용 자료 나누고 겹침 찾기</span></div><div class="lesson-item" style="background:#eceff1; padding:.25rem .5rem;"><span class="lesson-tag" style="background:#90a4ae;">5</span><span>나누는 방식에 따른 결과 비교·확인 기준</span></div><div class="lesson-item" style="background:#eceff1; padding:.25rem .5rem;"><span class="lesson-tag" style="background:#90a4ae;">6</span><span>학습·실행 입력 조건 차이 찾기</span></div><div class="lesson-item" style="background:var(--green-light); border:2px solid var(--green); padding:.25rem .5rem;"><span class="lesson-tag" style="background:var(--green);">7</span><span><strong>입력 조건 맞추고 확인 절차 세우기 (사후)</strong></span></div>
+        <div class="box box-blue" style="margin-top:.5rem; font-size:.84rem;"><strong>다음 시간</strong> — 7차시 끝 — <b>사후 설문</b>에 응답한다. 오늘 세운 절차는 우리 팀 차의 실제 사진으로 다시 확인할 과제다.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="progress-bar"></div>
+<span id="slide-num"></span>
+<button class="nav-btn" id="btn-prev">◀ 이전</button>
+<button class="nav-btn" id="btn-next">다음 ▶</button>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+let cur = 0;
+
+function show(n) {
+  slides[cur].classList.remove('active');
+  cur = Math.max(0, Math.min(n, slides.length - 1));
+  slides[cur].classList.add('active');
+  document.getElementById('progress-bar').style.width =
+    ((cur + 1) / slides.length * 100) + '%';
+  document.getElementById('slide-num').textContent =
+    (cur + 1) + ' / ' + slides.length;
+}
+
+document.getElementById('btn-next').onclick = () => show(cur + 1);
+document.getElementById('btn-prev').onclick = () => show(cur - 1);
+
+document.addEventListener('keydown', e => {
+  if (e.target && e.target.classList && e.target.classList.contains('copy-btn')) return;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); show(cur + 1); }
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   show(cur - 1);
+  if (e.key === 'Home') show(0);
+  if (e.key === 'End')  show(slides.length - 1);
+});
+
+
+// ===== 코드 블록 복사 버튼 =====
+function copyFallback(text, done) {
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed'; ta.style.top = '-1000px'; ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.focus(); ta.select();
+  try { document.execCommand('copy'); done(); } catch (err) { /* 무시 */ }
+  document.body.removeChild(ta);
+}
+
+// 명령(.cmd)·파일 내용(.file) 에만 붙인다. 화면 출력(.out)·지난 회차 예시(.ex)는 칠 것이 아니다.
+// 클래스를 안 쓰는 덱(코드 위주 회차)은 아래 선택자를 '#deck pre' 로 두면 전부 붙는다.
+document.querySelectorAll('#deck pre.cmd, #deck pre.file, #deck pre:not(.cmd):not(.file):not(.out):not(.ex)').forEach(function (pre) {
+  var text = pre.innerText;          // ★ 버튼 붙이기 전에 원문 확보
+  var btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'copy-btn';
+  btn.textContent = '복사';
+  btn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+    var done = function () {
+      btn.textContent = '복사됨';
+      btn.classList.add('done');
+      setTimeout(function () {
+        btn.textContent = '복사';
+        btn.classList.remove('done');
+      }, 1200);
+      btn.blur();                    // 스페이스바가 버튼을 다시 누르지 않게
+    };
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(done, function () { copyFallback(text, done); });
+    } else {
+      copyFallback(text, done);
+    }
+  });
+  pre.appendChild(btn);
+});
+
+show(0);
+</script>
+</body>
+</html>

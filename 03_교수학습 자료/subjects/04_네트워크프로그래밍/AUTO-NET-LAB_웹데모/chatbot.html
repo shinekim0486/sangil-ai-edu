@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AUTO-NET LAB · AI 챗봇</title>
+  <link rel="stylesheet" href="chatbot.css">
+</head>
+<body>
+  <main class="shell">
+    <div class="topbar">
+      <a href="index.html">← 실습 홈</a>
+      <span class="student" id="student-info"></span>
+    </div>
+    <section class="panel" aria-label="네트워크프로그래밍 AI 챗봇">
+      <header class="heading">
+        <div class="eyebrow">AUTO-NET LAB · AI ASSISTANT</div>
+        <h1>네트워크프로그래밍 챗봇</h1>
+        <p>패킷 형식, 지연 측정, 오류 검출과 안전 시험을 질문하세요. 질문과 답변은 학번·조별 기록으로 저장됩니다.</p>
+        <span class="status" id="server-status">서버 확인 중</span>
+      </header>
+      <div class="messages" id="messages" aria-live="polite">
+        <div class="empty">기존 기록을 참고해 답변합니다.<br>첫 질문을 입력해 주세요.</div>
+      </div>
+      <form class="composer" id="chat-form">
+        <textarea id="message-input" maxlength="2000" placeholder="예: 패킷의 LENGTH 값은 무엇을 기준으로 계산하나요?" required></textarea>
+        <button type="submit" id="send-button">전송</button>
+      </form>
+    </section>
+    <p class="note">API 키는 브라우저에 저장되지 않으며 서버 환경변수에서만 사용됩니다.</p>
+  </main>
+  <script src="chatbot-seed.js"></script>
+  <script src="chatbot.js"></script>
+</body>
+</html>

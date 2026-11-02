@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="3D 프린터용 제품 제작 학생별 산출물과 팀 도면 모음">
+  <title>3D 프린터용 제품 제작 · 학생 산출물</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="hero">
+    <nav><a class="brand" href="#top">MAKER LOG</a><div><a href="#teams">팀 도면</a><a href="#students">학생별 기록</a><a href="#archive">자료실</a></div></nav>
+    <div class="hero-grid" id="top">
+      <div>
+        <p class="eyebrow">3D 프린터용 제품 제작 · 1~4차시</p>
+        <h1>설계의 변화가<br><em>근거</em>가 되는 곳</h1>
+        <p class="lead">3학년 3개 반, 33명의 설계 활동을 팀 도면과 차시별 판정으로 연결했습니다. 학번·팀·부품으로 검색하고 원본 PDF를 바로 확인할 수 있습니다.</p>
+        <div class="hero-actions"><a class="button primary" href="#students">학생 기록 찾기</a><a class="button ghost" href="assets/활동지취합본.pdf" target="_blank">활동지 취합본 열기</a></div>
+      </div>
+      <div class="hero-visual"><img src="assets/F팀_곡면형_케이스도면_thumb.png" alt="곡면형 케이스 도면 미리보기"><span>도면에서 활동 기록까지</span></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="stats" aria-label="수업 현황">
+      <article><strong>33</strong><span>학생</span></article><article><strong>6</strong><span>설계팀</span></article><article><strong>4</strong><span>수업 차시</span></article><article><strong>16</strong><span>향상 학생</span></article>
+    </section>
+
+    <section class="section" id="teams">
+      <div class="section-head"><div><p class="eyebrow">TEAM DRAWINGS</p><h2>여섯 가지 케이스 설계</h2></div><p>공통 장착 규격을 바탕으로 팀마다 다른 차체 실루엣을 설계했습니다. 도면을 선택하면 원본 PDF가 열립니다.</p></div>
+      <div id="teamGrid" class="team-grid"></div>
+    </section>
+
+    <section class="section student-section" id="students">
+      <div class="section-head"><div><p class="eyebrow">STUDENT RECORDS</p><h2>학생별 산출물 기록</h2></div><p>차시별 판정은 활동지 취합본의 상·중·하·미 기준을 그대로 사용했습니다.</p></div>
+      <div class="filters">
+        <label class="search"><span>검색</span><input id="searchInput" type="search" placeholder="학번 또는 담당 부품"></label>
+        <label><span>팀</span><select id="teamFilter"><option value="">전체 팀</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select></label>
+        <label><span>변화</span><select id="trendFilter"><option value="">전체 변화</option><option value="up">향상</option><option value="same">유지</option><option value="down">하락</option></select></label>
+        <label class="check"><input id="supportFilter" type="checkbox"><span>보충지도 대상만</span></label>
+      </div>
+      <p id="resultCount" class="result-count"></p>
+      <div id="studentGrid" class="student-grid"></div>
+    </section>
+
+    <section class="section archive" id="archive">
+      <div class="archive-copy"><p class="eyebrow">SOURCE ARCHIVE</p><h2>수업 근거자료</h2><p>학생별 판정, 교사 메모, 차시별 분포와 자주 나온 실수는 활동지 취합본에서 확인할 수 있습니다. 추가목록은 후속 산출물을 기록하기 위한 원본 양식입니다.</p><div><a class="button primary" href="assets/활동지취합본.pdf" target="_blank">활동지 취합본 PDF</a><a class="button outline" href="assets/학생산출물_추가목록.csv" download>추가목록 CSV</a></div></div>
+      <a class="archive-cover" href="assets/활동지취합본.pdf" target="_blank"><img src="assets/활동지취합본_cover.png" alt="활동지 취합본 첫 페이지"><span>9쪽 PDF 열기</span></a>
+    </section>
+  </main>
+  <footer><strong>3D 프린터용 제품 제작</strong><span>학생 산출물 정리 · 2026</span></footer>
+  <script src="app.js"></script>
+</body>
+</html>

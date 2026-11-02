@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AUTO-NET LAB 로그인</title>
+<style>
+  :root {
+    --bg: #0a1120;
+    --card: #0f1a2c;
+    --border: #22324d;
+    --input: #0b1424;
+    --text: #e6edf7;
+    --muted: #7f93b3;
+    --accent: #12d6f5;
+    --accent-dark: #06222b;
+    --error: #ff6b7a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    font-family: "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", system-ui, sans-serif;
+    color: var(--text);
+    padding: 16px;
+  }
+  .card {
+    width: 100%;
+    max-width: 380px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px 26px 28px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: 0.3px;
+  }
+  .brand::before {
+    content: "";
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+  }
+  .subtitle {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  label, .label {
+    display: block;
+    margin: 26px 0 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #b9c6dc;
+  }
+  input {
+    width: 100%;
+    height: 48px;
+    padding: 0 16px;
+    background: var(--input);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 15px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  input::placeholder { color: #5d6f8c; letter-spacing: 1px; }
+  input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(18, 214, 245, .15);
+  }
+  .teams {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 7px;
+  }
+  .team {
+    height: 46px;
+    background: var(--input);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: #c9d4e6;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .team:hover { border-color: #3a5378; }
+  .team.selected {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(18, 214, 245, .08);
+    box-shadow: 0 0 0 1px var(--accent) inset;
+  }
+  .btn {
+    width: 100%;
+    height: 48px;
+    margin-top: 22px;
+    background: var(--accent);
+    border: none;
+    border-radius: 8px;
+    color: var(--accent-dark);
+    font-size: 15px;
+    font-weight: 800;
+    font-family: inherit;
+    cursor: pointer;
+    transition: filter .15s, transform .05s;
+  }
+  .btn:hover { filter: brightness(1.08); }
+  .btn:active { transform: translateY(1px); }
+  .msg {
+    min-height: 18px;
+    margin-top: 12px;
+    font-size: 12.5px;
+    color: var(--error);
+    text-align: center;
+  }
+  .msg.ok { color: var(--accent); }
+  .hint {
+    margin-top: 18px;
+    font-size: 12px;
+    line-height: 1.8;
+    color: var(--muted);
+  }
+  .hint mark {
+    background: rgba(18, 214, 245, .12);
+    color: var(--accent);
+    padding: 1px 5px;
+    border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+  <form class="card" id="loginForm" novalidate>
+    <div class="brand">AUTO-NET LAB</div>
+    <p class="subtitle">네트워크 프로그래밍 1·2·3차시 실습 — 로그인</p>
+
+    <label for="sid">학번 (5자리)</label>
+    <input id="sid" type="text" inputmode="numeric" maxlength="5" placeholder="예: 30101" autocomplete="username">
+
+    <label for="pw">비밀번호</label>
+    <input id="pw" type="password" maxlength="5" placeholder="학번과 동일하게 입력" autocomplete="current-password">
+
+    <span class="label">팀 선택</span>
+    <div class="teams" id="teams">
+      <button type="button" class="team" data-team="CAR1">CAR1</button>
+      <button type="button" class="team" data-team="CAR2">CAR2</button>
+      <button type="button" class="team" data-team="CAR3">CAR3</button>
+      <button type="button" class="team" data-team="CAR4">CAR4</button>
+      <button type="button" class="team" data-team="CAR5">CAR5</button>
+      <button type="button" class="team" data-team="CAR6">CAR6</button>
+    </div>
+
+    <button type="submit" class="btn">로그인</button>
+    <p class="msg" id="msg"></p>
+
+    <p class="hint">비밀번호는 <mark>학번과 동일</mark>합니다. 예: 학번이 30101이면 비밀번호도 30101.</p>
+    <p class="hint" style="text-align:right"><a href="teacher-login.html" style="color:#ffb547">교사 로그인 →</a></p>
+  </form>
+
+<script>
+  const form = document.getElementById('loginForm');
+  const sid = document.getElementById('sid');
+  const pw = document.getElementById('pw');
+  const msg = document.getElementById('msg');
+  let team = null;
+
+  // 숫자만 입력
+  [sid, pw].forEach(el => el.addEventListener('input', () => {
+    el.value = el.value.replace(/\D/g, '').slice(0, 5);
+  }));
+
+  document.getElementById('teams').addEventListener('click', e => {
+    const btn = e.target.closest('.team');
+    if (!btn) return;
+    document.querySelectorAll('.team').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    team = btn.dataset.team;
+  });
+
+  function show(text, ok = false) {
+    msg.textContent = text;
+    msg.classList.toggle('ok', ok);
+  }
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const id = sid.value.trim();
+    if (!/^\d{5}$/.test(id)) return show('학번 5자리를 정확히 입력하세요.'), sid.focus();
+    if (pw.value !== id) return show('비밀번호가 올바르지 않습니다.'), pw.focus();
+    if (!team) return show('팀을 선택하세요.');
+
+    try {
+      localStorage.setItem('autonet-session', JSON.stringify({ id, team }));
+      sessionStorage.setItem('autonet_user', JSON.stringify({ id, team }));
+    } catch (_) {}
+    show(`${id} · ${team} 로그인 성공!`, true);
+    const next = new URLSearchParams(location.search).get('next') || '';
+    const target = /^[^\/\\:?#]+\.html$/.test(next) && next !== 'login.html' ? next : 'index.html';
+    setTimeout(() => location.replace(target), 350);
+  });
+</script>
+</body>
+</html>

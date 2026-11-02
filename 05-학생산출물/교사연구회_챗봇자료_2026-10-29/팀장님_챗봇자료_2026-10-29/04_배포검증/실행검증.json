@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-29",
+  "paid_api_called": false,
+  "source_files_match": [
+    "app.py",
+    "gate.py",
+    "llm.py",
+    "pipeline.py",
+    "db.py",
+    "skills/skill_3d.md",
+    "skills/skill_ai.md",
+    "skills/skill_appux.md",
+    "skills/skill_game.md",
+    "skills/skill_network.md",
+    "skills/skill_ops.md",
+    "skills/skill_server.md",
+    "skills/skill_ui.md"
+  ],
+  "regular_runtime_http_session_s0": true,
+  "demo_ignores_configured_key": true,
+  "demo_four_turn_tokens": 0,
+  "demo_separate_db": true,
+  "credentials_student_records_excluded": true,
+  "scope": "이 PC에서 동봉 Python과 복제된 패키지로 검증. 학교망 및 유료 API 응답은 미검증."
+}

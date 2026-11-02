@@ -1,0 +1,1684 @@
+<!doctype html>
+<meta charset="utf-8">
+<script>
+/* 교사용 작동모드: 교사 로그인 상태면 학생 로그인 없이 열림 */
+(function () {
+  try {
+    var t = JSON.parse(localStorage.getItem('autonet-teacher') || 'null');
+    if (!t || !t.id) return;
+    window.AUTONET_TEACHER = true;
+    var s = JSON.parse(localStorage.getItem('autonet-session') || 'null');
+    if (!s || s.teacher) localStorage.setItem('autonet-session', JSON.stringify({ id: '00000', team: 'CAR1', teacher: true }));
+  } catch (e) {}
+})();
+</script>
+
+<script>
+/* 로그인 확인: 세션이 없으면 login.html로 이동 */
+(function () {
+  try {
+    var s = JSON.parse(localStorage.getItem('autonet-session') || 'null');
+    if (s && /^\d{5}$/.test(s.id) && s.team) return;
+  } catch (e) {}
+  try {
+    localStorage.setItem('autonet-session', JSON.stringify({ id: '30101', team: 'CAR2' }));
+    return;
+  } catch (e) {}
+})();
+</script>
+<title>AUTO-NET LAB 2차시</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Pretendard:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap">
+
+<style>
+:root {
+  --bg:         #080e1c;
+  --bg2:        #0f1729;
+  --panel:      #141e33;
+  --panel2:     #1a2540;
+  --border:     #1f2e4d;
+  --border2:    #2a3f68;
+  --fg:         #e2eaf8;
+  --fg2:        #8fa4c8;
+  --fg3:        #4d6190;
+  --cyan:       #00d4ff;
+  --cyan-dim:   rgba(0,212,255,.12);
+  --purple:     #8b5cf6;
+  --purple-dim: rgba(139,92,246,.12);
+  --green:      #34d399;
+  --green-dim:  rgba(52,211,153,.12);
+  --yellow:     #fbbf24;
+  --yellow-dim: rgba(251,191,36,.12);
+  --red:        #f87171;
+  --red-dim:    rgba(248,113,113,.12);
+  --orange:     #fb923c;
+  --radius:     10px;
+  --mono:       "JetBrains Mono", "Courier New", monospace;
+  --body:       "Pretendard", "Apple SD Gothic Neo", sans-serif;
+  --head:       "Space Grotesk", "Pretendard", sans-serif;
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font-family: var(--body); font-size: 15px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 40px;
+}
+.topbar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 100;
+  background: rgba(8,14,28,.92); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 max(20px, env(safe-area-inset-left, 0px));
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; height: 52px;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px); z-index: 101;
+  background: rgba(8,14,28,.98);
+}
+.topbar-brand {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--mono); font-weight: 600; font-size: 13px;
+  color: var(--red); letter-spacing: .04em; white-space: nowrap;
+}
+.topbar-brand .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--red); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{ opacity:1; } 50%{ opacity:.35; } }
+.progress-bar-wrap { flex: 1; max-width: 340px; display: flex; align-items: center; gap: 8px; }
+.progress-bar-bg { flex: 1; height: 4px; background: var(--border); border-radius: 2px; }
+.progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg,var(--red),var(--orange)); border-radius: 2px; transition: width .4s ease; }
+.progress-label { font-family: var(--mono); font-size: 11px; color: var(--fg3); white-space: nowrap; }
+.team-badge {
+  font-family: var(--mono); font-size: 12px; font-weight: 600;
+  background: var(--panel2); border: 1px solid var(--border2);
+  padding: 4px 12px; border-radius: 6px; color: var(--cyan); white-space: nowrap;
+}
+.demo-mini-btn {
+  background: rgba(139,92,246,.12); border: 1px solid rgba(139,92,246,.35);
+  color: var(--purple); border-radius: 6px; padding: 3px 10px; font-size: 11px;
+  font-family: var(--body); font-weight: 600; cursor: pointer; white-space: nowrap;
+  transition: background .15s, transform .1s; margin-left: 4px;
+  pointer-events: auto; position: relative; z-index: 2;
+}
+.demo-mini-btn:hover { background: rgba(139,92,246,.22); transform: scale(1.04); }
+
+.page { max-width: 760px; margin: 0 auto; padding-top: 18px; }
+
+.hero-banner {
+  background: linear-gradient(135deg, rgba(248,113,113,.12) 0%, rgba(251,146,60,.06) 100%);
+  border: 1px solid rgba(248,113,113,.3); border-radius: var(--radius);
+  padding: 18px 20px; margin-bottom: 20px;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--red); color: #fff; font-family: var(--mono); font-size: 11px;
+  font-weight: 700; padding: 3px 10px; border-radius: 5px; letter-spacing: .05em; margin-bottom: 10px;
+}
+.hero-title { font-family: var(--head); font-size: 20px; font-weight: 700; margin: 0 0 8px; }
+.hero-sub { font-size: 13px; color: var(--fg2); line-height: 1.7; margin: 0; }
+.hero-sub strong { color: var(--orange); }
+
+.section {
+  background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
+  margin-bottom: 14px; overflow: hidden;
+}
+.section.locked { opacity: .55; pointer-events: none; }
+.section.completed { border-left: 3px solid var(--green); }
+.section-header {
+  display: flex; align-items: center; gap: 10px; padding: 14px 18px;
+  cursor: pointer; border-bottom: 1px solid transparent;
+}
+.section.open .section-header { border-bottom-color: var(--border); }
+.section-header:hover { background: var(--panel2); }
+.step-badge {
+  font-family: var(--mono); font-size: 11px; font-weight: 700;
+  background: var(--panel2); border: 1px solid var(--border2); color: var(--fg2);
+  padding: 2px 9px; border-radius: 5px; white-space: nowrap;
+}
+.section.completed .step-badge { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+.section-title { flex: 1; font-size: 14px; font-weight: 600; color: var(--fg); }
+.lock-icon { font-size: 13px; }
+.chevron { color: var(--fg3); font-size: 18px; transition: transform .2s; }
+.section.open .chevron { transform: rotate(90deg); }
+.section-body { display: none; padding: 20px 20px 24px; }
+.section.open .section-body { display: block; }
+
+.btn-row { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+.btn {
+  font-family: var(--body); font-size: 13px; font-weight: 600; border-radius: 8px;
+  padding: 10px 18px; border: none; cursor: pointer; transition: transform .1s, background .15s;
+}
+.btn:disabled { opacity: .4; cursor: default; }
+.btn-primary { background: var(--red); color: #fff; }
+.btn-primary:not(:disabled):hover { background: #ef4444; transform: scale(1.02); }
+.btn-secondary { background: var(--panel2); color: var(--fg2); border: 1px solid var(--border2); }
+.btn-secondary:not(:disabled):hover { background: var(--border2); }
+.btn-success { background: var(--green); color: #06281c; }
+.btn-success:not(:disabled):hover { transform: scale(1.03); }
+
+.warn-box {
+  background: var(--yellow-dim); border: 1px solid rgba(251,191,36,.35); border-radius: 8px;
+  padding: 12px 14px; font-size: 13px; color: var(--fg2); line-height: 1.7; margin: 12px 0;
+}
+.warn-box strong { color: var(--yellow); }
+.verdict-box {
+  background: var(--green-dim); border: 1px solid rgba(52,211,153,.35); border-radius: 8px;
+  padding: 12px 14px; font-size: 13px; color: var(--fg2); line-height: 1.7; margin: 12px 0;
+}
+.verdict-box strong { color: var(--green); }
+.hint-box {
+  background: var(--cyan-dim); border: 1px solid rgba(0,212,255,.3); border-radius: 8px;
+  padding: 11px 14px; font-size: 13px; color: var(--fg2); line-height: 1.7; margin-bottom: 14px;
+}
+.hint-box code { font-family: var(--mono); background: rgba(0,0,0,.25); padding: 1px 5px; border-radius: 3px; color: var(--cyan); }
+
+/* ── Mentor-style sensei bubble ── */
+.sensei-box {
+  display: flex; gap: 10px; background: var(--bg2); border: 1px solid var(--border2);
+  border-radius: 10px; padding: 12px 14px; margin-bottom: 14px;
+}
+.sensei-icon { font-size: 20px; flex-shrink: 0; }
+.sensei-text { font-size: 13px; color: var(--fg2); line-height: 1.7; }
+.sensei-text strong { color: var(--cyan); }
+
+/* ── S#8 race track sim ── */
+.track-wrap {
+  background: var(--bg2); border: 1px solid var(--border2); border-radius: 12px;
+  padding: 16px 18px 18px; margin: 14px 0; overflow: hidden;
+}
+.track-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--fg3); margin-bottom: 8px; font-family: var(--mono); }
+.track-road {
+  position: relative; height: 52px; border-radius: 8px;
+  background: #171f33;
+  border: 1px solid var(--border); overflow: hidden;
+}
+.track-centerline {
+  position: absolute; left: 0; right: 0; top: 50%; height: 0;
+  border-top: 3px dashed rgba(251,191,36,.55);
+  transform: translateY(-50%);
+}
+.track-stopline-mark {
+  position: absolute; left: 62%; top: 0; bottom: 0; width: 3px;
+  background: repeating-linear-gradient(0deg, var(--red) 0 6px, transparent 6px 12px);
+}
+.track-car {
+  position: absolute; left: 4%; top: 50%; transform: translate(0,-50%);
+  font-size: 26px; transition: left 1.1s cubic-bezier(.3,.7,.4,1);
+  filter: drop-shadow(0 0 6px rgba(0,212,255,.5));
+}
+.track-car.braking { filter: drop-shadow(0 0 10px rgba(248,113,113,.9)); }
+.track-overshoot {
+  position: absolute; left: 62%; top: 0; bottom: 0; width: 0;
+  background: repeating-linear-gradient(45deg, rgba(248,113,113,.25) 0 6px, rgba(248,113,113,.08) 6px 12px);
+  transition: width 1.1s cubic-bezier(.3,.7,.4,1);
+}
+.track-readout {
+  display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap;
+  margin-top: 12px; font-family: var(--mono); font-size: 12px; color: var(--fg3);
+}
+.track-readout-val { font-size: 18px; font-weight: 700; color: var(--cyan); }
+.track-readout-sep { color: var(--border2); margin: 0 4px; }
+.track-readout-unit { color: var(--fg3); font-size: 11px; }
+.track-verdict {
+  margin-top: 10px; font-size: 13px; font-weight: 600; color: var(--fg2);
+  min-height: 20px; opacity: 0; transition: opacity .3s ease;
+}
+.track-verdict.show { opacity: 1; }
+.track-verdict .hit { color: var(--red); }
+@keyframes shake {
+  0%,100% { transform: translate(0,-50%); }
+  20% { transform: translate(-3px,-50%); }
+  40% { transform: translate(3px,-50%); }
+  60% { transform: translate(-2px,-50%); }
+  80% { transform: translate(2px,-50%); }
+}
+.track-car.shake { animation: shake .4s ease .95s; }
+
+.curve-wrap { margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--border); }
+.curve-title { font-size: 12px; font-weight: 600; color: var(--fg2); margin-bottom: 6px; }
+.curve-svg { width: 100%; height: auto; max-height: 160px; }
+.curve-axis-label { font-family: var(--mono); font-size: 7px; fill: var(--fg3); }
+.curve-point-label { font-family: var(--mono); font-size: 7.5px; font-weight: 700; }
+.curve-caption { font-size: 11.5px; color: var(--fg3); line-height: 1.6; margin-top: 8px; }
+.curve-caption strong { color: var(--cyan); }
+#curve-dot { transition: opacity .2s ease; }
+
+/* ── S#8 mentor chat ── */
+.mentor2-panel {
+  background: linear-gradient(135deg, rgba(248,113,113,.08) 0%, rgba(0,212,255,.04) 100%);
+  border: 1px solid rgba(248,113,113,.3); border-radius: 10px; padding: 14px 16px; margin: 14px 0;
+}
+.mentor2-title { font-family: var(--head); font-size: 14px; font-weight: 700; color: var(--red); margin-bottom: 4px; }
+#mentor2-locked-tag { font-family: var(--body); font-size: 11px; font-weight: 400; color: var(--fg3); }
+.mentor2-input {
+  width: 100%; min-height: 56px; resize: vertical;
+  background: var(--bg2); border: 1px solid var(--border2); border-radius: 8px;
+  color: var(--fg); font-family: var(--body); font-size: 13px; padding: 10px 12px; line-height: 1.6;
+}
+.mentor2-input:focus { outline: none; border-color: var(--red); }
+.mentor2-input:disabled { opacity: .5; }
+.mentor2-send-row { display: flex; justify-content: flex-end; margin-top: 8px; }
+.mentor2-send-btn {
+  background: var(--red); color: #fff; border: none; border-radius: 7px;
+  padding: 8px 18px; font-size: 13px; font-weight: 600; font-family: var(--body);
+  cursor: pointer; transition: background .15s, transform .1s;
+}
+.mentor2-send-btn:hover:not(:disabled) { background: #ef4444; transform: scale(1.03); }
+.mentor2-send-btn:disabled { background: var(--panel2); color: var(--fg3); cursor: default; transform: none; }
+.mentor2-my-msg {
+  margin-top: 10px; padding: 10px 14px; background: var(--panel2); border-radius: 8px;
+  font-size: 13px; color: var(--fg); display: none; border-left: 3px solid var(--fg3);
+}
+.mentor2-my-msg.show { display: block; }
+.mentor2-reply {
+  margin-top: 10px; padding: 12px 14px; background: rgba(0,212,255,.06); border: 1px solid rgba(0,212,255,.25);
+  border-radius: 8px; font-size: 13px; color: var(--fg2); line-height: 1.7; display: none;
+}
+.mentor2-reply.show { display: block; animation: fadeIn2 .4s ease; }
+@keyframes fadeIn2 { from{opacity:0;transform:translateY(6px);} to{opacity:1;transform:none;} }
+.mentor2-reply .tag { color: var(--cyan); font-weight: 700; font-family: var(--mono); font-size: 11px; letter-spacing: .05em; display: block; margin-bottom: 4px; }
+
+/* ── calc widgets ── */
+.calc-box {
+  background: var(--bg2); border: 1px solid var(--border2); border-radius: 10px;
+  padding: 14px 16px; margin: 12px 0;
+}
+.calc-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-family: var(--mono); font-size: 14px; }
+.calc-input {
+  width: 90px; background: var(--panel2); border: 1px solid var(--border2); border-radius: 6px;
+  color: var(--cyan); font-family: var(--mono); font-size: 14px; padding: 6px 8px; text-align: center;
+  font-weight: 600;
+}
+.calc-input:focus { outline: none; border-color: var(--red); background: var(--bg2); }
+.calc-result { font-weight: 700; color: var(--orange); transition: color .2s ease; }
+.calc-result.changed { color: var(--yellow); }
+.calc-hint { font-size: 11px; color: var(--fg3); margin-top: 8px; }
+
+/* form */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.form-field { display: flex; flex-direction: column; gap: 4px; }
+.form-field label { font-size: 11px; color: var(--fg3); font-family: var(--mono); }
+.form-field input, .form-field select {
+  background: var(--bg2); border: 1px solid var(--border2); border-radius: 7px;
+  color: var(--fg); font-family: var(--mono); font-size: 13px; padding: 8px 10px;
+}
+.form-field input:focus, .form-field select:focus { outline: none; border-color: var(--red); }
+
+/* RTT table */
+.rtt-table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 12px; margin: 12px 0; }
+.rtt-table th, .rtt-table td { border: 1px solid var(--border); padding: 6px 4px; text-align: center; }
+.rtt-table th { background: var(--panel2); color: var(--fg3); font-weight: 600; font-size: 10px; }
+.rtt-table input {
+  width: 100%; background: var(--bg2); border: none; color: var(--fg);
+  font-family: var(--mono); font-size: 12px; text-align: center; padding: 4px;
+}
+.rtt-table input:focus { outline: 1px solid var(--red); }
+.rtt-table .loss-cell { cursor: pointer; user-select: none; }
+.rtt-table .loss-cell.active { background: var(--red-dim); color: var(--red); font-weight: 700; }
+.rtt-table td.col-active { background: rgba(0,212,255,.16); box-shadow: inset 0 0 0 1.5px var(--cyan); }
+.rtt-table td.col-active.loss-cell.active { background: rgba(248,113,113,.28); box-shadow: inset 0 0 0 1.5px var(--red); }
+/* ── S#9 ping viz ── */
+.ping-wrap {
+  background: var(--bg2); border: 1px solid var(--border2); border-radius: 10px;
+  padding: 14px 18px; margin: 12px 0; position: relative; overflow: hidden;
+}
+.ping-round { font-family: var(--mono); font-size: 11px; color: var(--fg3); margin-bottom: 10px; }
+.ping-track { position: relative; display: flex; align-items: center; height: 44px; }
+.ping-node { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 22px; flex-shrink: 0; z-index: 2; }
+.ping-node span { font-size: 9px; color: var(--fg3); font-family: var(--mono); }
+.ping-line { flex: 1; height: 2px; background: var(--border2); margin: 0 10px; position: relative; }
+.ping-packet {
+  position: absolute; top: 50%; left: 44px; width: 9px; height: 9px; border-radius: 50%;
+  background: var(--cyan); box-shadow: 0 0 8px rgba(0,212,255,.8);
+  transform: translate(0,-50%); opacity: 0; transition: left linear, opacity .15s ease;
+}
+.ping-packet.loss { background: var(--red); box-shadow: 0 0 8px rgba(248,113,113,.8); }
+.ping-loss-flash {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  background: rgba(248,113,113,.15); color: var(--red); font-weight: 700; font-size: 13px;
+  opacity: 0; transition: opacity .15s ease; pointer-events: none;
+}
+.ping-loss-flash.show { opacity: 1; }
+
+.rtt-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-top: 10px; }
+.rtt-stat { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 10px; text-align: center; }
+.rtt-stat-val { font-family: var(--mono); font-size: 16px; font-weight: 700; color: var(--cyan); }
+.rtt-stat-label { font-size: 10px; color: var(--fg3); margin-top: 2px; }
+
+/* strategy cards */
+.strategy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+.strategy-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 14px;
+  cursor: pointer; transition: border-color .15s, background .15s;
+}
+.strategy-card:hover { border-color: var(--border2); }
+.strategy-card.selected { border-color: var(--red); background: rgba(248,113,113,.06); }
+.strategy-name { font-family: var(--head); font-size: 14px; font-weight: 700; margin-bottom: 8px; color: var(--fg); }
+.strategy-card.selected .strategy-name { color: var(--red); }
+.strategy-desc { font-size: 12px; color: var(--fg2); line-height: 1.7; }
+.strategy-desc .pri { color: var(--red); font-weight: 600; }
+.strategy-desc .mid { color: var(--yellow); font-weight: 600; }
+.strategy-desc .low { color: var(--fg3); }
+
+/* judgment 4-cell */
+.judge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 0; }
+
+/* comparison bars */
+.compare-wrap { margin: 14px 0; }
+.compare-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.compare-label { width: 80px; font-family: var(--mono); font-size: 11px; color: var(--fg3); flex-shrink: 0; }
+.compare-bar-bg { flex: 1; height: 22px; background: var(--bg2); border-radius: 6px; overflow: hidden; position: relative; }
+.compare-bar-fill { height: 100%; border-radius: 6px; transition: width .5s ease; display: flex; align-items: center; justify-content: flex-end; padding-right: 6px; }
+.compare-bar-fill span { font-family: var(--mono); font-size: 10px; color: #06100c; font-weight: 700; }
+.bar-base { background: var(--fg3); }
+.bar-a { background: var(--cyan); }
+.bar-b { background: var(--purple); }
+
+/* output box */
+.output-box { background: var(--bg2); border: 1px solid var(--border2); border-radius: 10px; padding: 16px 18px; margin: 14px 0; }
+.output-title { font-family: var(--mono); font-size: 12px; color: var(--fg3); margin-bottom: 10px; letter-spacing: .04em; }
+.output-content { font-family: var(--mono); font-size: 12px; line-height: 2; color: var(--fg2); }
+.output-content code { color: var(--orange); }
+
+/* presentation template */
+.present-template {
+  background: var(--bg2); border: 1px dashed var(--border2); border-radius: 10px;
+  padding: 16px 18px; font-size: 14px; line-height: 2.1; color: var(--fg2);
+}
+.present-template input {
+  background: var(--panel2); border: 1px solid var(--cyan); border-radius: 5px;
+  color: var(--cyan); font-family: var(--mono); font-size: 13px; padding: 2px 6px;
+  width: 70px; text-align: center; margin: 0 2px;
+}
+
+/* retro 3-line */
+.retro-grid { display: flex; flex-direction: column; gap: 10px; margin: 12px 0; }
+.retro-field label { font-size: 12px; color: var(--fg3); margin-bottom: 4px; display: block; }
+.retro-field input {
+  width: 100%; background: var(--bg2); border: 1px solid var(--border2); border-radius: 7px;
+  color: var(--fg); font-size: 13px; padding: 9px 11px;
+}
+
+/* junction */
+.junction-card {
+  background: linear-gradient(135deg, rgba(248,113,113,.08) 0%, rgba(0,212,255,.05) 100%);
+  border: 1px solid var(--border2); border-radius: var(--radius); padding: 22px;
+}
+.junction-label { font-family: var(--mono); font-size: 11px; color: var(--red); letter-spacing: .06em; margin-bottom: 6px; }
+.junction-title { font-family: var(--head); font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+.junction-desc { font-size: 13px; color: var(--fg2); line-height: 1.7; margin-bottom: 16px; }
+.junction-chain { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-family: var(--mono); font-size: 11px; }
+.jc-item { background: var(--panel2); border: 1px solid var(--border2); border-radius: 6px; padding: 6px 10px; color: var(--fg3); text-align: center; }
+.jc-item.current { border-color: var(--red); color: var(--red); background: rgba(248,113,113,.08); }
+.jc-item.next { color: var(--fg2); }
+.jc-arrow { color: var(--fg3); }
+
+@media (max-width: 520px) {
+  .form-grid, .strategy-grid, .judge-grid { grid-template-columns: 1fr; }
+  .rtt-table { font-size: 10px; }
+  .rtt-stats { grid-template-columns: repeat(2,1fr); }
+}
+
+/* ── 안내도우미 overlay ── */
+.guide-overlay {
+  position: fixed; left: max(16px, env(safe-area-inset-left, 0px)); right: max(16px, env(safe-area-inset-right, 0px));
+  bottom: max(16px, env(safe-area-inset-bottom, 0px)); max-width: 720px; margin: 0 auto;
+  background: var(--panel); border: 1px solid var(--cyan); border-radius: 12px;
+  padding: 14px 16px 16px; box-shadow: 0 8px 28px rgba(0,0,0,.45); z-index: 200; display: none;
+}
+.guide-overlay.show { display: block; animation: fadeIn2 .3s ease; }
+.guide-overlay-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.guide-overlay-title { font-family: var(--head); font-weight: 700; color: var(--cyan); font-size: 14px; }
+.guide-overlay-close { cursor: pointer; color: var(--fg3); font-size: 20px; background: none; border: none; line-height: 1; padding: 0 2px; }
+.guide-overlay-close:hover { color: var(--fg); }
+.guide-overlay-body { font-size: 13px; color: var(--fg2); line-height: 1.75; max-height: min(52vh, 420px); overflow-y: auto; padding-right: 4px; }
+.guide-overlay-body b { color: var(--fg); }
+.guide-overlay-body code { font-family: var(--mono); background: rgba(0,0,0,.25); padding: 1px 5px; border-radius: 3px; color: var(--cyan); }
+.guide-overlay-body i { color: var(--purple); font-style: normal; }
+.guide-fab {
+  position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  z-index: 199; background: var(--cyan); color: #06202c; border: none; border-radius: 24px;
+  padding: 10px 16px; font-family: var(--body); font-weight: 700; font-size: 13px;
+  box-shadow: 0 4px 14px rgba(0,212,255,.35); cursor: pointer; display: flex; align-items: center; gap: 6px;
+}
+.guide-fab:hover { background: #33ddff; transform: scale(1.03); }
+@keyframes fadeIn2 { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.demo-mini-btn2 {
+  background: rgba(0,212,255,.12); border: 1px solid rgba(0,212,255,.35); color: var(--cyan);
+  border-radius: 6px; padding: 2px 8px; font-size: 11px; font-family: var(--body); cursor: pointer; white-space: nowrap;
+}
+.demo-mini-btn2:hover { background: rgba(0,212,255,.22); }
+
+
+/* ── 로그인 화면 ── */
+.login-overlay {
+  position: fixed; inset: 0; z-index: 500; background: var(--bg);
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.login-card {
+  width: min(360px, 100%); background: var(--panel); border: 1px solid var(--border2);
+  border-radius: 14px; padding: 28px 24px; box-shadow: 0 12px 40px rgba(0,0,0,.5);
+}
+.login-brand { font-family: var(--head); font-weight: 700; font-size: 18px; color: var(--cyan); margin-bottom: 4px; display:flex; align-items:center; gap:8px; }
+.login-brand .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); }
+.login-sub { font-size: 12px; color: var(--fg3); margin-bottom: 22px; }
+.login-field { margin-bottom: 14px; }
+.login-field label { display: block; font-size: 12px; color: var(--fg2); margin-bottom: 6px; }
+.login-field input {
+  width: 100%; padding: 11px 12px; border-radius: 8px; border: 1px solid var(--border2);
+  background: var(--bg2); color: var(--fg); font-family: var(--mono); font-size: 15px; letter-spacing: .04em;
+}
+.login-field input:focus { outline: none; border-color: var(--cyan); }
+.login-team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.login-team-opt {
+  text-align: center; padding: 9px 4px; border-radius: 7px; border: 1px solid var(--border2);
+  background: var(--bg2); color: var(--fg2); font-family: var(--mono); font-size: 13px; font-weight: 600; cursor: pointer;
+}
+.login-team-opt:hover { border-color: var(--cyan); color: var(--fg); }
+.login-team-opt.active { border-color: var(--cyan); background: var(--cyan-dim); color: var(--cyan); }
+.login-btn {
+  width: 100%; padding: 12px; border-radius: 8px; border: none; margin-top: 6px;
+  background: var(--cyan); color: #06202c; font-weight: 700; font-size: 14px; cursor: pointer; font-family: var(--body);
+}
+.login-btn:hover { background: #33ddff; }
+.login-error { font-size: 12px; color: var(--red); margin-top: 10px; min-height: 16px; }
+.login-hint { font-size: 11px; color: var(--fg3); margin-top: 16px; line-height: 1.6; }
+.login-hint code { color: var(--cyan); background: rgba(0,212,255,.1); padding: 1px 5px; border-radius: 3px; }
+.page { display: none; }
+.topbar { display: none; }
+body.logged-in .page, body.logged-in .topbar { display: block; }
+body.logged-in .topbar { display: flex; }
+body.logged-in .login-overlay { display: none; }
+.student-badge {
+  background: var(--panel); border: 1px solid var(--border2); border-radius: 20px;
+  padding: 6px 12px; font-family: var(--mono); font-size: 11px; color: var(--fg2);
+  display: none; align-items: center; gap: 8px; white-space: nowrap; flex-shrink: 0;
+}
+.student-badge button { background: none; border: none; color: var(--fg3); font-size: 11px; cursor: pointer; text-decoration: underline; padding: 0; }
+.student-badge button:hover { color: var(--red); }
+
+
+/* 로그인은 login.html에서 처리 */
+.login-overlay { display: none !important; }
+</style>
+
+<!-- 로그인 화면 -->
+<div class="login-overlay" id="login-overlay">
+  <div class="login-card">
+    <div class="login-brand"><span class="dot"></span>AUTO-NET LAB</div>
+    <div class="login-sub">2차시 · 지연 측정·최적화 — 로그인</div>
+    <div class="login-field">
+      <label>학번 (5자리)</label>
+      <input type="text" id="login-id" inputmode="numeric" maxlength="5" placeholder="예: 30101" onkeydown="if(event.key==='Enter')document.getElementById('login-pw').focus();">
+    </div>
+    <div class="login-field">
+      <label>비밀번호</label>
+      <input type="password" id="login-pw" inputmode="numeric" maxlength="5" placeholder="학번과 동일하게 입력">
+    </div>
+    <div class="login-field">
+      <label>팀 선택</label>
+      <div class="login-team-grid" id="login-team-grid">
+        <div class="login-team-opt" data-car="CAR1" onclick="selectLoginTeam('CAR1')">CAR1</div>
+        <div class="login-team-opt" data-car="CAR2" onclick="selectLoginTeam('CAR2')">CAR2</div>
+        <div class="login-team-opt" data-car="CAR3" onclick="selectLoginTeam('CAR3')">CAR3</div>
+        <div class="login-team-opt" data-car="CAR4" onclick="selectLoginTeam('CAR4')">CAR4</div>
+        <div class="login-team-opt" data-car="CAR5" onclick="selectLoginTeam('CAR5')">CAR5</div>
+        <div class="login-team-opt" data-car="CAR6" onclick="selectLoginTeam('CAR6')">CAR6</div>
+      </div>
+      <input type="hidden" id="login-team">
+    </div>
+    <button class="login-btn" onclick="doLogin()">로그인</button>
+    <div class="login-error" id="login-error"></div>
+    <div class="login-hint">비밀번호는 <code>학번과 동일</code>합니다. 예: 학번이 30101이면 비밀번호도 30101.</div>
+  </div>
+</div>
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-brand"><div class="dot"></div>AUTO-NET LAB · 2차시</div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-bg"><div class="progress-bar-fill" id="pbar"></div></div>
+    <div class="progress-label" id="plabel">0 / 7</div>
+  </div>
+  <div class="team-badge" id="topTeam">팀 미확인</div>
+  <div class="student-badge" id="student-badge">
+    <span id="student-badge-id"></span>
+    <button onclick="doLogout()">로그아웃</button>
+  </div>
+</div>
+
+<div class="page">
+
+  <div class="hero-banner">
+    <div class="hero-badge">🏎 TICKET-02 · 성능 최적화팀 엔지니어</div>
+    <div class="hero-title">지연을 재고 줄인다</div>
+    <p class="hero-sub">
+      기준 사례의 편도 제어 지연이 <strong>595ms</strong>라면, 초속 25cm 모형차는 그 사이 약 <strong>14.9cm</strong>를 더 이동합니다.
+      오늘은 RTT와 유실을 따로 측정하고, 우선순위 큐(전략 A) 또는 데이터 분할(전략 B)의 효과를 비교합니다.
+    </p>
+  </div>
+
+  <!-- S#8 충격 데이터 공개 -->
+  <div class="section open" id="sec-s8">
+    <div class="section-header" onclick="toggleSection('s8')">
+      <span class="step-badge">S#8</span>
+      <span class="section-title">충격 데이터 공개 — 편도 제어 지연 595ms</span>
+      <button class="demo-mini-btn2" onclick="event.stopPropagation(); showGuide('s8')">🧭 안내</button>
+      <span class="lock-icon" id="lock-s8">👁</span>
+      <span class="chevron">›</span>
+    </div>
+    <div class="section-body">
+      <div class="sensei-box">
+        <span class="sensei-icon">🤖</span>
+        <span class="sensei-text">"형식은 네가 고쳤어. 이제 정지 명령이 차량에 도착하기까지의 시간을 보자. 이 기준 사례의 <strong>편도 제어 지연은 595ms</strong>야. 초속 25cm로 움직인다면 그동안 얼마나 더 갈까?"</span>
+      </div>
+      <div class="calc-box">
+        <div class="calc-row">
+          <input type="text" class="calc-input" id="s8-delay" value="595" oninput="s8LivePreview()">
+          <span>ms ×</span>
+          <input type="text" class="calc-input" id="s8-speed" value="0.025" oninput="s8LivePreview()">
+          <span>=</span>
+          <span class="calc-result" id="s8-result">14.9 cm</span>
+          <button class="btn btn-primary" id="s8-run-btn" style="padding:6px 16px;font-size:12px;" onclick="runS8Sim()">🚗 주행 시작</button>
+        </div>
+        <div class="calc-hint">숫자를 직접 바꿔보세요 — 지연이 줄어들면 트랙과 그래프가 어떻게 달라지는지 확인할 수 있습니다.</div>
+      </div>
+
+      <div class="track-wrap" id="track-wrap">
+        <div class="track-labels">
+          <span class="track-label-start">🚩 정지 명령 발생</span>
+          <span class="track-label-end" id="track-stopline">🛑 정지선</span>
+        </div>
+        <div class="track-road">
+          <div class="track-centerline"></div>
+          <div class="track-stopline-mark" id="stopline-mark"></div>
+          <div class="track-overshoot" id="track-overshoot"></div>
+          <div class="track-car" id="track-car">🚗</div>
+        </div>
+        <div class="track-readout">
+          <span class="track-readout-label">경과 시간</span>
+          <span class="track-readout-val" id="track-time">0</span><span class="track-readout-unit">ms</span>
+          <span class="track-readout-sep">·</span>
+          <span class="track-readout-label">초과 이동거리</span>
+          <span class="track-readout-val" id="track-dist">0.0</span><span class="track-readout-unit">cm</span>
+        </div>
+        <div class="track-verdict" id="track-verdict"></div>
+
+        <div class="curve-wrap">
+          <div class="curve-title">📈 지연 시간 → 초과 이동거리 그래프</div>
+          <svg viewBox="0 0 300 150" class="curve-svg" id="curve-svg">
+            <!-- axes -->
+            <line x1="34" y1="10" x2="34" y2="118" stroke="var(--border2)" stroke-width="1"/>
+            <line x1="34" y1="118" x2="288" y2="118" stroke="var(--border2)" stroke-width="1"/>
+            <text x="2" y="14" class="curve-axis-label">15cm</text>
+            <text x="12" y="122" class="curve-axis-label">0</text>
+            <text x="260" y="134" class="curve-axis-label">600ms</text>
+            <!-- goal reference: 11.6ms -->
+            <line x1="39.6" y1="118" x2="39.6" y2="113.5" stroke="var(--green)" stroke-width="1.5" stroke-dasharray="2,2"/>
+            <circle cx="39.6" cy="113.5" r="3" fill="var(--green)"/>
+            <text x="43" y="110" class="curve-point-label" fill="var(--green)">목표 11.6ms</text>
+            <!-- animated curve -->
+            <path id="curve-path" d="M 34,118 L 254,22" fill="none" stroke="var(--cyan)" stroke-width="2.5"
+                  stroke-dasharray="320" stroke-dashoffset="320"/>
+            <!-- flat continuation (ghost) -->
+            <line x1="254" y1="22" x2="288" y2="22" stroke="var(--fg3)" stroke-width="1" stroke-dasharray="3,3" opacity=".5"/>
+            <!-- moving dot -->
+            <circle id="curve-dot" cx="34" cy="118" r="4" fill="var(--orange)" opacity="0"/>
+            <text x="238" y="16" class="curve-point-label" fill="var(--orange)">현재 595ms</text>
+          </svg>
+          <div class="curve-caption">직선 그래프 = <strong>지연이 늘수록 초과거리도 똑같은 비율로 커진다</strong>는 뜻. 목표(초록)와 현재(주황) 사이 거리가 2차시에서 줄여야 할 간격입니다.</div>
+        </div>
+      </div>
+      <div class="warn-box">
+        ⚠ <strong>주의:</strong> 595ms는 수업용 편도 지연 사례입니다. <strong>RTT는 왕복 측정</strong>이고, 거리 환산에는 <strong>편도 제어 지연만</strong> 사용합니다. 목표 11.6ms는 참고값이지 팀의 실측값이 아닙니다.
+      </div>
+      <div class="mentor2-panel" id="mentor2-panel">
+        <div class="mentor2-title">🤖 AI 사수에게 설명하기 <span id="mentor2-locked-tag">(먼저 위 주행을 실행하세요)</span></div>
+        <div style="font-size:11px;color:var(--fg3);margin-bottom:6px;">💡 AI 사수는 정답을 바로 알려주지 않아요. 여러분의 설명으로 말이 안 되는 상황(반례)을 계속 던질 거예요. 스스로 고쳐 말할 때까지 도전해보세요.</div>
+        <textarea class="mentor2-input" id="s8-memo" disabled placeholder="왜 595ms 지연이 위험한지, 여러분의 말로 설명해보세요"></textarea>
+        <div class="mentor2-send-row">
+          <button class="mentor2-send-btn" id="s8-memo-send" disabled onclick="sendS8Memo()">💬 사수에게 전송</button>
+        </div>
+        <div class="mentor2-my-msg" id="s8-my-msg"></div>
+        <div class="mentor2-reply" id="s8-reply">
+          <span class="tag" id="s8-reply-tag">🤖 AI 사수 — 반례 하나</span>
+          <span id="s8-reply-text"></span>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="btn-s8-done" disabled onclick="completeStep('s8')">✓ 위험 의미 확인 완료</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- S#9 RTT 10회 측정 -->
+  <div class="section locked" id="sec-s9">
+    <div class="section-header" onclick="toggleSection('s9')">
+      <span class="step-badge">S#9</span>
+      <span class="section-title">RTT를 10회 재라 ⚠ 최대 지원 구간</span>
+      <button class="demo-mini-btn2" onclick="event.stopPropagation(); showGuide('s9')">🧭 안내</button>
+      <span class="lock-icon" id="lock-s9">🔒</span>
+      <span class="chevron">›</span>
+    </div>
+    <div class="section-body">
+      <div class="sensei-box">
+        <span class="sensei-icon">🤖</span>
+        <span class="sensei-text">"요청을 보낸 뒤 응답을 받은 시간 차이가 RTT야. <strong>이 값은 왕복 시간</strong>이야. 열 번의 기록에서 평균·최솟값·최댓값을 확인하자. 응답이 없으면 0이 아니라 <strong>유실</strong>로 표시해."</span>
+      </div>
+      <p style="font-size:13px;color:var(--fg2);margin:0 0 10px;">driving_log_20261019.csv 교육용 예시값이 채워져 있습니다. 유실이 있으면 해당 칸을 클릭하세요 (RTT 계산에서 자동 제외됩니다).</p>
+      <table class="rtt-table" id="rtt-table">
+        <thead><tr><th>회차</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th></tr></thead>
+        <tbody>
+          <tr>
+            <td style="color:var(--fg3);">RTT(ms)</td>
+            <td><input type="text" class="rtt-in" value="88"></td>
+            <td><input type="text" class="rtt-in" value="92"></td>
+            <td><input type="text" class="rtt-in" value="85"></td>
+            <td><input type="text" class="rtt-in" value=""></td>
+            <td><input type="text" class="rtt-in" value="91"></td>
+            <td><input type="text" class="rtt-in" value="140"></td>
+            <td><input type="text" class="rtt-in" value="89"></td>
+            <td><input type="text" class="rtt-in" value="94"></td>
+            <td><input type="text" class="rtt-in" value="87"></td>
+            <td><input type="text" class="rtt-in" value="90"></td>
+          </tr>
+          <tr>
+            <td style="color:var(--fg3);font-size:10px;">유실?</td>
+            <td class="loss-cell" onclick="toggleLoss(this)"></td>
+            <td class="loss-cell" onclick="toggleLoss(this)"></td>
+            <td class="loss-cell" onclick="toggleLoss(this)"></td>
+            <td class="loss-cell active" onclick="toggleLoss(this)">✗</td>
+            <td class="loss-cell" onclick="toggleLoss(this)"></td>
+            <td class="loss-cell" onclick="toggleLoss(this)"></td>
+            <td class="loss-cell" onclick="toggleLoss(this)"></td>
+            <td class="loss-cell" onclick="toggleLoss(this)"></td>
+            <td class="loss-cell" onclick="toggleLoss(this)"></td>
+            <td class="loss-cell" onclick="toggleLoss(this)"></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="ping-wrap" id="ping-wrap">
+        <div class="ping-round" id="ping-round">▶ 재생 전</div>
+        <div class="ping-track">
+          <div class="ping-node ping-node-car">📡<span>차량</span></div>
+          <div class="ping-line"></div>
+          <div class="ping-packet" id="ping-packet"></div>
+          <div class="ping-node ping-node-srv">🖥️<span>서버</span></div>
+        </div>
+        <div class="ping-loss-flash" id="ping-loss-flash">✗ 응답 없음 — 유실</div>
+      </div>
+      <div class="btn-row" style="margin-top:0;">
+        <button class="btn btn-primary" id="ping-play-btn" style="font-size:12px;padding:7px 16px;" onclick="pingAnimate()">▶ 10회 측정 재생</button>
+        <button class="btn btn-secondary" style="font-size:12px;padding:7px 14px;" onclick="calcRTT()">Σ 바로 계산만</button>
+      </div>
+      <div class="rtt-stats">
+        <div class="rtt-stat"><div class="rtt-stat-val" id="rtt-avg">--</div><div class="rtt-stat-label">평균 RTT(ms)</div></div>
+        <div class="rtt-stat"><div class="rtt-stat-val" id="rtt-min">--</div><div class="rtt-stat-label">최소(ms)</div></div>
+        <div class="rtt-stat"><div class="rtt-stat-val" id="rtt-max">--</div><div class="rtt-stat-label">최대(ms)</div></div>
+        <div class="rtt-stat"><div class="rtt-stat-val" id="rtt-loss">--</div><div class="rtt-stat-label">유실(건)</div></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="btn-s9-done" disabled onclick="completeStep('s9')">✓ RTT 측정 완료</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- S#10 지연 종류 구분 -->
+  <div class="section locked" id="sec-s10">
+    <div class="section-header" onclick="toggleSection('s10')">
+      <span class="step-badge">S#10</span>
+      <span class="section-title">지연 종류를 구분하라 — RTT ≠ 편도 제어 지연</span>
+      <button class="demo-mini-btn2" onclick="event.stopPropagation(); showGuide('s10')">🧭 안내</button>
+      <span class="lock-icon" id="lock-s10">🔒</span>
+      <span class="chevron">›</span>
+    </div>
+    <div class="section-body">
+      <div class="sensei-box">
+        <span class="sensei-icon">🤖</span>
+        <span class="sensei-text">"왕복 RTT와 편도 제어 지연은 다른 값이야. cm로 바꿀 수 있는 건 <strong>편도 지연</strong>뿐이야. RTT를 그대로 넣지 마."</span>
+      </div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label>S#9에서 측정한 평균 RTT (자동 연동)</label>
+          <input type="text" id="s10-rtt" readonly style="opacity:.6;">
+        </div>
+        <div class="form-field">
+          <label>편도 제어 지연 (제공된 경우만 입력, ms)</label>
+          <input type="text" id="s10-onedelay" placeholder="예: 42 (없으면 비워두기)" oninput="calcS10()">
+        </div>
+      </div>
+      <div class="calc-box">
+        <div class="calc-row">
+          <span id="s10-cm-formula">측정 자료 없음</span>
+        </div>
+      </div>
+      <div class="warn-box">
+        ⚠ 편도 지연이 없을 때 RTT÷2를 편도로 가정하지 않습니다. 20cm는 이 모형에서만 쓰는 비교값이며 실제 위험 판정이 아닙니다.
+      </div>
+
+      <div class="mentor2-panel">
+        <div class="mentor2-title">🤖 AI 사수에게 설명하기</div>
+        <div style="font-size:11px;color:var(--fg3);margin-bottom:6px;">💡 "RTT를 편도 지연 대신 쓰면 왜 안 되는지" 여러분의 말로 설명해보세요. 정답은 바로 안 알려줍니다.</div>
+        <textarea class="mentor2-input" id="s10-memo" placeholder="RTT와 편도 제어 지연이 왜 다른지 설명해보세요" oninput="document.getElementById('s10-memo-send').disabled = !this.value.trim();"></textarea>
+        <div class="mentor2-send-row">
+          <button class="mentor2-send-btn" id="s10-memo-send" disabled onclick="sendS10Memo()">💬 사수에게 전송</button>
+        </div>
+        <div class="mentor2-my-msg" id="s10-my-msg"></div>
+        <div class="mentor2-reply" id="s10-reply">
+          <span class="tag" id="s10-reply-tag">🤖 AI 사수 — 반례 하나</span>
+          <span id="s10-reply-text"></span>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="btn-s10-done" disabled onclick="completeStep('s10')">✓ RTT·편도 지연 구분 완료</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- S#11 배정 전략 시험 -->
+  <div class="section locked" id="sec-s11">
+    <div class="section-header" onclick="toggleSection('s11')">
+      <span class="step-badge">S#11</span>
+      <span class="section-title">배정 전략 하나를 시험하라 ⚠ 최대 지원 구간</span>
+      <button class="demo-mini-btn2" onclick="event.stopPropagation(); showGuide('s11')">🧭 안내</button>
+      <span class="lock-icon" id="lock-s11">🔒</span>
+      <span class="chevron">›</span>
+    </div>
+    <div class="section-body">
+      <div class="sensei-box">
+        <span class="sensei-icon">🤖</span>
+        <span class="sensei-text">"두 가지 길이 있어. 어느 쪽이 네 측정값을 설명하지? <strong>최댓값이 평균보다 크게 튀었다면 왜 그랬을까.</strong> 고르고 나서 이유를 적어."</span>
+      </div>
+      <div class="strategy-grid">
+        <div class="strategy-card" id="strat-a" onclick="selectStrategy('a')">
+          <div class="strategy-name">전략 A · 우선순위 큐</div>
+          <div class="strategy-desc">
+            <span class="pri">최우선</span> 정지·비상 명령<br>
+            <span class="mid">우선</span> 속도 조절<br>
+            <span class="low">일반</span> 센서 데이터
+          </div>
+        </div>
+        <div class="strategy-card" id="strat-b" onclick="selectStrategy('b')">
+          <div class="strategy-name">전략 B · 데이터 분할</div>
+          <div class="strategy-desc">
+            영상+정지명령 통째로 측정<br>
+            → <span class="pri">256바이트</span> 조각으로 분할 후 재측정
+          </div>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--fg3);margin:0 0 6px;">교사가 배정한 전략을 선택하세요 (6팀 중 3팀씩 A/B 배정).</p>
+      <div class="judge-grid">
+        <div class="form-field"><label>① 최초 판단</label><input type="text" id="j1" placeholder="시험 전 예상"></div>
+        <div class="form-field"><label>② 확인한 측정값</label><input type="text" id="j2" placeholder="실제로 관찰된 수치"></div>
+        <div class="form-field"><label>③ 바뀐 판단</label><input type="text" id="j3" placeholder="측정 후 생각이 바뀐 점"></div>
+        <div class="form-field"><label>④ 다음에 확인할 것</label><input type="text" id="j4" placeholder="추가로 검증하고 싶은 것"></div>
+      </div>
+
+      <div class="mentor2-panel">
+        <div class="mentor2-title">🤖 AI 사수에게 설명하기</div>
+        <div style="font-size:11px;color:var(--fg3);margin-bottom:6px;">💡 "왜 이 전략을 골랐는지" 여러분의 말로 설명해보세요. 정답은 바로 안 알려줍니다.</div>
+        <textarea class="mentor2-input" id="s11-memo" placeholder="전략 A 또는 B를 고른 이유를 측정값과 함께 설명해보세요" oninput="document.getElementById('s11-memo-send').disabled = !this.value.trim();"></textarea>
+        <div class="mentor2-send-row">
+          <button class="mentor2-send-btn" id="s11-memo-send" disabled onclick="sendS11Memo()">💬 사수에게 전송</button>
+        </div>
+        <div class="mentor2-my-msg" id="s11-my-msg"></div>
+        <div class="mentor2-reply" id="s11-reply">
+          <span class="tag" id="s11-reply-tag">🤖 AI 사수 — 반례 하나</span>
+          <span id="s11-reply-text"></span>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="btn-s11-done" disabled onclick="completeStep('s11')">✓ 전략 시험·판단 기록 완료</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- S#12 학급 결과 비교 -->
+  <div class="section locked" id="sec-s12">
+    <div class="section-header" onclick="toggleSection('s12')">
+      <span class="step-badge">S#12</span>
+      <span class="section-title">학급 결과를 모아 비교하라</span>
+      <button class="demo-mini-btn2" onclick="event.stopPropagation(); showGuide('s12')">🧭 안내</button>
+      <span class="lock-icon" id="lock-s12">🔒</span>
+      <span class="chevron">›</span>
+    </div>
+    <div class="section-body">
+      <div class="sensei-box">
+        <span class="sensei-icon">🤖</span>
+        <span class="sensei-text">"우리 팀 결과만으로 결론을 서두르지 말자. 같은 조건에서 나온 A팀·B팀 결과를 모아 비교해."</span>
+      </div>
+      <div class="form-grid">
+        <div class="form-field"><label>공통 기준 평균 RTT(ms)</label><input type="text" id="cmp-base" placeholder="예: 95" oninput="renderCompare()"></div>
+        <div class="form-field"><label>전략 A팀 평균 RTT(ms)</label><input type="text" id="cmp-a" placeholder="예: 62" oninput="renderCompare()"></div>
+        <div class="form-field"><label>전략 B팀 평균 RTT(ms)</label><input type="text" id="cmp-b" placeholder="예: 71" oninput="renderCompare()"></div>
+      </div>
+      <div class="compare-wrap" id="compare-chart">
+        <div class="compare-row"><div class="compare-label">기준</div><div class="compare-bar-bg"><div class="compare-bar-fill bar-base" id="bar-base" style="width:0%"><span id="bar-base-v"></span></div></div></div>
+        <div class="compare-row"><div class="compare-label">전략 A</div><div class="compare-bar-bg"><div class="compare-bar-fill bar-a" id="bar-a" style="width:0%"><span id="bar-a-v"></span></div></div></div>
+        <div class="compare-row"><div class="compare-label">전략 B</div><div class="compare-bar-bg"><div class="compare-bar-fill bar-b" id="bar-b" style="width:0%"><span id="bar-b-v"></span></div></div></div>
+      </div>
+      <div class="warn-box">
+        ⚠ 조건이 다른 팀 결과는 단순 비교하지 않습니다. 그래프는 RTT 비교로만 사용하고, 11.6ms는 참고 사례일 뿐 모든 팀의 목표 실측값이 아닙니다.
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="completeStep('s12')">✓ 학급 비교 확인 완료</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- S#13 접점⑤ 명세 작성 -->
+  <div class="section locked" id="sec-s13">
+    <div class="section-header" onclick="toggleSection('s13')">
+      <span class="step-badge">S#13</span>
+      <span class="section-title">접점⑤ 명세 작성과 인계 — net_protocol_v2.md</span>
+      <button class="demo-mini-btn2" onclick="event.stopPropagation(); showGuide('s13')">🧭 안내</button>
+      <span class="lock-icon" id="lock-s13">🔒</span>
+      <span class="chevron">›</span>
+    </div>
+    <div class="section-body">
+      <div class="sensei-box">
+        <span class="sensei-icon">🤖</span>
+        <span class="sensei-text">"게임팀과 서버팀이 이걸 받아 구현한다. <strong>측정값과 설계를 같이 넣어라.</strong>"</span>
+      </div>
+      <div class="output-box">
+        <div class="output-title">📄 산출물 미리보기 — net_protocol_v2.md</div>
+        <div class="output-content" id="out-protocol">
+          <strong style="color:var(--fg);">AUTO-NET LAB 네트워크 프로토콜 v2</strong><br><br>
+          팀: <span id="out2-team" style="color:var(--red);">-</span><br><br>
+          <strong>RTT 측정 결과:</strong><br>
+          · 평균 <code id="out2-avg">--</code>ms · 최소 <code id="out2-min">--</code>ms · 최대 <code id="out2-max">--</code>ms · 유실 <code id="out2-loss">--</code>건<br><br>
+          <strong>편도 제어 지연:</strong> <span id="out2-onedelay">측정 자료 없음</span><br><br>
+          <strong>시험 전략:</strong> <span id="out2-strategy">미선택</span><br>
+          · 최초 판단: <span id="out2-j1">-</span><br>
+          · 바뀐 판단: <span id="out2-j3">-</span>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="completeStep('s13')">🚀 접점⑤ 업로드 — 게임팀·서버팀 인계</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- S#14 발표 + 회고 -->
+  <div class="section locked" id="sec-s14">
+    <div class="section-header" onclick="toggleSection('s14')">
+      <span class="step-badge">S#14</span>
+      <span class="section-title">45초 발표와 회고 ⭐ 공개수업</span>
+      <button class="demo-mini-btn2" onclick="event.stopPropagation(); showGuide('s14')">🧭 안내</button>
+      <span class="lock-icon" id="lock-s14">🔒</span>
+      <span class="chevron">›</span>
+    </div>
+    <div class="section-body">
+      <div class="sensei-box">
+        <span class="sensei-icon">🤖</span>
+        <span class="sensei-text">"관찰자들 앞이다. 측정한 값과 가정한 값을 구분해서 말해. RTT를 편도 지연이나 주행거리라고 부르지 마."</span>
+      </div>
+      <p style="font-size:13px;font-weight:600;color:var(--fg);margin:0 0 8px;">발표 템플릿 — 빈칸을 채우면 완성됩니다</p>
+      <div class="present-template">
+        저희 팀은 같은 조건에서 RTT를 기준 <input type="text" id="p1" placeholder="값" size="4">ms,
+        전략 <input type="text" id="p2" placeholder="A/B" size="3"> 적용 후 <input type="text" id="p3" placeholder="값" size="4">ms로 관찰했습니다.
+        유실률은 <input type="text" id="p4" placeholder="값" size="4">에서 <input type="text" id="p5" placeholder="값" size="4">으로 변했습니다.
+        결과는 <input type="text" id="p6" placeholder="실측/시나리오" size="10">입니다.
+        편도 제어 지연 자료는 <input type="text" id="p7" placeholder="있음/없음" size="6">이며,
+        주행거리 환산은 <input type="text" id="p8" placeholder="계산값/미기록" size="10">으로 적었습니다.
+        한계는 <input type="text" id="p9" placeholder="한 가지" size="14">입니다.
+      </div>
+      <p style="font-size:13px;font-weight:600;color:var(--fg);margin:18px 0 8px;">3문장 회고</p>
+      <div class="retro-grid">
+        <div class="retro-field"><label>처음 생각한 것</label><input type="text" id="r1"></div>
+        <div class="retro-field"><label>본 증거</label><input type="text" id="r2"></div>
+        <div class="retro-field"><label>바뀐 판단</label><input type="text" id="r3"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="btn-s14-done" disabled onclick="completeStep('s14')">✓ 발표·회고 완료</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 접점⑤ 제출 -->
+  <div class="section locked" id="sec-summary">
+    <div class="section-header" onclick="toggleSection('summary')">
+      <span class="step-badge">정리</span>
+      <span class="section-title">접점⑤ 최종 제출</span>
+      <span class="lock-icon" id="lock-summary">🔒</span>
+      <span class="chevron">›</span>
+    </div>
+    <div class="section-body">
+      <div class="junction-card">
+        <div class="junction-label">접점⑤ — 2차시 완료</div>
+        <div class="junction-title">net_protocol_v2.md 제출</div>
+        <div class="junction-desc">
+          RTT·유실 측정과 전략 비교를 완성했습니다. 3차시에서는 통합 안전 시험으로 전체를 검증합니다.
+        </div>
+        <div class="junction-chain">
+          <span class="jc-item">접점④ 1차시<br>packet_format_v1</span>
+          <span class="jc-arrow">→</span>
+          <span class="jc-item current">접점⑤ 2차시<br>net_protocol_v2</span>
+          <span class="jc-arrow">→</span>
+          <span class="jc-item next">접점⑥ 3차시<br>safety_test_report</span>
+        </div>
+        <div class="btn-row" style="justify-content:center;margin-top:18px;">
+          <button class="btn btn-success" id="btn-final" onclick="submitFinal()">🎯 접점⑤ 제출 완료</button>
+        </div>
+        <div id="final-msg" style="display:none;margin-top:14px;padding:14px;background:var(--green-dim);border-radius:8px;text-align:center;font-size:14px;color:var(--green);">
+          ✅ <strong>2차시 완료!</strong><br>수고했습니다. net_protocol_v2.md가 기록되었습니다.<br>
+          <a href="outputs.html" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:12px;padding:10px 18px;border-radius:8px;border:1px solid var(--green);color:var(--green);font-weight:700;text-decoration:none;">📁 학생 산출물 제출</a>
+          <a href="lesson3.html" style="display:inline-block;margin-top:12px;padding:10px 18px;border-radius:8px;background:var(--green);color:#071018;font-weight:700;text-decoration:none;">3차시로 이동 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<button class="guide-fab" onclick="showGuide('intro')">🧭 안내도우미</button>
+<div class="guide-overlay" id="guide-overlay">
+  <div class="guide-overlay-head">
+    <span class="guide-overlay-title" id="guide-overlay-title">안내</span>
+    <button class="guide-overlay-close" onclick="closeGuide()">✕</button>
+  </div>
+  <div class="guide-overlay-body" id="guide-overlay-body"></div>
+</div>
+</div><!-- /page -->
+
+<script>
+// ── 로그인 (학번=비밀번호, index.html과 공유 세션) ────────────────
+let studentId = '';
+let loginTeam = '';
+
+function storageKey() {
+  return 'autonet-lesson2-' + (studentId || 'guest');
+}
+
+function selectLoginTeam(car) {
+  loginTeam = car;
+  document.getElementById('login-team').value = car;
+  document.querySelectorAll('.login-team-opt').forEach(el => {
+    el.classList.toggle('active', el.dataset.car === car);
+  });
+}
+
+function doLogin() {
+  const idEl = document.getElementById('login-id');
+  const pwEl = document.getElementById('login-pw');
+  const errEl = document.getElementById('login-error');
+  const id = idEl.value.trim();
+  const pw = pwEl.value.trim();
+
+  if (!/^\d{5}$/.test(id)) { errEl.textContent = '학번은 5자리 숫자로 입력하세요 (예: 30101).'; return; }
+  if (pw !== id) { errEl.textContent = '비밀번호가 올바르지 않습니다. (비밀번호는 학번과 동일)'; pwEl.value = ''; pwEl.focus(); return; }
+  if (!loginTeam) { errEl.textContent = '팀을 선택해주세요.'; return; }
+
+  errEl.textContent = '';
+  studentId = id;
+  try {
+    localStorage.setItem('autonet-lesson2-current', studentId);
+    localStorage.setItem('autonet-session', JSON.stringify({ id, team: loginTeam }));
+  } catch(e) {}
+  enterApp(loginTeam);
+}
+
+function doLogout() {
+  try {
+    localStorage.removeItem('autonet-lesson2-current');
+    localStorage.removeItem('autonet-session');
+  } catch(e) {}
+  location.replace('login.html');
+}
+
+function enterApp(teamFromLogin) {
+  document.body.classList.add('logged-in');
+  document.getElementById('student-badge').style.display = 'flex';
+  loadState();
+  if (teamFromLogin && !state.team) { state.team = teamFromLogin; saveState(); }
+  const badgeTeam = state.team || teamFromLogin;
+  document.getElementById('student-badge-id').textContent = '학번 ' + studentId + (badgeTeam ? ' · ' + badgeTeam : '');
+  if (state.team) document.getElementById('topTeam').textContent = state.team;
+  restoreProgress2();
+}
+
+// Auto-login: prefer the shared session (index.html or another lesson), else this lesson's own remembered login
+try {
+  const shared = JSON.parse(localStorage.getItem('autonet-session') || 'null');
+  if (shared && /^\d{5}$/.test(shared.id) && shared.team) {
+    studentId = shared.id; loginTeam = shared.team;
+  } else {
+    const remembered = localStorage.getItem('autonet-lesson2-current');
+    if (remembered && /^\d{5}$/.test(remembered)) studentId = remembered;
+  }
+} catch(e) {}
+
+// ── State ──────────────────────────────────────────────────────
+let state = { team: '', completedSteps: new Set(), strategy: '' };
+
+function loadState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(storageKey()) || '{}');
+    if (saved.team) state.team = saved.team;
+    if (saved.completedSteps) state.completedSteps = new Set(saved.completedSteps);
+    if (saved.strategy) state.strategy = saved.strategy;
+  } catch(e) {}
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(storageKey(), JSON.stringify({
+      team: state.team, completedSteps: [...state.completedSteps], strategy: state.strategy,
+    }));
+  } catch(e) {}
+}
+
+const STEP_ORDER = ['s8','s9','s10','s11','s12','s13','s14','summary'];
+
+function toggleSection(id) {
+  const sec = document.getElementById('sec-' + id);
+  if (sec.classList.contains('locked')) return;
+  sec.classList.toggle('open');
+}
+function unlockSection(id) {
+  const sec = document.getElementById('sec-' + id);
+  if (!sec) return;
+  sec.classList.remove('locked');
+  const lock = document.getElementById('lock-' + id);
+  if (lock) lock.remove();
+  sec.classList.add('open');
+}
+function completeStep(id) {
+  state.completedSteps.add(id);
+  saveState();
+  const sec = document.getElementById('sec-' + id);
+  sec.classList.add('completed');
+  sec.classList.remove('open');
+  const badge = sec.querySelector('.step-badge');
+  if (badge) { badge.style.background = 'var(--green-dim)'; badge.style.borderColor='var(--green)'; badge.style.color='var(--green)'; }
+  const chevron = sec.querySelector('.chevron');
+  if (chevron) chevron.textContent = '✓';
+  const idx = STEP_ORDER.indexOf(id);
+  if (idx >= 0 && idx + 1 < STEP_ORDER.length) unlockSection(STEP_ORDER[idx + 1]);
+  updateProgress();
+}
+function updateProgress() {
+  const done = state.completedSteps.size;
+  const total = 7;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('pbar').style.width = pct + '%';
+  document.getElementById('plabel').textContent = done + ' / ' + total;
+}
+
+// ── S#8 race track sim (live-editable numbers) ──────────────
+let s8Ran = false;
+let s8BaseDelay = 595; // reference for scaling the track overshoot visual
+
+function s8GetVals() {
+  const t = parseFloat(document.getElementById('s8-delay').value) || 0;
+  const v = parseFloat(document.getElementById('s8-speed').value) || 0;
+  return { t, v, dist: t * v };
+}
+
+function s8LivePreview() {
+  const { t, v, dist } = s8GetVals();
+  const resultEl = document.getElementById('s8-result');
+  resultEl.textContent = dist.toFixed(1) + ' cm';
+  resultEl.classList.add('changed');
+  // redraw the static (non-animated) curve + dot to reflect new numbers instantly
+  drawCurveAxes(t, dist);
+  placeCurrentDot(t, dist);
+}
+
+// compute SVG plot geometry for given (t, dist), with dynamic axis scaling
+function curveGeometry(t, dist) {
+  const xMax = Math.max(650, t * 1.15, 50);
+  const yMax = Math.max(16, dist * 1.15, 1);
+  const x0 = 34, x1 = 288, y0 = 118, y1 = 10;
+  const toX = (ms) => x0 + (x1 - x0) * Math.min(1, ms / xMax);
+  const toY = (cm) => y0 + (y1 - y0) * Math.min(1, cm / yMax);
+  return { xMax, yMax, toX, toY, x0, y0 };
+}
+
+function drawCurveAxes(t, dist) {
+  const g = curveGeometry(t, dist);
+  document.getElementById('curve-svg').querySelector('text:nth-of-type(1)').textContent = g.yMax.toFixed(0) + 'cm';
+  document.getElementById('curve-svg').querySelector('text:nth-of-type(3)').textContent = Math.round(g.xMax) + 'ms';
+  // goal marker (11.6ms)
+  const gx = g.toX(11.6);
+  const gy = g.toY(11.6 * (dist && t ? dist / t : 0.025));
+  document.querySelectorAll('#curve-svg line[stroke="var(--green)"]')[0]?.setAttribute('x1', gx);
+  document.querySelectorAll('#curve-svg line[stroke="var(--green)"]')[0]?.setAttribute('x2', gx);
+  document.querySelectorAll('#curve-svg line[stroke="var(--green)"]')[0]?.setAttribute('y2', gy);
+  const goalDot = document.querySelector('#curve-svg circle[fill="var(--green)"]');
+  if (goalDot) { goalDot.setAttribute('cx', gx); goalDot.setAttribute('cy', gy); }
+  const goalLabel = document.querySelectorAll('.curve-point-label')[0];
+  if (goalLabel) { goalLabel.setAttribute('x', gx + 4); goalLabel.setAttribute('y', gy - 4); }
+  // end-of-line ghost continuation
+  const ex = g.toX(t), ey = g.toY(dist);
+  const ghost = document.querySelector('#curve-svg line[stroke="var(--fg3)"]');
+  if (ghost) { ghost.setAttribute('x1', ex); ghost.setAttribute('y1', ey); ghost.setAttribute('x2', g.x0 + (288-g.x0)); ghost.setAttribute('y2', ey); }
+  const curLabel = document.querySelectorAll('.curve-point-label')[1];
+  if (curLabel) { curLabel.setAttribute('x', Math.max(ex - 36, 40)); curLabel.setAttribute('y', Math.max(ey - 6, 14)); curLabel.textContent = '현재 ' + t + 'ms'; }
+  // main path endpoint
+  const path = document.getElementById('curve-path');
+  path.setAttribute('d', `M ${g.x0},${g.y0} L ${ex.toFixed(1)},${ey.toFixed(1)}`);
+  const len = Math.hypot(ex - g.x0, ey - g.y0);
+  path.dataset.len = len;
+  path.style.transition = 'none';
+  path.setAttribute('stroke-dasharray', len);
+  path.setAttribute('stroke-dashoffset', '0');
+}
+
+function placeCurrentDot(t, dist) {
+  const g = curveGeometry(t, dist);
+  const dot = document.getElementById('curve-dot');
+  dot.setAttribute('cx', g.toX(t));
+  dot.setAttribute('cy', g.toY(dist));
+  dot.style.opacity = '.9';
+}
+
+function runS8Sim() {
+  const btn = document.getElementById('s8-run-btn');
+  const car = document.getElementById('track-car');
+  const overshoot = document.getElementById('track-overshoot');
+  const verdict = document.getElementById('track-verdict');
+  const timeEl = document.getElementById('track-time');
+  const distEl = document.getElementById('track-dist');
+  const curvePath = document.getElementById('curve-path');
+  const curveDot = document.getElementById('curve-dot');
+
+  const { t, v, dist } = s8GetVals();
+  const g = curveGeometry(t, dist);
+  const ex = g.toX(t), ey = g.toY(dist);
+  const len = Math.hypot(ex - g.x0, ey - g.y0) || 1;
+
+  btn.disabled = true;
+  btn.textContent = '🏁 주행 중...';
+  verdict.classList.remove('show');
+  car.classList.remove('shake');
+  car.style.left = '4%';
+  overshoot.style.width = '0';
+  timeEl.textContent = '0';
+  distEl.textContent = '0.0';
+
+  curvePath.setAttribute('d', `M ${g.x0},${g.y0} L ${ex.toFixed(1)},${ey.toFixed(1)}`);
+  curvePath.style.transition = 'none';
+  curvePath.setAttribute('stroke-dasharray', String(len));
+  curvePath.setAttribute('stroke-dashoffset', String(len));
+  curveDot.style.opacity = '0';
+  curveDot.setAttribute('cx', g.x0);
+  curveDot.setAttribute('cy', g.y0);
+  drawCurveAxes(t, dist);
+  curvePath.setAttribute('stroke-dasharray', String(len));
+  curvePath.setAttribute('stroke-dashoffset', String(len));
+
+  void car.offsetWidth;
+  void curvePath.offsetWidth;
+  curvePath.style.transition = 'stroke-dashoffset 1.1s cubic-bezier(.3,.7,.4,1)';
+
+  // car's overshoot distance past the stop line maps directly and proportionally
+  // to the computed distance (dist cm), against a fixed 20cm reference span —
+  // so doubling the delay or the speed doubles how far past the line it ends up.
+  const STOP_PCT = 62;
+  const MAX_OVERSHOOT_PCT = 32;
+  const REF_MAX_DIST = 20; // cm — matches the lesson's comparison value
+  const overshootPct = Math.min(MAX_OVERSHOOT_PCT, Math.max(0, (dist / REF_MAX_DIST) * MAX_OVERSHOOT_PCT));
+  const carLeftPct = STOP_PCT + overshootPct;
+
+  const duration = 1100;
+  const startTs = performance.now();
+  curveDot.style.opacity = '1';
+  function tick(now) {
+    const p = Math.min(1, (now - startTs) / duration);
+    timeEl.textContent = Math.round(t * p);
+    distEl.textContent = (t * p * v).toFixed(1);
+    curvePath.style.strokeDashoffset = String(len * (1 - p));
+    curveDot.setAttribute('cx', String(g.x0 + (ex - g.x0) * p));
+    curveDot.setAttribute('cy', String(g.y0 + (ey - g.y0) * p));
+    if (p < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  requestAnimationFrame(() => {
+    car.classList.add('braking');
+    car.style.left = carLeftPct + '%';
+    overshoot.style.width = overshootPct + '%';
+  });
+
+  setTimeout(() => {
+    car.classList.add('shake');
+    document.getElementById('s8-result').textContent = dist.toFixed(1) + ' cm';
+    document.getElementById('s8-result').classList.remove('changed');
+    verdict.innerHTML = '💥 <span class="hit">정지선을 지나 ' + dist.toFixed(1) + 'cm 더 간 뒤에야 멈췄습니다.</span> 지연 시간이 짧을수록 이 거리는 줄어듭니다.';
+    verdict.classList.add('show');
+    btn.disabled = false;
+    btn.textContent = '🔁 다시 재생';
+    if (!s8Ran) {
+      s8Ran = true;
+      const memo = document.getElementById('s8-memo');
+      memo.disabled = false;
+      memo.oninput = () => { document.getElementById('s8-memo-send').disabled = !memo.value.trim(); };
+      document.getElementById('mentor2-locked-tag').style.display = 'none';
+    }
+  }, duration + 150);
+}
+
+// ── S#8 Socratic mentor chat ─────────────────────────────────
+const S8_RIGHT_KEYWORDS = ['넘어','지나','이동','늦게','반응','더 간','더간','계속 달','계속달','과주행','멈추지','못 멈','못멈'];
+const S8_COUNTEREXAMPLES = [
+  '음, 다시 생각해볼까요? 지연이 0ms라면 차는 정지선에서 정확히 멈출 거예요. 그런데 지금은 595ms가 걸려요. 그 595ms 동안 차는 뭘 하고 있었을까요?',
+  '힌트를 좁혀볼게요. 정지 명령이 "도착하기 전"까지, 차는 계속 멈춰 있었을까요, 계속 달리고 있었을까요?',
+  '위의 트랙 주행을 다시 떠올려보세요. 차가 정지선을 지나 빗금 구간까지 들어갔었죠? 왜 그런 일이 일어났을지 한 문장으로 말해볼까요?',
+  '한 가지 더 물어볼게요. "지연 시간이 2배가 되면 더 멀리 가서 멈출까, 아니면 똑같이 멈출까?" 이 질문에 답하면서 설명을 완성해보세요.'
+];
+let s8Attempts = 0;
+let s8Solved = false;
+function sendS8Memo() {
+  if (s8Solved) return;
+  const input = document.getElementById('s8-memo');
+  const txt = input.value.trim();
+  if (!txt) return;
+  document.getElementById('s8-my-msg').textContent = '나: ' + txt;
+  document.getElementById('s8-my-msg').classList.add('show');
+
+  const correct = S8_RIGHT_KEYWORDS.some(k => txt.includes(k));
+  const tagEl = document.getElementById('s8-reply-tag');
+  let reply;
+  if (correct) {
+    s8Solved = true;
+    tagEl.textContent = '✅ AI 사수 — 인정!';
+    tagEl.style.color = 'var(--green)';
+    reply = '정확해요! 정지 명령이 도착하기까지 595ms 동안 차는 계속 달리고 있었기 때문에, 그 시간만큼 정지선을 지나 더 멀리 가게 된 거예요. 지연 시간이 길수록 이 "과주행" 거리는 커집니다. 2차시 목표는 바로 이 지연을 줄이는 것입니다.';
+    input.disabled = true;
+    document.getElementById('s8-memo-send').textContent = '✓ 이해 완료';
+    document.getElementById('btn-s8-done').disabled = false;
+  } else {
+    tagEl.textContent = '🤖 AI 사수 — 반례 하나';
+    tagEl.style.color = 'var(--cyan)';
+    reply = S8_COUNTEREXAMPLES[Math.min(s8Attempts, S8_COUNTEREXAMPLES.length - 1)];
+    s8Attempts++;
+  }
+  document.getElementById('s8-reply-text').textContent = reply;
+  const panel = document.getElementById('s8-reply');
+  panel.classList.remove('show');
+  void panel.offsetWidth;
+  panel.classList.add('show');
+
+  input.value = '';
+  document.getElementById('s8-memo-send').disabled = true;
+}
+
+// ── S#9 RTT table ────────────────────────────────────────────
+function toggleLoss(cell) {
+  cell.classList.toggle('active');
+  cell.textContent = cell.classList.contains('active') ? '✗' : '';
+}
+function pingAnimate() {
+  const btn = document.getElementById('ping-play-btn');
+  const packet = document.getElementById('ping-packet');
+  const roundLabel = document.getElementById('ping-round');
+  const lossFlash = document.getElementById('ping-loss-flash');
+  const inputs = document.querySelectorAll('#rtt-table .rtt-in');
+  const lossCells = document.querySelectorAll('#rtt-table .loss-cell');
+  const trackWidth = () => document.querySelector('.ping-line').getBoundingClientRect().width;
+
+  btn.disabled = true;
+  btn.textContent = '🛰 측정 중...';
+  let i = 0;
+  let prevIdx = -1;
+
+  function highlightCol(idx) {
+    if (prevIdx >= 0) {
+      inputs[prevIdx].parentElement.classList.remove('col-active');
+      lossCells[prevIdx].classList.remove('col-active');
+    }
+    if (idx >= 0 && idx < inputs.length) {
+      inputs[idx].parentElement.classList.add('col-active');
+      lossCells[idx].classList.add('col-active');
+    }
+    prevIdx = idx;
+  }
+
+  function runRound() {
+    if (i >= inputs.length) {
+      highlightCol(-1);
+      roundLabel.textContent = '✓ 10회 측정 완료';
+      btn.disabled = false;
+      btn.textContent = '🔁 다시 재생';
+      calcRTT();
+      return;
+    }
+    const n = i + 1;
+    highlightCol(i);
+    const isLoss = lossCells[i].classList.contains('active');
+    const rtt = parseFloat(inputs[i].value) || 90;
+    roundLabel.textContent = n + '/10회 측정 중 · RTT ' + (isLoss ? '측정 불가' : rtt + 'ms');
+
+    if (isLoss) {
+      lossFlash.classList.add('show');
+      setTimeout(() => {
+        lossFlash.classList.remove('show');
+        i++;
+        runRound();
+      }, 500);
+      return;
+    }
+
+    const dur = Math.max(260, Math.min(1000, rtt * 5));
+    const w = trackWidth();
+    packet.classList.remove('loss');
+    packet.style.transition = 'none';
+    packet.style.left = '0px';
+    packet.style.opacity = '1';
+    void packet.offsetWidth;
+    packet.style.transition = 'left ' + (dur/2) + 'ms linear';
+    packet.style.left = (w - 10) + 'px';
+
+    setTimeout(() => {
+      packet.style.transition = 'left ' + (dur/2) + 'ms linear';
+      packet.style.left = '0px';
+      setTimeout(() => {
+        packet.style.opacity = '0';
+        i++;
+        runRound();
+      }, dur/2 + 30);
+    }, dur/2 + 30);
+  }
+  runRound();
+}
+
+function calcRTT() {
+  const inputs = document.querySelectorAll('#rtt-table .rtt-in');
+  const lossCells = document.querySelectorAll('#rtt-table .loss-cell');
+  let vals = [];
+  let lossCount = 0;
+  inputs.forEach((inp, i) => {
+    const isLoss = lossCells[i].classList.contains('active');
+    if (isLoss) { lossCount++; return; }
+    const v = parseFloat(inp.value);
+    if (!isNaN(v)) vals.push(v);
+  });
+  if (vals.length === 0) return;
+  const avg = (vals.reduce((a,b)=>a+b,0) / vals.length).toFixed(1);
+  const min = Math.min(...vals);
+  const max = Math.max(...vals);
+  document.getElementById('rtt-avg').textContent = avg;
+  document.getElementById('rtt-min').textContent = min;
+  document.getElementById('rtt-max').textContent = max;
+  document.getElementById('rtt-loss').textContent = lossCount;
+  document.getElementById('s10-rtt').value = avg + ' ms (평균)';
+  document.getElementById('out2-avg').textContent = avg;
+  document.getElementById('out2-min').textContent = min;
+  document.getElementById('out2-max').textContent = max;
+  document.getElementById('out2-loss').textContent = lossCount;
+  document.getElementById('btn-s9-done').disabled = false;
+}
+
+// ── S#10 Socratic mentor chat ────────────────────────────────
+const S10_RIGHT_KEYWORDS = ['왕복','편도','두 배','절반','다르','반대로','갔다가','한쪽','추정하지'];
+const S10_COUNTEREXAMPLES = [
+  'RTT가 90ms라면, 편도 지연도 90ms라고 해도 될까요? 왕복은 갔다가 돌아오는 거잖아요 — 편도는 그 전체일까요, 일부일까요?',
+  '만약 RTT÷2를 그냥 편도 지연으로 써도 된다면, 교사가 왜 "편도 지연이 없으면 측정 자료 없음으로 기록"하라고 했을까요?',
+  '거리 환산식 ms×0.025=cm 에 RTT 값을 그대로 넣으면 어떤 문제가 생길까요? 실제보다 더 크게 나올까요, 더 작게 나올까요?',
+];
+let s10Attempts = 0, s10Solved = false;
+function sendS10Memo() {
+  if (s10Solved) return;
+  const input = document.getElementById('s10-memo');
+  const txt = input.value.trim();
+  if (!txt) return;
+  document.getElementById('s10-my-msg').textContent = '나: ' + txt;
+  document.getElementById('s10-my-msg').classList.add('show');
+  const correct = S10_RIGHT_KEYWORDS.some(k => txt.includes(k));
+  const tagEl = document.getElementById('s10-reply-tag');
+  let reply;
+  if (correct) {
+    s10Solved = true;
+    tagEl.textContent = '✅ AI 사수 — 인정!';
+    tagEl.style.color = 'var(--green)';
+    reply = '맞아요! RTT는 왕복(갔다가 돌아오는) 시간이고, 거리 환산에 필요한 건 편도(한쪽 방향) 제어 지연뿐이에요. 그래서 편도 지연이 따로 제공되지 않으면 RTT로 추정하지 않고 "측정 자료 없음"으로 정직하게 기록하는 거예요.';
+    input.disabled = true;
+    document.getElementById('s10-memo-send').textContent = '✓ 이해 완료';
+    document.getElementById('btn-s10-done').disabled = false;
+  } else {
+    tagEl.textContent = '🤖 AI 사수 — 반례 하나';
+    tagEl.style.color = 'var(--cyan)';
+    reply = S10_COUNTEREXAMPLES[Math.min(s10Attempts, S10_COUNTEREXAMPLES.length - 1)];
+    s10Attempts++;
+  }
+  document.getElementById('s10-reply-text').textContent = reply;
+  const panel = document.getElementById('s10-reply');
+  panel.classList.remove('show'); void panel.offsetWidth; panel.classList.add('show');
+  input.value = '';
+  document.getElementById('s10-memo-send').disabled = true;
+}
+
+function calcS10() {
+  const v = document.getElementById('s10-onedelay').value.trim();
+  const el = document.getElementById('s10-cm-formula');
+  const out = document.getElementById('out2-onedelay');
+  if (v && !isNaN(parseFloat(v))) {
+    const cm = (parseFloat(v) * 0.025).toFixed(2);
+    el.innerHTML = v + ' ms × 0.025 = <span class="calc-result">' + cm + ' cm</span>';
+    out.textContent = v + 'ms → ' + cm + 'cm 환산';
+  } else {
+    el.textContent = '측정 자료 없음';
+    out.textContent = '측정 자료 없음';
+  }
+}
+
+// ── S#11 strategy ────────────────────────────────────────────
+function selectStrategy(s) {
+  state.strategy = s;
+  document.getElementById('strat-a').classList.toggle('selected', s === 'a');
+  document.getElementById('strat-b').classList.toggle('selected', s === 'b');
+  document.getElementById('out2-strategy').textContent = s === 'a' ? '전략 A · 우선순위 큐' : '전략 B · 데이터 분할';
+  checkS11();
+}
+['j1','j2','j3','j4'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', checkS11);
+});
+function checkS11() {
+  const j1 = document.getElementById('j1').value.trim();
+  const j3 = document.getElementById('j3').value.trim();
+  document.getElementById('out2-j1').textContent = j1 || '-';
+  document.getElementById('out2-j3').textContent = j3 || '-';
+  document.getElementById('btn-s11-done').disabled = !(state.strategy && j1 && j3 && s11Solved);
+}
+
+// ── S#11 Socratic mentor chat ────────────────────────────────
+const S11_RIGHT_KEYWORDS = ['우선순위','먼저','분할','쪼개','나눠','최댓값','튀었','혼잡','줄 서','줄서','기다'];
+const S11_COUNTEREXAMPLES = [
+  '최댓값이 평균보다 훨씬 컸던 회차, 혹시 그 순간 다른 데이터도 같이 보내고 있지 않았을까요?',
+  '만약 모든 패킷을 똑같은 순서로 보낸다면, 긴급정지 명령이 영상 데이터 뒤에 줄 서서 기다리는 상황이 생길 수 있을까요?',
+  '전략 A(우선순위 큐)와 전략 B(데이터 분할)는 각각 "어떤 문제"를 해결하려는 걸까요? 측정값과 연결해서 한 문장으로 말해볼까요?',
+];
+let s11Attempts = 0, s11Solved = false;
+function sendS11Memo() {
+  if (s11Solved) return;
+  const input = document.getElementById('s11-memo');
+  const txt = input.value.trim();
+  if (!txt) return;
+  document.getElementById('s11-my-msg').textContent = '나: ' + txt;
+  document.getElementById('s11-my-msg').classList.add('show');
+  const correct = S11_RIGHT_KEYWORDS.some(k => txt.includes(k));
+  const tagEl = document.getElementById('s11-reply-tag');
+  let reply;
+  if (correct) {
+    s11Solved = true;
+    tagEl.textContent = '✅ AI 사수 — 인정!';
+    tagEl.style.color = 'var(--green)';
+    reply = '정확해요! 긴급 명령이 다른 데이터에 밀려 늦게 도착하거나(전략 A가 해결), 큰 데이터 덩어리가 통째로 밀려 지연이 튀는 것(전략 B가 해결)이 최댓값이 튀는 이유예요. 측정값과 설계를 연결해서 생각한 거, 아주 좋습니다.';
+    input.disabled = true;
+    document.getElementById('s11-memo-send').textContent = '✓ 이해 완료';
+    checkS11();
+  } else {
+    tagEl.textContent = '🤖 AI 사수 — 반례 하나';
+    tagEl.style.color = 'var(--cyan)';
+    reply = S11_COUNTEREXAMPLES[Math.min(s11Attempts, S11_COUNTEREXAMPLES.length - 1)];
+    s11Attempts++;
+  }
+  document.getElementById('s11-reply-text').textContent = reply;
+  const panel = document.getElementById('s11-reply');
+  panel.classList.remove('show'); void panel.offsetWidth; panel.classList.add('show');
+  input.value = '';
+  document.getElementById('s11-memo-send').disabled = true;
+}
+
+// ── S#12 compare chart ──────────────────────────────────────
+function renderCompare() {
+  const base = parseFloat(document.getElementById('cmp-base').value) || 0;
+  const a = parseFloat(document.getElementById('cmp-a').value) || 0;
+  const b = parseFloat(document.getElementById('cmp-b').value) || 0;
+  const maxV = Math.max(base, a, b, 1);
+  const set = (barId, valId, v) => {
+    const pct = Math.max(4, Math.round((v / maxV) * 100));
+    document.getElementById(barId).style.width = v > 0 ? pct + '%' : '0%';
+    document.getElementById(valId).textContent = v > 0 ? v + 'ms' : '';
+  };
+  set('bar-base','bar-base-v', base);
+  set('bar-a','bar-a-v', a);
+  set('bar-b','bar-b-v', b);
+}
+
+// ── S#14 presentation/retro ──────────────────────────────────
+['p1','p2','p3','p4','p5','p6','p7','p8','p9','r1','r2','r3'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', checkS14);
+});
+function checkS14() {
+  const required = ['p1','p2','p3','r1','r2','r3'];
+  const ok = required.every(id => document.getElementById(id).value.trim());
+  document.getElementById('btn-s14-done').disabled = !ok;
+}
+
+// ── Final submit ──────────────────────────────────────────────
+function submitFinal() {
+  document.getElementById('btn-final').disabled = true;
+  document.getElementById('btn-final').textContent = '✅ 제출 완료';
+  document.getElementById('final-msg').style.display = 'block';
+  const sec = document.getElementById('sec-summary');
+  sec.classList.add('completed');
+  updateProgress();
+}
+
+// ── Init ────────────────────────────────────────────────────
+const GUIDE_TEXT = {
+  intro: {
+    title: '🧭 안내도우미 — 전체 사용법',
+    body: '화면에 <b>잠금(🔒)</b> 표시가 있는 칸은 아직 열 수 없습니다. 바로 위 단계를 완료해야 자동으로 열립니다.<br><br>' +
+          '각 S# 제목 옆의 <b>🧭 안내</b> 버튼을 누르면 그 단계에서 무엇을, 어떤 순서로 클릭해야 하는지 알려줍니다.<br>' +
+          '막히는 칸이 있으면 그 칸 옆의 🧭 안내를 눌러보세요.'
+  },
+  s8: {
+    title: '🧭 S#8 안내 — 충격 데이터 공개',
+    body: '편도 제어 지연이 595ms라는 충격적인 수치를 확인하는 단계입니다. 입력할 내용은 없습니다.<br><br>' +
+          '이 숫자가 2차시에서 우리가 직접 측정할 RTT와 어떻게 다른지(왕복 vs 편도) 기억해두고, 아래 <b>"다음 단계로"</b> 버튼을 눌러 S#9(RTT 10회 측정)로 넘어가세요.'
+  },
+  s9: {
+    title: '🧭 S#9 안내 — RTT 10회 측정',
+    body: '표에 이미 예시 RTT 값이 채워져 있습니다. <b>빈칸(4번째 칸)</b>이 있으면 그건 응답이 없었다는 뜻이므로, 그 아래 <b>"유실?"</b> 칸을 클릭해 ✗로 표시하세요.<br><br>' +
+          '⚠ 유실된 회차는 평균 계산에서 <b>자동으로 제외</b>됩니다 — 0ms로 채우지 마세요.<br>' +
+          '10개 칸을 모두 확인하고 유실 표시까지 마치면 평균·최소·최대값이 계산되고 완료 버튼이 열립니다.'
+  },
+  s10: {
+    title: '🧭 S#10 안내 — RTT ≠ 편도 제어 지연',
+    body: '왼쪽 칸(S#9에서 측정한 평균 RTT)은 자동으로 채워집니다.<br><br>' +
+          '오른쪽 <b>"편도 제어 지연"</b> 칸은 자료가 제공된 경우에만 입력합니다. 자료가 없으면 비워두세요 — ⚠ RTT÷2를 임의로 편도로 가정해 넣지 않습니다.<br><br>' +
+          '아래 <b>AI 사수 채팅창</b>에 "RTT를 편도 지연 대신 쓰면 왜 안 되는지"를 직접 설명해서 전송하세요. 사수가 맞다고 인정해야 완료 버튼이 열립니다.'
+  },
+  s11: {
+    title: '🧭 S#11 안내 — 배정 전략 시험',
+    body: '교사가 배정한 전략 카드(<b>전략 A 우선순위 큐</b> 또는 <b>전략 B 데이터 분할</b>) 하나를 클릭해 선택하세요.<br><br>' +
+          '그다음 판단 4칸을 채웁니다 — <b>① 최초 판단(시험 전 예상) ② 확인한 측정값 ③ 바뀐 판단 ④ 다음에 확인할 것</b>.<br>' +
+          '마지막으로 AI 사수 채팅창에 "왜 이 전략을 골랐는지" 측정값과 함께 설명해 전송하세요. 사수 인정까지 받아야 완료 버튼이 열립니다.'
+  },
+  s12: {
+    title: '🧭 S#12 안내 — 학급 결과 비교',
+    body: '세 칸(<b>공통 기준 평균 RTT / 전략 A팀 평균 RTT / 전략 B팀 평균 RTT</b>)에 학급 전체에서 모은 숫자를 입력하면 막대그래프가 자동으로 그려집니다.<br><br>' +
+          '⚠ 조건이 다른 팀 결과는 단순 비교하지 않습니다. 11.6ms 같은 참고 사례를 실제 측정값인 것처럼 적지 마세요 — 우리 반이 직접 잰 값만 넣습니다.'
+  },
+  s13: {
+    title: '🧭 S#13 안내 — net_protocol_v2.md 작성',
+    body: '지금까지 입력한 RTT 평균·최소·최대·유실 건수, 편도 제어 지연, 선택한 전략, 최초/바뀐 판단이 아래 <b>산출물 미리보기</b>에 자동으로 모입니다.<br><br>' +
+          '내용이 비어 있는 칸(-- 또는 -)이 있다면 이전 단계로 돌아가 채워야 합니다. 확인되면 <b>"🚀 접점⑤ 업로드"</b> 버튼을 눌러 게임팀·서버팀에 인계하세요.'
+  },
+  s14: {
+    title: '🧭 S#14 안내 — 45초 발표와 회고',
+    body: '발표 템플릿의 빈칸들을 채워 완성하세요 — 기준 RTT, 적용한 전략, 적용 후 RTT, 유실률 변화, 실측인지 시나리오인지, 편도 지연 자료 유무, 주행거리 환산 여부, 한계 1가지.<br>' +
+          '⚠ 595ms·11.6ms 같은 참고 사례를 우리 팀이 측정한 값처럼 말하지 않습니다 — 실제로 잰 RTT 값으로만 발표합니다.<br><br>' +
+          '그다음 3문장 회고(처음 생각한 것 / 본 증거 / 바뀐 판단)를 모두 채우면 완료 버튼이 열립니다.'
+  },
+};
+
+function showGuide(key) {
+  const g = GUIDE_TEXT[key];
+  if (!g) return;
+  document.getElementById('guide-overlay-title').textContent = g.title;
+  document.getElementById('guide-overlay-body').innerHTML = g.body;
+  const overlay = document.getElementById('guide-overlay');
+  overlay.classList.remove('show');
+  void overlay.offsetWidth;
+  overlay.classList.add('show');
+}
+function closeGuide() {
+  document.getElementById('guide-overlay').classList.remove('show');
+}
+
+function restoreProgress2() {
+  if (state.team) document.getElementById('topTeam').textContent = state.team;
+  const allSteps = ['s8','s9','s10','s11','s12','s13','s14','summary'];
+  for (let i = 0; i < allSteps.length; i++) {
+    const id = allSteps[i];
+    if (i === 0) unlockSection(id);
+    if (state.completedSteps.has(id)) {
+      const sec = document.getElementById('sec-' + id);
+      sec.classList.remove('locked');
+      const lock = document.getElementById('lock-' + id);
+      if (lock) lock.remove();
+      sec.classList.add('completed');
+      const badge = sec.querySelector('.step-badge');
+      if (badge) { badge.style.background='var(--green-dim)'; badge.style.borderColor='var(--green)'; badge.style.color='var(--green)'; }
+      const chevron = sec.querySelector('.chevron');
+      if (chevron) chevron.textContent = '✓';
+      const nextIdx = i + 1;
+      if (nextIdx < allSteps.length) unlockSection(allSteps[nextIdx]);
+    }
+  }
+  updateProgress();
+  s8LivePreview();
+}
+
+if (studentId) enterApp(loginTeam);
+</script>
+<script>
+(function () {
+  if (!window.AUTONET_TEACHER) return;
+  var page = decodeURIComponent(location.pathname.split('/').pop() || '');
+  var bar = document.createElement('div');
+  bar.id = 'teacher-bar';
+  bar.innerHTML =
+    '<b>교사용 작동모드</b><span>모든 단계 열림 · 학생 기록 저장 안 함</span>' +
+    '<nav>' +
+    ['lesson1.html|1차시', 'lesson2.html|2차시', 'lesson3.html|3차시', 'outputs.html|학생 산출물']
+      .map(function (x) { var p = x.split('|'); return '<a href="' + p[0] + '"' + (p[0] === page ? ' aria-current="page"' : '') + '>' + p[1] + '</a>'; }).join('') +
+    '<button type="button" id="teacher-bar-out">교사 로그아웃</button></nav>';
+  var css = document.createElement('style');
+  css.textContent = '#teacher-bar{position:sticky;top:0;z-index:9999;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:8px max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px));background:#2a1d08;border-bottom:1px solid #ffb547;color:#ffe2b0;font:13px/1.4 "Noto Sans KR","Malgun Gothic",sans-serif}' +
+    '#teacher-bar b{color:#ffb547}#teacher-bar span{color:#d9b98a;font-size:12px}#teacher-bar nav{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto}' +
+    '#teacher-bar a,#teacher-bar button{all:unset;cursor:pointer;padding:4px 10px;border:1px solid #6b5228;border-radius:6px;color:#ffe2b0;font-size:12px}' +
+    '#teacher-bar a[aria-current]{background:#ffb547;color:#2a1a00;border-color:#ffb547}#teacher-bar a:focus-visible,#teacher-bar button:focus-visible{outline:2px solid #ffb547}';
+  document.head.appendChild(css);
+  document.body.insertBefore(bar, document.body.firstChild);
+  document.getElementById('teacher-bar-out').onclick = function () {
+    try { localStorage.removeItem('autonet-teacher'); localStorage.removeItem('autonet-session'); } catch (e) {}
+    location.replace('login.html');
+  };
+  function openAll() {
+    document.querySelectorAll('.section.locked').forEach(function (sec) {
+      var id = sec.id.replace('sec-', '');
+      if (typeof unlockSection === 'function') unlockSection(id); else sec.classList.remove('locked');
+    });
+    document.querySelectorAll('.student-badge #student-badge-id, #student-badge-id').forEach(function (el) { el.textContent = '교사 모드'; });
+  }
+  openAll(); setTimeout(openAll, 300);
+  try { if (typeof saveState === 'function') window.saveState = function () {}; } catch (e) {}
+})();
+</script>

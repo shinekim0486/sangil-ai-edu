@@ -1,0 +1,288 @@
+﻿<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>[확산용 산출물] 교사용 활용 가이드: 수업설계 및 운영 매뉴얼 | AI 에이전트 교육혁신 연구회</title>
+<style>
+:root{--navy:#132836;--teal:#0d7a6f;--blue:#1d4ed8;--bg:#f4f7f9;--card:#ffffff;--line:#d8e2e8;--muted:#5a6d7a;--amber:#d97706}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--navy);font:15px/1.65 'Malgun Gothic','맑은 고딕',sans-serif}
+header{background:linear-gradient(135deg,#132836,#0d5e57);color:#fff;padding:38px 24px}
+.wrap{max-width:1240px;margin:0 auto}
+.top-bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:14px}
+.badge{background:#ffffff24;padding:5px 14px;border-radius:999px;font-size:13px;font-weight:700}
+.nav-links{display:flex;gap:10px;flex-wrap:wrap}
+.nav-links a{color:#c2f0ea;text-decoration:none;font-size:13.5px;font-weight:700;padding:6px 12px;border:1px solid #ffffff33;border-radius:8px}
+.nav-links a:hover{background:#ffffff1a}
+h1{margin:0 0 8px;font-size:30px}
+header p{margin:0;color:#d5ece9;font-size:15px}
+.mode-tabs{display:flex;gap:12px;margin:22px auto 0;flex-wrap:wrap}.mode-tab{padding:12px 20px;border-radius:12px;text-decoration:none;font-weight:800;font-size:15px;border:1px solid var(--line);background:#fff;color:var(--navy)}.mode-tab.active{background:var(--teal);color:#fff;border-color:var(--teal)}
+.action-strip{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 24px;margin:22px auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;box-shadow:0 4px 12px #00000008}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:10px;text-decoration:none;font-weight:700;font-size:13.5px;background:var(--teal);color:#fff;border:0;cursor:pointer}
+.btn.outline{background:#f0f6f5;color:var(--navy);border:1px solid #bdd4d1}
+.sec{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:28px;margin-bottom:24px;box-shadow:0 4px 14px #00000006}
+.sec h2{margin:0 0 14px;font-size:21px;color:var(--navy);border-left:5px solid var(--teal);padding-left:12px}
+.sec h3{margin:20px 0 10px;font-size:17px;color:#0f4c46}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+th,td{border:1px solid var(--line);padding:11px 13px;text-align:left;vertical-align:top}
+th{background:#1b3a4b;color:#fff;font-weight:700;text-align:center}
+td.center{text-align:center;font-weight:700}
+tr:nth-child(even) td{background:#f9fbfc}
+.step-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;margin-top:14px}
+.step-card{border:1px solid var(--line);border-radius:12px;padding:18px;background:#fafcfd}
+.step-card .tag{display:inline-block;background:#e3f3f1;color:var(--teal);font-weight:800;font-size:12px;padding:3px 9px;border-radius:6px;margin-bottom:8px}
+.step-card h4{margin:0 0 8px;font-size:16px}
+.tip-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(350px,1fr));gap:14px;margin-top:12px}
+.tip{border-left:4px solid var(--amber);background:#fffbeb;padding:14px 16px;border-radius:0 10px 10px 0}
+.tip b{display:block;color:#92400e;margin-bottom:4px}
+.prompt-box{background:#132836;color:#e6f4f1;border-radius:12px;padding:18px 20px;margin:12px 0;position:relative;font-size:14px;line-height:1.7}
+.prompt-box b{color:#5eead4}
+footer{text-align:center;padding:28px;color:var(--muted);font-size:13px}
+@media print{header,.action-strip .btn{background:#fff!important;color:#000!important}body{background:#fff}.sec{box-shadow:none;break-inside:avoid}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="top-bar">
+      <span class="badge">2026 상일미디어고등학교 AI 에이전트 교육혁신 연구회</span>
+      <div class="nav-links">
+        <a href="../../index.html">← 최종제출 통합 포털</a>
+        <a href="../../03_교수학습 자료/index.html">03_교수학습 자료 포털</a>
+        <a href="../공개수업및 수업시연/index.html">07_공개수업 참관 아카이브</a>
+      </div>
+    </div>
+    <h1>📘 교사용 활용 가이드: AI 에이전트 기반 수업설계 및 운영 매뉴얼</h1>
+    <p>상일미디어고등학교 AI 에이전트 교육혁신 연구회 | 타 직업계고·전문교과 현장 확산을 위한 3단계 질문·검토 수업 설계·운영 표준 지침서</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="mode-tabs">
+    <a class="mode-tab active" href="index.html">📘 교사용 활용 가이드 (수업설계·운영 매뉴얼)</a>
+    <a class="mode-tab" href="학생용_활용_가이드_활용절차_및_주의사항.html">📗 학생용 활용 가이드 (활용 절차 및 주의사항)</a>
+    <a class="mode-tab" href="전공별_프롬프트_카드_세트.html">🗂️ 전공별 프롬프트 카드 세트 (7개 교과 21종)</a>
+  </div>
+  <section class="action-strip">
+    <div>
+      <strong style="font-size:16px">📂 매뉴얼 문서 다운로드 및 인쇄</strong>
+      <div style="color:var(--muted);font-size:13px;margin-top:3px">교내 연수, 타 학교 확산 워크숍 및 수업 설계 시 Word(DOCX)·마크다운(MD)·인쇄용으로 즉시 활용할 수 있습니다.</div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <a class="btn" href="교사용_활용_가이드_수업설계_및_운영_매뉴얼.docx" download>📄 Word 매뉴얼 (.docx) 다운로드</a>
+      <a class="btn outline" href="교사용_활용_가이드_수업설계_및_운영_매뉴얼.md" target="_blank">📝 마크다운 (.md) 원문</a>
+      <button class="btn outline" onclick="window.print()">🖨️ 매뉴얼 인쇄 / PDF 저장</button>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>Ⅰ. 매뉴얼 개요 및 『3단계 질문·검토 중심 수업 모델』 핵심 원리</h2>
+    <p>직업계고 전문교과 실습에서 생성형 AI를 단순 '코드·정답 자동 생성기'로만 활용하면 학생의 무비판적 수용이 높아지고 실제 실습 장비·현장 조건과의 차이를 해결하지 못합니다. 본 모델은 <strong>학생이 제약 조건을 넣어 질문(1단계)하고, 단일 변인 실험·측정으로 AI 제안을 대조·검증(2단계)한 뒤, 실측 근거를 바탕으로 후속 질문 및 산출물을 완성·인계(3단계)</strong>하도록 설계되었습니다.</p>
+    <div class="step-grid">
+      <div class="step-card">
+        <span class="tag">STEP 1 · 질문 구성</span>
+        <h4>조건 포함 질문 구성</h4>
+        <p>과제 목표, 장비 제약(치수·지연·권한·화면 크기 등), 입출력 기준을 명시하여 첫 질문을 작성하고, 질문 전 <b>본인의 초기 예상과 판단 기준</b>을 활동지에 먼저 기록합니다.</p>
+      </div>
+      <div class="step-card">
+        <span class="tag">STEP 2 · 실험 대조</span>
+        <h4>예상·AI 제안 대조 및 단일 변인 검증</h4>
+        <p>AI 답변에서 바로 쓸 수 있는 것과 실험으로 확인해야 할 가정을 분리하고, <b>한 번에 하나의 조건만 바꾸며(단일 변인 통제)</b> 전·후 측정값을 비교합니다.</p>
+      </div>
+      <div class="step-card">
+        <span class="tag">STEP 3 · 후속 질문 & 인계</span>
+        <h4>근거 확인 후속 질문 및 산출물 인계</h4>
+        <p>실측 오차·경계조건 수치를 넣어 후속 질문을 진행하고, <b>실측 수치(mm, ms, %, 건수)를 근거로 채택·수정·보류를 판정</b>하여 다음 차시/교과로 인계합니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>Ⅱ. 차시별 수업 설계 가이드 (50분 기준 표준 운영안)</h2>
+    <h3>1. 본시 '핵심 질문(Essential Question)' 설계 기준</h3>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:16%">교과 영역</th>
+          <th style="width:38%">피해야 할 질문 (단순 지식·자동 생성형)</th>
+          <th style="width:46%">권장 핵심 질문 (조건 비교·실험 검증형)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="center">SW·응용개발</td>
+          <td>Python으로 로그인 코드를 어떻게 작성하는가?</td>
+          <td>내가 정의한 요구사항과 예외 조건이 서버 코드의 어느 위치에서 어떻게 검증되는가?</td>
+        </tr>
+        <tr>
+          <td class="center">3D모델링·기계</td>
+          <td>Fusion 360에서 돌출(Extrude) 기능은 무엇인가?</td>
+          <td>부품 실측 치수에 조립 공차(+0.4~1.0mm)를 어떻게 반영해야 간섭 없이 장착되는가?</td>
+        </tr>
+        <tr>
+          <td class="center">네트워크·통신</td>
+          <td>UDP와 TCP 프로토콜의 차이점은 무엇인가?</td>
+          <td>동일 조건에서 지연(RTT)·유실을 측정했을 때 어떤 재전송·비상정지 규칙이 더 안전한가?</td>
+        </tr>
+        <tr>
+          <td class="center">인공지능·데이터</td>
+          <td>이미지 분류 모델의 정확도를 높이는 방법은?</td>
+          <td>검증 정확도 96% 모델이 실제 주행에서 흔들리는 원인은 데이터 누수 때문인가, 편향 때문인가?</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>2. 50분 단위 수업 진행 표준 흐름표</h3>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:18%">단계 (시간)</th>
+          <th style="width:42%">학생 핵심 활동</th>
+          <th style="width:40%">교사 코칭 및 발문 포인트</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="center">도입 (10분)</td>
+          <td>· 이전 차시/교과 인계 조건 및 오늘의 핵심 질문 확인<br>· 활동지 [칸 1]에 <b>내 초기 예상과 기준값</b> 먼저 기록</td>
+          <td>· 칠판/슬라이드에 핵심 혼동 개념(예: RTT vs 편도 지연) 상시 게시<br>· 예상 기록 전에는 챗봇 입력 시작하지 않도록 안내</td>
+        </tr>
+        <tr>
+          <td class="center">전개 1 (10분)<br>[1단계 질문]</td>
+          <td>· 환경·제약·목표 수치를 포함한 1차 질문 작성 및 질의<br>· AI 제안 중 '실습으로 검증할 항목' 선별</td>
+          <td>· 단답형 질문 학생에게 '3대 조건(환경·제약·목표 수치)' 추가 유도</td>
+        </tr>
+        <tr>
+          <td class="center">전개 2 (15분)<br>[2단계 검증]</td>
+          <td>· <b>고정 조건</b>과 <b>바꾼 조건 1가지</b>를 적고 실습·시뮬레이션 수행<br>· 변경 전·후 실측 데이터(수치·캡처) 기록</td>
+          <td>· 여러 조건을 한꺼번에 바꾸지 않도록 단일 변인 통제 점검<br>· 평균값뿐 아니라 최댓값·오류 사례 확인 지도</td>
+        </tr>
+        <tr>
+          <td class="center">전개 3 (10분)<br>[3단계 후속질문]</td>
+          <td>· 실측 오차·오류 수치를 넣어 2차 후속 질문 수행<br>· 최종 <b>채택 / 수정 채택 / 보류</b> 판정 및 근거 작성</td>
+          <td>· AI 문장 복사가 아닌 <b>실측 수치(ms, mm, %) 기반 판정 이유</b> 작성 지도</td>
+        </tr>
+        <tr>
+          <td class="center">정리 (5분)</td>
+          <td>· 핵심 발견 공유 및 다음 차시/교과 인계 명세 제출</td>
+          <td>· 수행평가 루브릭 기반 즉각 피드백 및 다음 행동 안내</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="sec">
+    <h2>Ⅲ. 7개 전문교과 수업 설계·운영 실전 예시 및 인계 체계</h2>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:6%">순서</th>
+          <th style="width:20%">전문교과 (담당교사)</th>
+          <th style="width:28%">핵심 수업 과제</th>
+          <th style="width:22%">활용 시뮬레이터·도구</th>
+          <th style="width:24%">다음 교과 인계 산출물</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="center">1</td>
+          <td><b>응용프로그래밍개발</b><br>(김0훈·김0주)</td>
+          <td>요구사항 정의, 서버 기능 명세 확인 및 정상·오류 입력 단위 시험</td>
+          <td>교사연구회 통합 챗봇(`Flask·SQLite`), 단위 시험표</td>
+          <td>요구사항 명세서 및 단위 테스트 검증 기준</td>
+        </tr>
+        <tr>
+          <td class="center">2</td>
+          <td><b>3D프린터용제품제작</b><br>(김0석)</td>
+          <td>부품 실측 치수·조립 여유값(공차) 반영 차체·브래킷 모델링 및 간섭 검사</td>
+          <td>Fusion 360, 간섭 점검표, 통합 챗봇</td>
+          <td>차체·카메라 장착 높이·각도 확정 치수 및 3D 도면</td>
+        </tr>
+        <tr>
+          <td class="center">3</td>
+          <td><b>게임프로그래밍</b><br>(조0민)</td>
+          <td>카메라 장착 조건 반영 Unity 가상 주행 트랙 구현 및 주행 표본 수집</td>
+          <td>Unity 엔진, 주행 캡처·라벨링 도구, 통합 챗봇</td>
+          <td>도로 주행 이미지 표본(14종) 및 조향 라벨 데이터셋</td>
+        </tr>
+        <tr>
+          <td class="center">4</td>
+          <td><b>인공지능모델링</b><br>(류0상)</td>
+          <td>연속 프레임 데이터 누수(Leakage) 방지 분할 및 경량 모델 실차 검증</td>
+          <td>Python 학습 환경, 분할 검증표, 통합 챗봇</td>
+          <td>검증 완료 주행 판단 모델 및 추론 지연 기준</td>
+        </tr>
+        <tr>
+          <td class="center">5</td>
+          <td><b>네트워크프로그래밍</b><br>(김0선)</td>
+          <td>차량 제어 6필드 패킷 설계, RTT·유실 측정 및 안전 정지 프로토콜 검증</td>
+          <td><b>AUTO-NET LAB 전용 시뮬레이터</b>, Wireshark</td>
+          <td>패킷 포맷(v1)·통신 최적화(v2)·안전 프로토콜 명세(v3)</td>
+        </tr>
+        <tr>
+          <td class="center">6</td>
+          <td><b>시스템운영및네트워크운영</b><br>(우0정)</td>
+          <td>다중 접속 챗봇 로그 이상 징후 분석 및 서버-장치 타임스탬프 시각 보정</td>
+          <td>시스템 로그 분석 도구, 통합 챗봇</td>
+          <td>시각 동기화 보정 절차서 및 통합 모니터링 기준</td>
+        </tr>
+        <tr>
+          <td class="center">7</td>
+          <td><b>스마트문화앱콘텐츠제작</b><br>(윤0상)</td>
+          <td>주행 중 시선 분산을 최소화하는 실시간 차량 관제 모바일 웹앱 UI/UX 구현</td>
+          <td>모바일 웹앱 프로토타입, UI 점검 체크리스트</td>
+          <td>실시간 자율주행 관제 대시보드 모바일 웹앱</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="sec">
+    <h2>Ⅳ. 공개수업 48건 참관 피드백 기반 현장 지도 핵심 팁 6선</h2>
+    <div class="tip-grid">
+      <div class="tip">
+        <b>1. 단일 변인 통제: "한 번에 한 조건만 바꾸었나요?"</b>
+        학생들이 속도·재전송 주기·데이터 구성을 동시에 바꾸면 원인을 분석할 수 없습니다. 활동지에 '고정한 조건'과 '바꾼 조건 1가지'를 먼저 적고 실험하게 하세요.
+      </div>
+      <div class="tip">
+        <b>2. 대푯값의 함정: "평균 뒤에 숨은 최댓값·오류를 보았나요?"</b>
+        평균 RTT나 전체 정확도(96%)만 보고 넘어가지 않도록 최대 지연시간(Max RTT), 연속 유실 구간, 소수 클래스(우회전) 오분류를 반드시 확인하게 하세요.
+      </div>
+      <div class="tip">
+        <b>3. 첨부파일 착시 방지: "질문 본문에 조건 수치를 적었나요?"</b>
+        파일 이름만 올리고 AI가 내부 데이터를 다 읽었다고 착각하는 경우를 막기 위해, 질문 본문에 핵심 제약 수치(mm, ms, 필드 길이)를 직접 명시하도록 지도하세요.
+      </div>
+      <div class="tip">
+        <b>4. 판정 근거 수치화: "AI 문장 대신 내 실측 수치로 적으세요"</b>
+        채택·수정 이유 칸에는 AI 설명 요약이 아니라 "10회 측정 평균 RTT가 142ms→68ms로 감소하여 전략 A 채택"처럼 학생의 실험 수치를 적게 합니다.
+      </div>
+      <div class="tip">
+        <b>5. 핵심 혼동 개념 상시 게시</b>
+        'RTT vs 편도 지연', '공차 vs 실측치', '랜덤 분할 vs 시간순 분할' 등 핵심 대비 개념을 칠판·슬라이드 상단에 고정해 두면 질문 품질이 크게 높아집니다.
+      </div>
+      <div class="tip">
+        <b>6. 수준별 속도 편차 조절 (기본 vs 심화 예외 조건)</b>
+        느린 조에는 1단계 질문 프롬프트 템플릿을 제공하고, 빠른 조에는 '연속 3회 패킷 손실·통신 단절·야간 그림자' 등 예외 조건 검증 과제를 부여하세요.
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>Ⅴ. 부록: 학생 배포용 『3단계 질문·검토 프롬프트 작성 공식』</h2>
+    <div class="prompt-box">
+      <b>[1단계: 조건 포함 첫 질문 템플릿]</b><br>
+      "현재 <b>[교과/실습 장비 환경]</b>에서 <b>[해결하려는 과제]</b>를 수행 중이다. 반드시 지켜야 할 제약 조건은 <b>[치수 / 허용 지연시간 / 데이터 형식 / 안전 기준 수치]</b>이고, 내 초기 예상은 <b>[나의 예상]</b>이다. 이 조건을 만족하는 설계안(또는 원인 후보 2가지)과 내가 실습으로 직접 확인할 수 있는 검증 절차를 제시해 줘."
+    </div>
+    <div class="prompt-box">
+      <b>[2단계 → 3단계: 실험 후 후속 질문 템플릿]</b><br>
+      "제안한 방법대로 <b>[고정한 조건]</b>에서 <b>[바꾼 조건 1가지]</b>만 변경하여 시험한 결과, 예상과 달리 <b>[실측 수치 / 오류 현상]</b>이 발생했다. 이 측정값을 기준으로 볼 때 원인이 무엇이며, 어떤 기준값을 어떻게 수정해야 하는지 비교해 줘."
+    </div>
+  </section>
+</main>
+
+<footer>
+  AI 에이전트 교육혁신 연구회 (상일미디어고등학교) | 2026 교육부 직업계고 교수학습능력 향상 교사연구회 지원사업 확산용 산출물
+</footer>
+</body>
+</html>

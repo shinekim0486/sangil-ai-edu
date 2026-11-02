@@ -1,0 +1,752 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2026 직업계고 교수학습능력 향상 교사연구회 연구산출물 통합 포털 | AI 에이전트 교육혁신 연구회</title>
+<style>
+:root {
+  --navy: #0f1e29;
+  --dark-teal: #0a4d46;
+  --teal: #0d7a6f;
+  --teal-light: #e6f6f4;
+  --teal-hover: #096158;
+  --blue: #1e5ba8;
+  --blue-light: #eef5fc;
+  --bg: #f4f7f9;
+  --card-bg: #ffffff;
+  --line: #d8e2e6;
+  --text-main: #14242d;
+  --text-muted: #536773;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 8px 24px rgba(15, 30, 41, 0.08);
+  --radius-lg: 18px;
+  --radius-md: 12px;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text-main);
+  font: 15px/1.65 -apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+header {
+  background: linear-gradient(135deg, #0e1e28 0%, #0d3838 50%, #084c44 100%);
+  color: #fff;
+  padding: 50px 24px 44px;
+  border-bottom: 3px solid var(--teal);
+}
+.wrap {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.badge-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #e2f5f2;
+  padding: 5px 13px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+.badge.highlight {
+  background: #11a393;
+  color: #fff;
+  border-color: transparent;
+}
+h1 {
+  margin: 0 0 10px;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.3;
+}
+header p {
+  margin: 0 0 22px;
+  color: #d1e7e4;
+  font-size: 15.5px;
+  max-width: 980px;
+  line-height: 1.6;
+}
+.stats-banner {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 12px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+.stat-pill {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+}
+.stat-num {
+  font-size: 20px;
+  font-weight: 800;
+  color: #5eead4;
+}
+.stat-label {
+  font-size: 12px;
+  color: #d0e4e2;
+  margin-top: 2px;
+}
+main {
+  padding: 38px 24px 60px;
+}
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 22px;
+}
+.section-title h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: -0.4px;
+}
+.section-title span {
+  font-size: 13.5px;
+  color: var(--text-muted);
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 24px;
+}
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 26px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: #bad3db;
+}
+.card-header {
+  margin-bottom: 18px;
+}
+.folder-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--teal-light);
+  color: var(--teal);
+  font-weight: 800;
+  font-size: 12.5px;
+  padding: 4px 10px;
+  border-radius: 7px;
+  margin-bottom: 12px;
+}
+.folder-tag.blue {
+  background: var(--blue-light);
+  color: var(--blue);
+}
+.card h3 {
+  margin: 0 0 10px;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: -0.3px;
+}
+.card p {
+  margin: 0 0 16px;
+  color: var(--text-muted);
+  font-size: 14.5px;
+  line-height: 1.6;
+}
+.feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.feature-list li {
+  font-size: 13px;
+  color: #3b505c;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+.feature-list li::before {
+  content: "✔";
+  color: var(--teal);
+  font-weight: bold;
+}
+.links {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+  padding-top: 14px;
+  border-top: 1px solid #f0f4f6;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 13.5px;
+  background: var(--teal);
+  color: #fff;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+.btn:hover {
+  background: var(--teal-hover);
+}
+.btn.primary-blue {
+  background: var(--blue);
+}
+.btn.primary-blue:hover {
+  background: #174a8c;
+}
+.btn.sub {
+  background: #f1f6f8;
+  color: var(--navy);
+  border: 1px solid var(--line);
+}
+.btn.sub:hover {
+  background: #e4ecf0;
+}
+footer {
+  text-align: center;
+  padding: 32px 24px;
+  color: var(--text-muted);
+  font-size: 13.5px;
+  background: #fff;
+  border-top: 1px solid var(--line);
+}
+footer .members {
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: #798d99;
+}
+@media (max-width: 768px) {
+  header { padding: 36px 18px; }
+  h1 { font-size: 24px; }
+  .grid { grid-template-columns: 1fr; }
+  main { padding: 24px 16px 40px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="badge-group">
+      <span class="badge">2026 상일미디어고등학교 AI 에이전트 교육혁신 연구회</span>
+      <span class="badge highlight">03~08 전문교과 연구산출물 아카이브</span>
+    </div>
+    <h1>AI 에이전트 교육혁신 연구회 (상일미디어고등학교)</h1>
+    <p>
+      에이전트 AI 기반 질문·검토 중심 7개 전문교과 교수학습 모델 및 실증 연구 성과 포털입니다.<br>
+      수업 과정안·활동지, AI 맞춤형 피드백 대시보드, 학생 산출물 및 프롬프트 로그, 통계 검증 데이터, 현장 확산 매뉴얼을 집약하였습니다.
+    </p>
+    
+    <div class="stats-banner">
+      <div class="stat-pill">
+        <span class="stat-num">7개 교과</span>
+        <span class="stat-label">공개수업 일체안 (HWPX)</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-num">🤖 대시보드</span>
+        <span class="stat-label">AI 맞춤형 평가·피드백</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-num">3,383건</span>
+        <span class="stat-label">학생 AI 프롬프트 로그 원장</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-num">238건</span>
+        <span class="stat-label">사전·사후 설문 통계 실측</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-num">48건</span>
+        <span class="stat-label">공개수업 참관록 아카이브</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-num">69장</span>
+        <span class="stat-label">현장 실습·수업 사진 갤러리</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ===================================================================== -->
+  <!-- 🧭 연구 포털 시작 가이드 & 7개 전문교과 융합 로드맵 -->
+  <section class="roadmap-box" id="carRoadmapSection" style="background:#ffffff; border:1px solid #d8e2e6; border-radius:20px; padding:28px 32px; margin-bottom:34px; box-shadow:0 6px 24px rgba(15,30,41,0.06); overflow:hidden;">
+    
+    <!-- Top Header -->
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:18px; border-bottom:2px solid #eef3f5; padding-bottom:14px;">
+      <div>
+        <span style="background:linear-gradient(135deg, #0d7a6f, #11a393); color:#fff; font-weight:800; font-size:12px; padding:4px 12px; border-radius:999px; letter-spacing:0.5px; box-shadow:0 2px 6px rgba(13,122,111,0.25);">
+          🚗 AUTONOMOUS DRIVING ROADMAP
+        </span>
+        <h2 style="margin:8px 0 0; font-size:23px; font-weight:800; color:#0f1e29; display:flex; align-items:center; gap:8px;">
+          <span>🏁</span> 7개 전문교과 자율주행 주행 서킷 & 시작 로드맵
+        </h2>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="font-size:12.5px; color:#536773; background:#f4f7f9; padding:6px 14px; border-radius:999px; border:1px solid #e2ebf0;">
+          📌 최종보고서 요약본 포스터 연계
+        </span>
+      </div>
+    </div>
+
+    <!-- 1. Background Summary Strip -->
+    <div style="background:#f8fbfa; border:1px solid #d4eae5; border-radius:12px; padding:16px 20px; margin-bottom:24px;">
+      <div style="display:flex; align-items:flex-start; gap:12px;">
+        <span style="font-size:24px; line-height:1;">💡</span>
+        <div>
+          <strong style="color:#0a4d46; font-size:14.5px;">생성형 AI 무비판적 수용 탈피 & 7개 전문교과 3단계 질문·실측 융합</strong>
+          <p style="margin:4px 0 0; font-size:13.5px; color:#334d47; line-height:1.6;">
+            자율주행차 한 대가 완성되기까지, <strong>차체 공차(+0.5mm), 카메라 화각, 데이터 누수 방지, 네트워크 RTT 지연, 시각 오차(+2.0초)</strong>의 실측 제약 조건을 통제하며 7개 교과가 배턴을 이어받는 <strong>『자율주행 융합 파이프라인』</strong>을 완성했습니다.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Interactive Autonomous Circuit Track Simulator -->
+    <div class="circuit-container" style="background:#131c24; border-radius:16px; padding:24px 20px; margin-bottom:26px; border:2px solid #223542; box-shadow:inset 0 2px 10px rgba(0,0,0,0.5); position:relative; overflow:hidden;">
+      
+      <!-- Track Header & Controls -->
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid #263c4a;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#10b981; box-shadow:0 0 10px #10b981; animation:pulse-green 1.5s infinite;"></span>
+          <span style="color:#e2e8f0; font-weight:700; font-size:14px; letter-spacing:0.5px;">AUTONOMOUS TEST TRACK SIMULATOR</span>
+        </div>
+        
+        <div style="display:flex; align-items:center; gap:8px;">
+          <button id="carPlayBtn" onclick="toggleCarDrive()" style="background:#0d7a6f; hover:background:#096158; color:#fff; border:none; padding:6px 14px; border-radius:8px; font-weight:700; font-size:12.5px; cursor:pointer; display:flex; align-items:center; gap:6px; transition:all 0.15s;">
+            <span id="playIcon">▶</span> <span id="playText">자동 주행 시연</span>
+          </button>
+          <button onclick="resetCarTrack()" style="background:#2d4454; color:#cbd5e1; border:none; padding:6px 12px; border-radius:8px; font-weight:600; font-size:12px; cursor:pointer;">
+            처음으로 ↺
+          </button>
+        </div>
+      </div>
+
+      <!-- Telemetry Status Bar -->
+      <div id="telemetryBar" style="background:#1a2834; border:1px solid #2e4757; border-radius:10px; padding:10px 16px; margin-bottom:20px; font-size:12.5px; color:#cbd5e1; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <div>
+          <span style="color:#64748b;">현재 통과 교과:</span> 
+          <strong id="curSubject" style="color:#38bdf8; margin-left:4px;">Step 1. 응용프로그래밍개발</strong>
+        </div>
+        <div>
+          <span style="color:#64748b;">차량 센서·인계 상태:</span> 
+          <span id="curStatus" style="color:#4ade80; margin-left:4px;">기능 명세 & 정상/예외 단위 시험 인계 완료</span>
+        </div>
+        <div style="color:#94a3b8; font-family:monospace; font-size:11.5px;">
+          SYS_TIME: <span id="telemetryTime" style="color:#fcd34d;">00:00:00</span> · OFFSET: <span style="color:#4ade80;">0.00s</span>
+        </div>
+      </div>
+
+      <!-- Visual Asphalt Track -->
+      <div class="road-track" style="position:relative; background:#1e293b; border-radius:12px; padding:32px 14px 28px; border:2px solid #334155; margin-bottom:12px; overflow-x:auto;">
+        
+        <!-- Center dashed road lane -->
+        <div style="position:absolute; top:46px; left:20px; right:20px; height:4px; border-top:3px dashed #facc15; opacity:0.85; z-index:1;"></div>
+
+        <!-- Animated Autonomous Driving Car Element -->
+        <div id="racingCar" style="position:absolute; top:18px; left:20px; z-index:10; transition:left 0.8s cubic-bezier(0.4, 0, 0.2, 1); cursor:pointer;" title="자율주행 차량 (클릭하면 주행합니다)">
+          <div style="position:relative; display:inline-block;">
+            <!-- Lidar Sensor Pulse Beam -->
+            <div style="position:absolute; top:-6px; left:50%; transform:translateX(-50%); width:32px; height:18px; background:radial-gradient(circle, rgba(56, 189, 248, 0.6) 0%, transparent 70%); border-radius:50%; animation:lidar-spin 1s infinite alternate;"></div>
+            <!-- Car Emoji / Icon Body -->
+            <div style="font-size:34px; filter:drop-shadow(0 4px 10px rgba(0,0,0,0.6)); transform:scaleX(-1);">🏎️</div>
+            <!-- Headlight LED Beams -->
+            <div style="position:absolute; top:16px; left:-18px; width:22px; height:8px; background:linear-gradient(to left, rgba(254, 240, 138, 0.8), transparent); filter:blur(1px); border-radius:50%;"></div>
+          </div>
+        </div>
+
+        <!-- 7 Checkpoint Stations along the Road -->
+        <div style="display:grid; grid-template-columns:repeat(7, minmax(130px, 1fr)); gap:12px; position:relative; z-index:2; margin-top:28px;">
+          
+          <!-- Station 1 -->
+          <div class="track-station active-station" id="station-1" onclick="moveCarTo(1)" style="background:#0f172a; border:1px solid #38bdf8; border-radius:10px; padding:12px 10px; text-align:center; cursor:pointer; transition:all 0.2s;">
+            <div style="font-size:11px; font-weight:800; color:#38bdf8; margin-bottom:4px;">STEP 1</div>
+            <div style="font-size:22px; margin-bottom:4px;">💻</div>
+            <div style="font-size:12px; font-weight:700; color:#f8fafc; line-height:1.3;">응용SW</div>
+            <div style="font-size:10.5px; color:#94a3b8; margin-top:4px;">요구서·명세</div>
+          </div>
+
+          <!-- Station 2 -->
+          <div class="track-station" id="station-2" onclick="moveCarTo(2)" style="background:#0f172a; border:1px solid #334155; border-radius:10px; padding:12px 10px; text-align:center; cursor:pointer; transition:all 0.2s;">
+            <div style="font-size:11px; font-weight:800; color:#94a3b8; margin-bottom:4px;">STEP 2</div>
+            <div style="font-size:22px; margin-bottom:4px;">🖨️</div>
+            <div style="font-size:12px; font-weight:700; color:#cbd5e1; line-height:1.3;">3D프린터</div>
+            <div style="font-size:10.5px; color:#64748b; margin-top:4px;">공차 +0.5mm</div>
+          </div>
+
+          <!-- Station 3 -->
+          <div class="track-station" id="station-3" onclick="moveCarTo(3)" style="background:#0f172a; border:1px solid #334155; border-radius:10px; padding:12px 10px; text-align:center; cursor:pointer; transition:all 0.2s;">
+            <div style="font-size:11px; font-weight:800; color:#94a3b8; margin-bottom:4px;">STEP 3</div>
+            <div style="font-size:22px; margin-bottom:4px;">🎮</div>
+            <div style="font-size:12px; font-weight:700; color:#cbd5e1; line-height:1.3;">게임제작</div>
+            <div style="font-size:10.5px; color:#64748b; margin-top:4px;">Unity 조향14종</div>
+          </div>
+
+          <!-- Station 4 -->
+          <div class="track-station" id="station-4" onclick="moveCarTo(4)" style="background:#0f172a; border:1px solid #334155; border-radius:10px; padding:12px 10px; text-align:center; cursor:pointer; transition:all 0.2s;">
+            <div style="font-size:11px; font-weight:800; color:#94a3b8; margin-bottom:4px;">STEP 4</div>
+            <div style="font-size:22px; margin-bottom:4px;">🧠</div>
+            <div style="font-size:12px; font-weight:700; color:#cbd5e1; line-height:1.3;">AI모델링</div>
+            <div style="font-size:10.5px; color:#64748b; margin-top:4px;">누수방지 분할</div>
+          </div>
+
+          <!-- Station 5 -->
+          <div class="track-station" id="station-5" onclick="moveCarTo(5)" style="background:#0f172a; border:1px solid #334155; border-radius:10px; padding:12px 10px; text-align:center; cursor:pointer; transition:all 0.2s;">
+            <div style="font-size:11px; font-weight:800; color:#94a3b8; margin-bottom:4px;">STEP 5</div>
+            <div style="font-size:22px; margin-bottom:4px;">🌐</div>
+            <div style="font-size:12px; font-weight:700; color:#cbd5e1; line-height:1.3;">네트워크</div>
+            <div style="font-size:10.5px; color:#64748b; margin-top:4px;">RTT·재전송v3</div>
+          </div>
+
+          <!-- Station 6 -->
+          <div class="track-station" id="station-6" onclick="moveCarTo(6)" style="background:#0f172a; border:1px solid #334155; border-radius:10px; padding:12px 10px; text-align:center; cursor:pointer; transition:all 0.2s;">
+            <div style="font-size:11px; font-weight:800; color:#94a3b8; margin-bottom:4px;">STEP 6</div>
+            <div style="font-size:22px; margin-bottom:4px;">🖥️</div>
+            <div style="font-size:12px; font-weight:700; color:#cbd5e1; line-height:1.3;">시스템운영</div>
+            <div style="font-size:10.5px; color:#64748b; margin-top:4px;">시각오차 +2.0s</div>
+          </div>
+
+          <!-- Station 7 -->
+          <div class="track-station" id="station-7" onclick="moveCarTo(7)" style="background:#0f172a; border:1px solid #334155; border-radius:10px; padding:12px 10px; text-align:center; cursor:pointer; transition:all 0.2s;">
+            <div style="font-size:11px; font-weight:800; color:#94a3b8; margin-bottom:4px;">STEP 7 🏁</div>
+            <div style="font-size:22px; margin-bottom:4px;">📱</div>
+            <div style="font-size:12px; font-weight:700; color:#cbd5e1; line-height:1.3;">스마트문화앱</div>
+            <div style="font-size:10.5px; color:#64748b; margin-top:4px;">0.9s 관제앱</div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div style="text-align:right; font-size:11.5px; color:#64748b; margin-top:6px;">
+        💡 원하는 체크포인트를 클릭하면 자율주행 차량이 해당 교과로 이동합니다.
+      </div>
+    </div>
+
+    <!-- 3. Pipeline Detail Accordion / Cards -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px; margin-bottom:24px;">
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:14px;">
+        <span style="font-size:11px; font-weight:800; background:#e0f2fe; color:#0369a1; padding:2px 6px; border-radius:4px;">전반부 (설계·수집)</span>
+        <div style="font-size:13px; font-weight:700; color:#0f172a; margin-top:6px;">명세 ➔ 기구 ➔ 가상 주행</div>
+        <p style="font-size:12px; color:#64748b; margin:4px 0 0; line-height:1.5;">
+          기능 요구 명세 작성(응용SW) ➔ Fusion 360 공차(+0.5mm) 차체 제작(3D) ➔ Unity 카메라 뷰 및 14종 조향각 라벨 표본 추출(게임)
+        </p>
+      </div>
+
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:14px;">
+        <span style="font-size:11px; font-weight:800; background:#fef3c7; color:#b45309; padding:2px 6px; border-radius:4px;">중반부 (판단·통신)</span>
+        <div style="font-size:13px; font-weight:700; color:#0f172a; margin-top:6px;">AI 판단 ➔ V2X 패킷 제어</div>
+        <p style="font-size:12px; color:#64748b; margin:4px 0 0; line-height:1.5;">
+          시간순 분할로 데이터 누수 방지 주행 모델(AI) ➔ AUTO-NET-LAB 왕복 지연 RTT 실측 및 100ms 재전송 안전 프로토콜 v3 확립(네트워크)
+        </p>
+      </div>
+
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:14px;">
+        <span style="font-size:11px; font-weight:800; background:#dcfce7; color:#15803d; padding:2px 6px; border-radius:4px;">후반부 (동기화·관제)</span>
+        <div style="font-size:13px; font-weight:700; color:#0f172a; margin-top:6px;">시각 보정 ➔ 반응형 관제앱</div>
+        <p style="font-size:12px; color:#64748b; margin:4px 0 0; line-height:1.5;">
+          서버-라즈베리파이 시각 오차(+2.0초) 보정 및 타임라인 확립(시스템운영) ➔ 1순위 비상정지 0.9초 인지 웹앱 대시보드(스마트문화앱)
+        </p>
+      </div>
+    </div>
+
+    <!-- 4. Recommended Navigation Steps -->
+    <div style="border-top:1px dashed #d8e2e6; padding-top:18px;">
+      <h3 style="margin:0 0 10px; font-size:15px; font-weight:800; color:#0f1e29;">
+        🎯 추천 탐색 동선 (어디서부터 둘러보아야 할까요?)
+      </h3>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:10px; font-size:12.5px;">
+        <a href="03_교수학습 자료/index.html" style="text-decoration:none; color:inherit; background:#f8fafb; border:1px solid #e1e9ed; border-radius:8px; padding:10px 12px; display:block; transition:all 0.15s;">
+          <strong style="color:#0d7a6f;">① 수업 설계 확인</strong>
+          <div style="color:#536773; margin-top:2px;">03_교수학습 자료 (과정안·지도안·활동지)</div>
+        </a>
+        <a href="04_평가도구/AI_기반_맞춤형_평가_피드백_대시보드.html" style="text-decoration:none; color:inherit; background:#f8fafb; border:1px solid #e1e9ed; border-radius:8px; padding:10px 12px; display:block; transition:all 0.15s;">
+          <strong style="color:#1e5ba8;">② AI 맞춤형 피드백</strong>
+          <div style="color:#536773; margin-top:2px;">04_평가도구 (실시간 대시보드 & 루브릭)</div>
+        </a>
+        <a href="05-학생산출물/index.html" style="text-decoration:none; color:inherit; background:#f8fafb; border:1px solid #e1e9ed; border-radius:8px; padding:10px 12px; display:block; transition:all 0.15s;">
+          <strong style="color:#0d7a6f;">③ 학생 실습 성과</strong>
+          <div style="color:#536773; margin-top:2px;">05-학생산출물 (3,383건 프롬프트 로그)</div>
+        </a>
+        <a href="06_연구결과및 효과검증자료/index.html" style="text-decoration:none; color:inherit; background:#f8fafb; border:1px solid #e1e9ed; border-radius:8px; padding:10px 12px; display:block; transition:all 0.15s;">
+          <strong style="color:#1e5ba8;">④ 통계 실측 검증</strong>
+          <div style="color:#536773; margin-top:2px;">06_연구결과 (238건 대응표본 t-검정)</div>
+        </a>
+        <a href="07_성과확산및 현장적용 자료/확산용 산출물/index.html" style="text-decoration:none; color:inherit; background:#f8fafb; border:1px solid #e1e9ed; border-radius:8px; padding:10px 12px; display:block; transition:all 0.15s;">
+          <strong style="color:#0d7a6f;">⑤ 현장 확산 보급</strong>
+          <div style="color:#536773; margin-top:2px;">07_성과확산 (교사/학생 매뉴얼 3종)</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Script for Autonomous Car Interactive Drive -->
+  <script>
+    const STATIONS_DATA = [
+      { step: 1, name: "Step 1. 응용프로그래밍개발", status: "요구사항 정의 · 웹 챗봇 기능 명세 및 정상/예외 단위 시험 인계", offset: "0.00s", pct: 4 },
+      { step: 2, name: "Step 2. 3D프린터용제품제작", status: "부품 실측 치수 및 조립 공차(+0.5mm) 반영 차체·카메라 브래킷 설계 인계", offset: "+0.15s", pct: 19 },
+      { step: 3, name: "Step 3. 게임프로그래밍", status: "카메라 장착 높이·각도 반영 Unity 가상 주행 트랙 및 조향 라벨 표본(14종) 인계", offset: "+0.32s", pct: 34 },
+      { step: 4, name: "Step 4. 인공지능모델링", status: "연속 프레임 데이터 누수 방지 시간순 분할 및 경량 주행 판단 모델 검증 인계", offset: "+0.85s", pct: 50 },
+      { step: 5, name: "Step 5. 네트워크프로그래밍", status: "AUTO-NET-LAB 기반 제어 패킷(v1) · RTT 실측(v2) · 100ms 재전송 안전 프로토콜(v3) 인계", offset: "+1.20s", pct: 66 },
+      { step: 6, name: "Step 6. 시스템운영및네트워크운영", status: "서버-장치 간 시각 오차(+2.0초) 보정 및 사건 선후 관계 타임라인 정립 인계", offset: "+2.00s", pct: 81 },
+      { step: 7, name: "Step 7. 스마트문화앱콘텐츠제작", status: "1순위 긴급 경고 상단 고정 + 0.9초 이내 인지 반응형 실시간 관제 웹 대시보드 완성 🏁", offset: "보정 완료", pct: 95 }
+    ];
+
+    let currentStepIndex = 0;
+    let driveTimer = null;
+    let isDriving = false;
+
+    function updateCarTelemetry(idx) {
+      const info = STATIONS_DATA[idx];
+      const car = document.getElementById('racingCar');
+      const curSubject = document.getElementById('curSubject');
+      const curStatus = document.getElementById('curStatus');
+      const timeElem = document.getElementById('telemetryTime');
+
+      if (car) {
+        // Calculate position based on percentage
+        car.style.left = `calc(${info.pct}% - 20px)`;
+      }
+
+      if (curSubject) curSubject.textContent = info.name;
+      if (curStatus) curStatus.textContent = info.status;
+      if (timeElem) timeElem.textContent = new Date().toTimeString().split(' ')[0];
+
+      // Highlight active station
+      for (let i = 1; i <= 7; i++) {
+        const st = document.getElementById('station-' + i);
+        if (st) {
+          if (i === idx + 1) {
+            st.style.borderColor = '#38bdf8';
+            st.style.boxShadow = '0 0 14px rgba(56, 189, 248, 0.4)';
+            st.style.background = '#1e293b';
+          } else {
+            st.style.borderColor = '#334155';
+            st.style.boxShadow = 'none';
+            st.style.background = '#0f172a';
+          }
+        }
+      }
+    }
+
+    function moveCarTo(stepNum) {
+      currentStepIndex = stepNum - 1;
+      updateCarTelemetry(currentStepIndex);
+    }
+
+    function toggleCarDrive() {
+      const playIcon = document.getElementById('playIcon');
+      const playText = document.getElementById('playText');
+      if (isDriving) {
+        clearInterval(driveTimer);
+        isDriving = false;
+        if (playIcon) playIcon.textContent = '▶';
+        if (playText) playText.textContent = '주행 재개';
+      } else {
+        isDriving = true;
+        if (playIcon) playIcon.textContent = '⏸';
+        if (playText) playText.textContent = '주행 일시정지';
+        driveTimer = setInterval(() => {
+          currentStepIndex = (currentStepIndex + 1) % STATIONS_DATA.length;
+          updateCarTelemetry(currentStepIndex);
+        }, 1600);
+      }
+    }
+
+    function resetCarTrack() {
+      if (isDriving) toggleCarDrive();
+      currentStepIndex = 0;
+      updateCarTelemetry(0);
+    }
+
+    // Auto initialize telemetry time
+    setInterval(() => {
+      const t = document.getElementById('telemetryTime');
+      if (t) t.textContent = new Date().toTimeString().split(' ')[0];
+    }, 1000);
+  </script>
+
+
+  <div class="section-title">
+    <h2>전문교과 교수학습 실행 및 연구산출물 (03~08)</h2>
+    <span>각 영역별 통합 웹 포털 및 원자료 바로가기</span>
+  </div>
+
+  <div class="grid">
+    <!-- 03_교수학습 자료 -->
+    <article class="card">
+      <div>
+        <div class="card-header">
+          <span class="folder-tag">📁 03_교수학습 자료</span>
+          <h3>7개 전문교과 과정안 · 지도안 · 활동지 포털</h3>
+          <p>
+            응용프로그래밍·3D프린터·게임·네트워크·AI모델링·시스템운영·스마트문화앱 7개 전문교과의 질문·검토 중심 수업설계 일체안과 시뮬레이터입니다.
+          </p>
+        </div>
+        <ul class="feature-list">
+          <li>7개 전문교과 공개수업 일체안 (HWPX 7종 완비)</li>
+          <li>차시별 수업지도안 ZIP 7종 & 웹 슬라이드 뷰어</li>
+          <li>학생 활동지 ZIP 7종 및 AUTO-NET-LAB 네트워크 시뮬레이터</li>
+        </ul>
+      </div>
+      <div class="links">
+        <a class="btn" href="03_교수학습 자료/index.html">03_교수학습 자료 웹 포털 열기 →</a>
+      </div>
+    </article>
+
+    <!-- 04_평가도구 -->
+    <article class="card">
+      <div>
+        <div class="card-header">
+          <span class="folder-tag blue">🤖 04_평가도구</span>
+          <h3>AI 맞춤형 피드백 · 루브릭 · 관찰도구 · 설문지</h3>
+          <p>
+            학생 산출물과 프롬프트를 실시간 분석하여 4단계 피드백을 제공하는 대시보드와 정밀 수행평가 루브릭, 관찰도구 및 설문지입니다.
+          </p>
+        </div>
+        <ul class="feature-list">
+          <li>🤖 AI 기반 맞춤형 평가·피드백 실시간 대시보드</li>
+          <li>7개 교과 34명 실측 루브릭 평가 도구 7종</li>
+          <li>공개수업 교사 관찰 체크리스트 & 사전·사후 설문지 (공통+특화)</li>
+        </ul>
+      </div>
+      <div class="links">
+        <a class="btn primary-blue" href="04_평가도구/AI_기반_맞춤형_평가_피드백_대시보드.html">🤖 AI 맞춤형 피드백 대시보드 →</a>
+        <a class="btn sub" href="04_평가도구/index.html">04_평가도구 종합 포털</a>
+        <a class="btn sub" href="04_평가도구/AI_기반_맞춤형_피드백_설계안.docx">설계안(.docx)</a>
+      </div>
+    </article>
+
+    <!-- 05-학생산출물 -->
+    <article class="card">
+      <div>
+        <div class="card-header">
+          <span class="folder-tag">💻 05-학생산출물</span>
+          <h3>7개 교과 학생 포트폴리오 & 통합 챗봇 로그</h3>
+          <p>
+            응용SW, 3D 모델링, Unity 자율주행, 네트워크 프로토콜, AI 모델 산출물과 수업 중 생성된 3,383건의 학생 질문·검토 프롬프트 로그 원장입니다.
+          </p>
+        </div>
+        <ul class="feature-list">
+          <li>전문교과 학생 34명 포트폴리오 및 프로젝트 결과물</li>
+          <li>교사연구회 통합 챗봇 시스템 및 실행 패키지</li>
+          <li>학생 AI 질문·검토 프롬프트 로그 원장 (총 3,383건 전수 수록)</li>
+        </ul>
+      </div>
+      <div class="links">
+        <a class="btn" href="05-학생산출물/index.html">05_학생 산출물 통합 포털 열기 →</a>
+      </div>
+    </article>
+
+    <!-- 06_연구결과및 효과검증자료 -->
+    <article class="card">
+      <div>
+        <div class="card-header">
+          <span class="folder-tag blue">📊 06_연구결과및 효과검증자료</span>
+          <h3>연구결과 원자료 및 4대 영역 통합 분석 대시보드</h3>
+          <p>
+            사전·사후 238건 설문과 루브릭 채점 실측 데이터를 기반으로 대응표본 t-검정, 효과크기(Cohen's dz) 분석을 완비한 대시보드입니다.
+          </p>
+        </div>
+        <ul class="feature-list">
+          <li>①루브릭 채점 결과 ②AI 활용 전·후 비교 ③성취도 변화 ④인식변화</li>
+          <li>4대 영역 통합 분석 원장 엑셀 (개인정보 비식별화 완료)</li>
+          <li>대응표본 t-검정 및 효과크기 실시간 조회 대시보드</li>
+        </ul>
+      </div>
+      <div class="links">
+        <a class="btn primary-blue" href="06_연구결과및 효과검증자료/index.html">📊 연구결과 통합 분석 대시보드 →</a>
+        <a class="btn sub" href="06_연구결과및 효과검증자료/연구결과 관련 원자료/index.html">원자료 아카이브</a>
+        <a class="btn sub" href="06_연구결과및 효과검증자료/06_연구결과_4대영역_통합분석_원장(개인정보비공개).xlsx">분석원장(.xlsx)</a>
+      </div>
+    </article>
+
+    <!-- 07_성과확산및 현장적용 자료 -->
+    <article class="card">
+      <div>
+        <div class="card-header">
+          <span class="folder-tag">📢 07_성과확산및 현장적용 자료</span>
+          <h3>공개수업 참관록(48건) 및 교사용·학생용 가이드</h3>
+          <p>
+            공개수업(10.20.~10.22.) 48건 참관록 전수 아카이브와 타 학교 및 타 교과 확산을 위한 수업 설계 매뉴얼, 전공별 프롬프트 카드입니다.
+          </p>
+        </div>
+        <ul class="feature-list">
+          <li>공개수업 참관록 48건 원자료 및 교과별 참관 아카이브</li>
+          <li>참관교사 정량·정성 피드백 종합 분석 보고서</li>
+          <li>교사용 수업설계 매뉴얼 & 학생 가이드 & 전공별 프롬프트 카드 21종</li>
+        </ul>
+      </div>
+      <div class="links">
+        <a class="btn" href="07_성과확산및 현장적용 자료/확산용 산출물/index.html">교사용 활용 가이드 매뉴얼 →</a>
+        <a class="btn sub" href="07_성과확산및 현장적용 자료/공개수업및 수업시연/index.html">공개수업 참관록(48건)</a>
+        <a class="btn sub" href="07_성과확산및 현장적용 자료/확산용 산출물/전공별_프롬프트_카드_세트.html">프롬프트 카드(21종)</a>
+      </div>
+    </article>
+
+    <!-- 08_연구회 운영자료 -->
+    <article class="card">
+      <div>
+        <div class="card-header">
+          <span class="folder-tag">📋 08_연구회 운영자료</span>
+          <h3>연구회 운영자료 및 현장 사진 아카이브</h3>
+          <p>
+            7대 전문교과(네트워크프로그래밍·3D프린터·게임·AI모델링·시스템운영및네트워크운영·스마트문화앱·응용SW개발) 공개수업과 자율주행 융합수업 현장 사진(69장) 웹 갤러리입니다. 협의회 회의록과 활동일지는 비공개로 보관합니다.
+          </p>
+        </div>
+        <ul class="feature-list">
+          <li>정기 협의회 회의록과 활동일지는 비공개 보관</li>
+          <li>7대 전문교과 전 과목별(네트워크·3D·게임·AI·시스템·스마트앱·응용SW) 사진 69장 전수 수록</li>
+          <li>공개수업(27장) 및 자율주행 조별 융합수업(42장) 고화질 원클릭 필터 뷰어</li>
+        </ul>
+      </div>
+      <div class="links">
+        <a class="btn" href="08_연구회 운영자료/index.html">08_운영자료 및 사진 갤러리 열기 →</a>
+        <span class="btn sub">회의록: 비공개</span>
+        <span class="btn sub">활동일지: 비공개</span>
+      </div>
+    </article>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div><strong>AI 에이전트 교육혁신 연구회</strong> | 상일미디어고등학교</div>
+    <div class="members">회장: 김0선 · 총무: 김0훈 · 회원: 윤0상 · 조0민 · 김0주 · 류0상 · 우0정 · 김0석</div>
+  </div>
+</footer>
+
+</body>
+</html>

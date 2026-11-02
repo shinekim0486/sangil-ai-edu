@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>시연</title>
+<style>
+  html,body{margin:0;padding:0;height:100%;overflow:hidden;background:#111}
+  #bar{height:44px;background:#1f3b63;color:#fff;display:flex;align-items:center;
+       padding:0 20px;font:15px "맑은 고딕",sans-serif;gap:14px}
+  #bar b{font-size:17px}
+  #bar span{opacity:.75}
+  iframe{width:100%;height:calc(100% - 44px);border:0;background:#fff}
+</style>
+</head>
+<body>
+<div id="bar"><b id="w">A-1팀</b><span id="s">자율주행자동차 제작 — 6주</span></div>
+<iframe id="fr" src="http://127.0.0.1:5000"></iframe>
+<script>
+/*
+ * A-1팀이 하나의 대화창에서 6주를 쭉 이어간다.
+ * 대화를 끊지 않는다. 스크롤이 쌓이는 것 자체가 이 팀이 지나온 길이다.
+ */
+const SCRIPT = [
+  { w:"1주차 · 착수",        s:"차체 설계부터 시작한다", m:[
+    "3D 프린터용 제품 제작 시간인데 차체를 그려야 한대요",
+    "아두이노랑 배터리를 올려야 되는데 어디에 배치해요?",
+  ]},
+  { w:"1주차 · 착수",        s:"차가 움직이게 만든다", m:[
+    "모터 두 개 연결했는데 한쪽만 돌아요",
+    "배선은 다시 봤고 맞게 꽂혀 있어요. 시리얼에는 명령 잘 찍혀요",
+  ]},
+  { w:"2주차 · 설계",        s:"모델링과 센서", m:[
+    "치수를 바꿨더니 파트가 통째로 틀어져요",
+    "조도 센서로 차선 구분하려는데 교실에서 잡은 값이 트랙에서 안 맞아요",
+  ]},
+  { w:"3주차 · 구현",        s:"출력하고 통신을 만든다", m:[
+    "카메라 마운트 뽑았는데 나사가 안 들어가요. M3 나사 쓰는데 구멍을 3mm로 그렸어요",
+    "아두이노에서 PC로 센서값 보내려는데 체크섬을 XOR로 하면 되나요?",
+  ]},
+  { w:"4주차 · 학습",        s:"인식 모델을 만든다", m:[
+    "정지선 인식을 딥러닝으로 해야 되나요?",
+    "학습시켰는데 정확도가 99%인데 실제론 다 틀려요. 데이터 2000장을 나누진 않았어요",
+  ]},
+  { w:"4주차 · 관제",        s:"기록을 볼 화면을 만든다", m:[
+    "주행기록 조회 페이지 만드는데 한글이 물음표로 나와요",
+  ]},
+  { w:"5주차 · 통합 주행",   s:"실차에 올리고 재본다", m:[
+    "카메라 영상이랑 같은 시리얼로 보내는데 정지 명령이 늦게 가요",
+    "실차로 돌렸는데 정지선 지나쳐서 서요. 지연 재봤더니 320ms 나와요",
+  ]},
+  { w:"5주차 · 막판",        s:"조급해진 학생", m:[
+    "그냥 완성 코드 주면 안 돼요?",
+  ]},
+  { w:"6주차 · 마무리",      s:"끝까지 파고든다", m:[
+    "초음파 센서 값이 자꾸 튀어서 장애물 앞에서 제대로 못 서요",
+    "차체는 조립했고 모터도 잘 돌아요. 시리얼에 2cm였다가 300cm였다가 찍혀요",
+    "5번 재서 평균 내는 코드를 넣어봤는데 여전히 튀어요. 코드 좀 보여주세요",
+  ]},
+];
+
+const wait = ms => new Promise(r => setTimeout(r, ms));
+const bar = (w,s) => { document.getElementById('w').textContent=w;
+                       document.getElementById('s').textContent=s; };
+
+async function typeInto(D, el, text){
+  el.value = "";
+  for (const ch of text){
+    el.value += ch;
+    el.dispatchEvent(new D.defaultView.Event("input",{bubbles:true}));
+    await wait(8);
+  }
+}
+// 답변이 몇 개 붙었는지로 센다.
+// 자식 수로 세면 안 된다 — 첫 메시지를 보낼 때 안내문(.blank)이 지워져서
+// 자식 수가 그대로라, 답이 왔는데도 60초를 꼬박 기다리다 재전송했다.
+const aiCount = log => log.querySelectorAll(".turn.ai").length;
+
+async function waitReply(log, before, ms=45000){
+  const t0=Date.now();
+  while(Date.now()-t0<ms){
+    // "생각 중…" 자리표시자도 .turn.ai라서, 그게 사라진 뒤에 세야 한다
+    if(!log.querySelector(".bubble.typing") && aiCount(log)>before){
+      await wait(400);
+      return true;
+    }
+    await wait(150);
+  }
+  return false;   // 답변이 안 왔다
+}
+
+window.addEventListener("load", async () => {
+  const fr = document.getElementById('fr');
+  await wait(1200);
+  const D = fr.contentDocument;
+
+  bar("A-1팀", "시작합니다");
+  await wait(400);
+  await typeInto(D, D.getElementById("teamInput"), "A-1");
+  await wait(300);
+  D.getElementById("btnStart").click();
+  await wait(800);
+  const skip = D.getElementById("btnSkip");
+  if (skip && D.getElementById("clip").classList.contains("on")) skip.click();
+  await wait(700);
+  D.body.click();
+  await wait(500);
+
+  const input = D.getElementById("input");
+  const send  = D.getElementById("btnSend");
+  const log   = D.getElementById("log");
+
+  // 대화를 한 번만 시작하고 끝까지 이어간다
+  for (const sc of SCRIPT){
+    bar(sc.w, sc.s);
+    await wait(400);
+    for (const m of sc.m){
+      await typeInto(D, input, m);
+      await wait(200);
+      let before = aiCount(log);
+      send.click();
+      let ok = await waitReply(log, before);
+      if (!ok) {                       // 답변이 안 오면 한 번 더
+        await typeInto(D, input, m);
+        await wait(400);
+        before = aiCount(log);
+        send.click();
+        await waitReply(log, before);
+      }
+      // 답변이 길면 아래로 스크롤해 끝까지 보여 준다
+      log.scrollTop = log.scrollHeight;
+      await wait(800);
+    }
+  }
+  bar("6주 완료", "하나의 대화로 자율주행자동차를 완성했습니다");
+  await wait(1200);
+  // 지나온 대화를 위에서 아래로 훑어 준다
+  log.scrollTop = 0;
+  await wait(600);
+  const step = Math.max(18, log.scrollHeight / 120);
+  while (log.scrollTop + log.clientHeight < log.scrollHeight - 4){
+    log.scrollTop += step;
+    await wait(40);
+  }
+  await wait(1500);
+  window.__done = true;
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><title>AI활용 전 후 결과물 비교</title><style>
+:root {
+  --bg: #f8fafc; --card: #ffffff; --ink: #0f172a; --muted: #475569;
+  --blue: #1d4ed8; --blue-lt: #eff6ff; --teal: #0f766e; --teal-lt: #f0fdfa;
+  --amber: #b45309; --amber-lt: #fffbeb; --rose: #be123c; --rose-lt: #fff1f2;
+  --line: #e2e8f0;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: 'Pretendard', 'Malgun Gothic', sans-serif; background: var(--bg); color: var(--ink); line-height: 1.65; }
+header { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #0f766e 100%); color: #fff; padding: 36px 24px; }
+.wrap { max-width: 1180px; margin: 0 auto; }
+.badge { display: inline-block; background: rgba(255,255,255,0.16); padding: 5px 13px; border-radius: 999px; font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+h1 { margin: 0 0 8px; font-size: 27px; }
+.sub { margin: 0; opacity: 0.9; font-size: 14.5px; }
+.top-nav { margin-top: 18px; display: flex; gap: 8px; flex-wrap: wrap; }
+.top-nav a { color: #fff; text-decoration: none; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.28); padding: 7px 13px; border-radius: 8px; font-size: 13px; font-weight: 700; }
+.top-nav a:hover, .top-nav a.active { background: #fff; color: #0f172a; }
+main { max-width: 1180px; margin: 26px auto 60px; padding: 0 20px; }
+.section { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 26px; margin-bottom: 22px; box-shadow: 0 4px 14px rgba(15,23,42,0.04); }
+h2 { margin: 0 0 14px; font-size: 20px; color: #1e3a8a; border-bottom: 2px solid var(--line); padding-bottom: 9px; }
+h3 { margin: 18px 0 10px; font-size: 16px; color: var(--teal); }
+.kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-bottom: 20px; }
+.kpi { background: var(--blue-lt); border: 1px solid #bfdbfe; border-radius: 12px; padding: 16px; }
+.kpi .lbl { font-size: 12.5px; font-weight: 700; color: var(--muted); }
+.kpi .val { font-size: 24px; font-weight: 800; color: var(--blue); margin: 4px 0; }
+.kpi .desc { font-size: 12px; color: var(--muted); }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 12px 0; }
+th, td { border: 1px solid var(--line); padding: 10px 12px; text-align: left; vertical-align: middle; }
+th { background: #f1f5f9; font-weight: 700; color: #1e293b; text-align: center; }
+td.center { text-align: center; }
+.pill { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+.pill-high { background: #dcfce7; color: #166534; }
+.pill-mid { background: #dbeafe; color: #1e40af; }
+.pill-low { background: #fef3c7; color: #92400e; }
+.ba-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px; }
+.ba-box { border-radius: 12px; padding: 16px; border: 1px solid var(--line); }
+.ba-before { background: #fff1f2; border-color: #fecdd3; }
+.ba-after { background: #f0fdf4; border-color: #bbf7d0; }
+@media (max-width: 768px) { .ba-grid { grid-template-columns: 1fr; } }
+footer { text-align: center; padding: 24px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); }
+</style></head><body>
+<header><div class="wrap">
+  <span class="badge">06_연구결과 및 효과검증자료 · 세부 분석 보고서 ②</span>
+  <h1>② AI 활용 전·후 결과물 비교 분석 (Before vs. After)</h1>
+  <p class="sub">1단계 단순 AI 생성·수용 초안(Before) vs 3단계 질문·단일 변인 실험·실측 검증 후 최종 산출물(After)</p>
+  <div class="top-nav">
+    <a href="index.html">📊 통합 분석 대시보드</a>
+    <a href="수행평가 과제 및 루브릭 채점 결과.html">① 수행평가·루브릭 결과</a>
+    <a href="AI활용 전 후 결과물 비교.html" class="active">② AI 활용 전·후 결과물 비교</a>
+    <a href="전문교과 성취도 변화분석.html">③ 전문교과 성취도 변화분석</a>
+    <a href="AI 활용에 대한 학생인식변화.html">④ AI 활용 학생인식변화</a>
+  </div>
+</div></header>
+<main>
+  <div class="kpi-row">
+    <div class="kpi"><div class="lbl">비교 검증 태도(Q6) 향상</div><div class="val">+0.71점 (+24.6%)</div><div class="desc">2.88 → 3.59 (전체 문항 중 최대 향상)</div></div>
+    <div class="kpi"><div class="lbl">무비판적 수용(Q8) 감소</div><div class="val">-0.59점 (-19.2%)</div><div class="desc">3.06 → 2.47 (맹목적 복사 습관 탈피)</div></div>
+    <div class="kpi"><div class="lbl">산출물 인계 역량(Q9)</div><div class="val">+0.48점 (+15.9%)</div><div class="desc">3.02 → 3.50 (타 교과 재현 가능 명세화)</div></div>
+    <div class="kpi"><div class="lbl">교과 특화 성취도 향상</div><div class="val">+0.64점 (+23.6%)</div><div class="desc">2.73 → 3.38 (p&lt;.001, dz=0.84)</div></div>
+  </div>
+  
+    <div class="section">
+      <h2>■ 응용프로그래밍개발 (김0훈·김0주 선생님)</h2>
+      <p><strong>수행 과제:</strong> 팀별 챗봇 기능 명세 해석 및 조건별 기능 시험·결과 인계 | <strong>챗봇 질문:</strong> <span class="pill pill-mid">267건 (S2 63건 · S3 66건 / 상위 단계 48.3%)</span></p>
+      <p><strong>검증 성과:</strong> <span class="pill pill-high">교과 성취도 2.98 → 3.41 (+0.43점, p=.001) | 개념 정답률 K1 55.9% → 85.3% (+29.4%p)</span></p>
+      <div class="ba-grid">
+        <div class="ba-box ba-before">
+          <h3 style="color:#be123c;margin-top:0">❌ AI 단순 활용 / 1단계 초기 산출물 (Before)</h3>
+          <ul><li>챗봇이 제시한 기본 CRUD 코드와 설명을 그대로 복사하여 정상 입력 1건만 단순 실행 후 “이상 없음”으로 기록</li><li>입력 처리 → 데이터베이스 저장 → 이전 대화 조회의 자료 흐름(Data Flow) 구분 없이 화면 출력만 확인</li><li>팀코드 불일치, 긴 문자열 입력, 빈 파일 첨부 등 예외·경계 조건에 대한 시험 기준 누락</li></ul>
+        </div>
+        <div class="ba-box ba-after">
+          <h3 style="color:#15803d;margin-top:0">✅ 3단계 질문·검토 및 조건 통제 시험 후 최종 산출물 (After)</h3>
+          <ul><li>기능 명세를 입력·처리·저장·조회 4단계로 분해하고, 기대 결과(Expected)와 실제 관찰(Observed)을 분리 기록</li><li>팀별 접속·지난 대화 불러오기·단계별 질문(S1~S3)·파일 첨부 등 비교 조건을 1개씩 통제하여 기능 시험표 완성</li><li>타 교과 및 다음 개발팀이 재현할 수 있도록 실패 재현 조건과 확인 질문을 포함한 기능 시험 인계서 작성 완료</li></ul>
+        </div>
+      </div>
+      <p style="margin-top:14px;background:#f8fafc;padding:12px 16px;border-left:4px solid #1d4ed8;border-radius:8px;font-style:italic">
+        💬 <strong>학생 성찰 기록:</strong> “처음에는 챗봇이 준 예제 코드가 실행만 되면 끝인 줄 알았는데, 팀코드를 다르게 넣거나 파일 조건을 하나씩 바꿔 보면서 어디서 오류가 나는지 기대와 관찰로 나누어 적으니 문제를 정확히 찾을 수 있었다.”
+      </p>
+    </div>
+    
+    <div class="section">
+      <h2>■ 3D프린터용제품제작 (김0석 선생님)</h2>
+      <p><strong>수행 과제:</strong> 자율주행 차량 부품 요구 치수·조립 공차 검증 및 장착 규격 인계 | <strong>챗봇 질문:</strong> <span class="pill pill-mid">743건 (S2 167건 · S3 182건 / 상위 단계 47.0%)</span></p>
+      <p><strong>검증 성과:</strong> <span class="pill pill-high">교과 성취도 2.55 → 2.84 (+0.29점, p&lt;.001) | 질문 구성(Q2) 2.50 → 2.88 (+0.38점)</span></p>
+      <div class="ba-grid">
+        <div class="ba-box ba-before">
+          <h3 style="color:#be123c;margin-top:0">❌ AI 단순 활용 / 1단계 초기 산출물 (Before)</h3>
+          <ul><li>AI가 추천한 일반 브래킷 외형 치수만 그대로 입력하고, 실제 조립 시 필요한 장착 공차(Clearance 0mm) 미반영</li><li>기준면·원점·완전 구속(Fully Constrained) 없이 스케치를 돌출시켜 치수 1개 변경 시 구멍 위치와 외벽이 함께 틀어짐</li><li>카메라 시야각 및 배터리 교체 공간 등 타 부품과의 물리적 간섭(Interference) 미점검</li></ul>
+        </div>
+        <div class="ba-box ba-after">
+          <h3 style="color:#15803d;margin-top:0">✅ 3단계 질문·검토 및 조립 간섭 실측 후 최종 산출물 (After)</h3>
+          <ul><li>요구 치수와 실제 측정 항목을 구분하고, 기준면·원점 구속을 적용해 치수 변경 전·후 구멍 위치 유지 검증</li><li>조립 결합부 편측 여유(+0.5mm 공차) 반영 및 단면·간섭 검사 실행으로 부품 간 물리적 겹침 0건 달성</li><li>카메라 가시 범위 및 고정부 규격·STL/STEP 출력 조건을 정리한 타 교과(AI·시스템) 장착 규격 인계서 완성</li></ul>
+        </div>
+      </div>
+      <p style="margin-top:14px;background:#f8fafc;padding:12px 16px;border-left:4px solid #1d4ed8;border-radius:8px;font-style:italic">
+        💬 <strong>학생 성찰 기록:</strong> “치수를 바꾸기 전후의 구멍 위치와 카메라 화면에서 선·차체가 보이는 범위를 챗봇에게 조건별로 되물으며 점검했고, 간섭 검사 화면으로 직접 확인한 뒤 인계서를 작성했다.”
+      </p>
+    </div>
+    
+    <div class="section">
+      <h2>■ 게임프로그래밍 (조0민 선생님)</h2>
+      <p><strong>수행 과제:</strong> 자율주행 가상 환경 구성 및 영상·행동(Steering·Throttle) 라벨 데이터 검증 | <strong>챗봇 질문:</strong> <span class="pill pill-mid">535건 (S2 121건 · S3 130건 / 상위 단계 46.9%)</span></p>
+      <p><strong>검증 성과:</strong> <span class="pill pill-high">교과 성취도 2.63 → 2.87 (+0.24점, p=.002) | 개념 정답률 K1 29.4% → 52.9% (+23.5%p)</span></p>
+      <div class="ba-grid">
+        <div class="ba-box ba-before">
+          <h3 style="color:#be123c;margin-top:0">❌ AI 단순 활용 / 1단계 초기 산출물 (Before)</h3>
+          <ul><li>사용자가 위에서 내려다보는 관찰 화면(Top-down View)과 인공지능 모델이 실제 입력받는 차량 전면 카메라 영상을 혼동</li><li>속도·조향각·카메라 각도를 한꺼번에 여러 개 바꾼 뒤 주행이 실패하자 어느 변인이 원인인지 설명하지 못함</li><li>수집된 주행 이미지 파일명과 JSON 기록(조향값·가속값)의 1:1 대응 및 결측 여부를 확인하지 않고 학습팀에 전달</li></ul>
+        </div>
+        <div class="ba-box ba-after">
+          <h3 style="color:#15803d;margin-top:0">✅ 3단계 질문·검토 및 단일변인 주행 실험 후 최종 산출물 (After)</h3>
+          <ul><li>관찰용 화면과 모델 입력용 영상(128×96 해상도·전면 화각)을 명확히 분리하여 가상 트랙 환경 구축</li><li>시작 위치와 트랙 조건을 고정한 상태에서 설정을 1개씩만 변경(단일 변인 통제)하여 변경 전·후 주행 궤적 비교</li><li>image_0001.png와 steering(-0.25)·throttle(0.60) 라벨 대응 및 흔들림·이탈 프레임 제외 기준을 문서화하여 AI팀에 인계</li></ul>
+        </div>
+      </div>
+      <p style="margin-top:14px;background:#f8fafc;padding:12px 16px;border-left:4px solid #1d4ed8;border-radius:8px;font-style:italic">
+        💬 <strong>학생 성찰 기록:</strong> “위에서 보는 화면과 모델 입력은 따로라는 걸 명확히 이해했고, 시작 위치를 고정한 채 한 설정씩 바꾸며 화면과 이동 결과를 나란히 남겨 비교하는 습관이 생겼다.”
+      </p>
+    </div>
+    
+    <div class="section">
+      <h2>■ 네트워크프로그래밍 (AUTO-NET LAB) (김0선 선생님)</h2>
+      <p><strong>수행 과제:</strong> 원격 주행 제어 패킷(v1)·RTT 지연 및 유실 측정(v2)·안전 우선 규약(v3) 설계·검증 | <strong>챗봇 질문:</strong> <span class="pill pill-mid">정제 산출물 96건 (36명 전수 v1·v2·v3 단계별 산출물 및 데이터 정제 로그)</span></p>
+      <p><strong>검증 성과:</strong> <span class="pill pill-high">교과 성취도 2.33 → 4.22 (+1.89점, p&lt;.001) | 측정 비교(Q6) 2.26 → 4.59 (+2.32점) | 유실 판별(SEQ) 정답률 100%</span></p>
+      <div class="ba-grid">
+        <div class="ba-box ba-before">
+          <h3 style="color:#be123c;margin-top:0">❌ AI 단순 활용 / 1차시 초기 산출물 packet_format_v1 (Before)</h3>
+          <ul><li>AI 초기 설명을 그대로 수용하여 왕복 지연 시간(RTT)을 단방향(편도) 지연과 동일하다고 오해(사전 S4 2.26점)</li><li>10회 전송 측정 중 발생한 TIMEOUT(유실)을 0ms 또는 임의 숫자로 포함하여 평균 RTT를 잘못 계산</li><li>일반 주행 상태 로그와 긴급 정지(E-STOP) 명령을 동일한 주기와 우선순위로 처리하여 지연 위험 발생</li></ul>
+        </div>
+        <div class="ba-box ba-after">
+          <h3 style="color:#15803d;margin-top:0">✅ AUTO-NET LAB 3단계 질문·실측 검증 후 net_protocol_v2 · safety_protocol_v3 (After)</h3>
+          <ul><li>SEQ(순번) 건너뜀으로 패킷 유실을 판별(정답률 100%)하고, 10회 측정 중 유실 1회를 제외한 유효 9회 평균 RTT(95.1ms) 정확 산출</li><li>재전송 타임아웃 주기를 단일 변인으로 조정(200ms → 100ms)하여 평균 응답 지연을 95.1ms → 61.0ms(-34.1ms 단축)로 실측 개선</li><li>긴급 정지 패킷 최우선 처리 및 연속 유실 시 자동 감속·정지 규칙을 명문화한 safety_protocol_v3 인계 문서 완성</li></ul>
+        </div>
+      </div>
+      <p style="margin-top:14px;background:#f8fafc;padding:12px 16px;border-left:4px solid #1d4ed8;border-radius:8px;font-style:italic">
+        💬 <strong>학생 성찰 기록:</strong> “고치기 전에 먼저 RTT와 유실률을 측정하고, 타임아웃 조건 하나만 바꾼 뒤 유효 측정값 평균을 다시 계산해 비교하니 AI가 제안한 수치가 우리 네트워크 조건에서 왜 틀렸는지 바로 증명할 수 있었다.”
+      </p>
+    </div>
+    
+    <div class="section">
+      <h2>■ 인공지능모델링 (류0상 선생님)</h2>
+      <p><strong>수행 과제:</strong> 자율주행 인식 모델 데이터 분할 누수(Leakage) 검증 및 PC-실차 입력 조건 정합성 확보 | <strong>챗봇 질문:</strong> <span class="pill pill-mid">464건 (S2 103건 · S3 116건 / 상위 단계 47.2%)</span></p>
+      <p><strong>검증 성과:</strong> <span class="pill pill-high">교과 성취도 3.32 → 3.46 (+0.15점, p&lt;.001) | 무비판적 수용(Q8 원점수) 2.59 → 1.59 (-1.00점 대폭 감소)</span></p>
+      <div class="ba-grid">
+        <div class="ba-box ba-before">
+          <h3 style="color:#be123c;margin-top:0">❌ AI 단순 활용 / 1단계 초기 산출물 (Before)</h3>
+          <ul><li>챗봇이 생성한 기본 train_test_split(무작위 분할) 코드를 그대로 실행하여 출력된 검증 정확도 96%를 무비판적으로 신뢰</li><li>연속 촬영된 주행 영상의 인접 프레임이 학습셋과 검증셋에 동시에 들어가는 데이터 누수(Data Leakage) 미인지</li><li>학습 PC(RGB, 0~1 정규화)와 실제 자율주행 차량 카메라(BGR, 0~255)의 입력 전처리 조건 차이를 확인하지 않아 실차 주행 이탈 발생</li></ul>
+        </div>
+        <div class="ba-box ba-after">
+          <h3 style="color:#15803d;margin-top:0">✅ 3단계 질문·검토 및 입력 파이프라인 통일 후 최종 산출물 (After)</h3>
+          <ul><li>주행 회차(Episode/시간순) 기준으로 학습 자료와 검증 자료를 재분할하여 겹침(누수) 여부를 직접 검증하고 과적합 원인을 규명</li><li>PC와 실차 간 해상도(128×96)·색 공간(RGB/BGR)·정규화 범위(0~1)를 표로 대조하여 단일 조건씩 일치시키며 추론 결과 비교</li><li>혼동 행렬(Confusion Matrix)과 오분류 주행 구간 영상을 근거로 재수집이 필요한 코너·역광 조건을 정리하여 게임·3D팀에 역인계</li></ul>
+        </div>
+      </div>
+      <p style="margin-top:14px;background:#f8fafc;padding:12px 16px;border-left:4px solid #1d4ed8;border-radius:8px;font-style:italic">
+        💬 <strong>학생 성찰 기록:</strong> “검증 정확도 96%라는 숫자만 믿었는데, 연속 프레임이 섞여 있었다는 걸 확인한 뒤 시간순 분할과 RGB·정규화 조건 일치를 하나씩 대조하며 진짜 성능을 검증하는 법을 배웠다.”
+      </p>
+    </div>
+    
+    <div class="section">
+      <h2>■ 시스템운영및네트워크운영 (우0정 선생님)</h2>
+      <p><strong>수행 과제:</strong> 다중 장치 로그 집계 범위 설정 및 기준 시각(Time Skew) 보정을 통한 장애 타임라인 재구성 | <strong>챗봇 질문:</strong> <span class="pill pill-mid">453건 (S2 99건 · S3 115건 / 상위 단계 47.2%)</span></p>
+      <p><strong>검증 성과:</strong> <span class="pill pill-high">교과 성취도 3.32 → 3.50 (+0.18점, p&lt;.001) | 무비판적 수용(Q8 원점수) 2.53 → 1.62 (-0.91점 감소)</span></p>
+      <div class="ba-grid">
+        <div class="ba-box ba-before">
+          <h3 style="color:#be123c;margin-top:0">❌ AI 단순 활용 / 1단계 초기 산출물 (Before)</h3>
+          <ul><li>차량 제어기·중계 서버·관제 단말의 시계가 서로 어긋나 있는 상태(Time Skew +2.0초)에서 AI에게 로그 요약을 맡겨 사건 순서를 거꾸로 해석</li><li>정상 연결 대기 로그와 오류 재시도 로그의 집계 범위를 구분하지 않고 전체 건수만 단순 합산하여 보고</li><li>챗봇이 추정한 장애 원인을 실제 패킷·시스템 로그 타임스탬프와 대조하지 않고 그대로 수용</li></ul>
+        </div>
+        <div class="ba-box ba-after">
+          <h3 style="color:#15803d;margin-top:0">✅ 3단계 질문·검토 및 기준 시각 보정 후 최종 산출물 (After)</h3>
+          <ul><li>기준 장치(Reference Clock)를 정하고 장치 간 시각 오차(+2.0초)를 먼저 보정한 뒤 10:00:01~10:00:15 구간의 4단계 이벤트 순서를 정확히 재정렬</li><li>집계 기간·포함 상태값·제외 조건을 명시하여 누가 다시 세어도 동일한 건수가 나오도록 운영 집계 규칙 표준화</li><li>보정 전·후 로그 비교표와 재발 방지 점검 절차를 포함한 시스템 운영 인계 보고서 완성</li></ul>
+        </div>
+      </div>
+      <p style="margin-top:14px;background:#f8fafc;padding:12px 16px;border-left:4px solid #1d4ed8;border-radius:8px;font-style:italic">
+        💬 <strong>학생 성찰 기록:</strong> “서로 다른 장비의 로그를 합칠 때 보정 기준 시각을 먼저 정하고 두 기록을 나란히 놓아 순서를 확인하니, 챗봇이 처음에 잘못 말했던 사건 순서 오류를 명확히 잡아낼 수 있었다.”
+      </p>
+    </div>
+    
+    <div class="section">
+      <h2>■ 스마트문화앱콘텐츠제작 (윤0상 선생님)</h2>
+      <p><strong>수행 과제:</strong> 자율주행 관제 앱 정보 우선순위 설계 및 다중 알림 목록 깨짐·중복 표시 조건 검증 | <strong>챗봇 질문:</strong> <span class="pill pill-mid">348건 (S2 84건 · S3 90건 / 상위 단계 50.0%)</span></p>
+      <p><strong>검증 성과:</strong> <span class="pill pill-high">교과 성취도 2.00 → 3.33 (+1.34점, p&lt;.001) | 개념 정답률 K1 35.3%→88.2% (+52.9%p), K2 26.5%→91.2% (+64.7%p)</span></p>
+      <div class="ba-grid">
+        <div class="ba-box ba-before">
+          <h3 style="color:#be123c;margin-top:0">❌ AI 단순 활용 / 1단계 초기 산출물 (Before)</h3>
+          <ul><li>AI가 생성한 기본 대시보드 템플릿을 그대로 사용하여 항목 수만 많은 일반 센서 수치를 상단에 배치하고 긴급 정지·통신 끊김 경보를 하단에 배치</li><li>동일 차량(예: CAR2)에서 연속 발생한 상태 알림이 묶이지 않고 화면에 반복 적재되어 다른 차량 상태가 밀려나는 현상 방치</li><li>화면이 깨지거나 겹칠 때 발생 위치와 데이터 조건(글자 수·표시 개수·정렬 기준)을 적지 않고 “화면 고쳐줘”라고만 단답형 질문</li></ul>
+        </div>
+        <div class="ba-box ba-after">
+          <h3 style="color:#15803d;margin-top:0">✅ 3단계 질문·검토 및 UI 표시 조건 검증 후 최종 산출물 (After)</h3>
+          <ul><li>사용자 목적과 위험도를 기준으로 [1순위: 긴급 정지·통신 끊김 상단 고정 배너 → 2순위: 현재 속도·배터리 → 3순위: 상세 누적 로그] 위계 재설계</li><li>차량 ID 기준 그룹화(묶음 표시) 및 최신 상태 1건 우선 표시 + 펼침 목록 규칙을 적용해 다중 차량 동시 수신 시 목록 깨짐 해결</li><li>표시 정보·정렬 기준·묶음 조건·최대 표시 개수를 분리한 화면 검증 체크리스트 완성(개념 확인 정답률 K1 88.2%, K2 91.2% 달성)</li></ul>
+        </div>
+      </div>
+      <p style="margin-top:14px;background:#f8fafc;padding:12px 16px;border-left:4px solid #1d4ed8;border-radius:8px;font-style:italic">
+        💬 <strong>학생 성찰 기록:</strong> “항목 수가 많은 정보가 아니라 사용자 목적과 위험 정보를 기준으로 상단 우선순위를 정해야 한다는 걸 깨달았고, 문제가 나타난 위치와 정렬·묶음·표시 개수 조건을 나누어 확인하게 되었다.”
+      </p>
+    </div>
+    
+</main>
+<footer>상일미디어고등학교 AI 에이전트 교육혁신 연구회 | 2026 직업계고 교수학습능력 향상 교사연구회</footer>
+</body></html>
