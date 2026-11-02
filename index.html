@@ -234,6 +234,86 @@ main {
 .btn.sub:hover {
   background: #e4ecf0;
 }
+.timeline-section {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 28px 32px;
+  margin-bottom: 34px;
+  box-shadow: var(--shadow-sm);
+}
+.timeline-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.timeline-head h2 {
+  margin: 0;
+  color: var(--navy);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+}
+.timeline-head p {
+  margin: 6px 0 0;
+  color: var(--text-muted);
+  font-size: 13.5px;
+}
+.timeline-link {
+  white-space: nowrap;
+  color: var(--teal);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 800;
+}
+.timeline-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 14px;
+}
+.timeline-item {
+  position: relative;
+  background: #f8fbfa;
+  border: 1px solid #dce9e7;
+  border-radius: 14px;
+  padding: 16px 16px 15px;
+}
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  top: 18px;
+  right: 16px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--teal);
+  box-shadow: 0 0 0 4px rgba(13, 122, 111, 0.12);
+}
+.timeline-date {
+  display: inline-flex;
+  align-items: center;
+  background: var(--teal-light);
+  color: var(--dark-teal);
+  border-radius: 999px;
+  padding: 3px 9px;
+  font-size: 12px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+.timeline-item h3 {
+  margin: 0 20px 7px 0;
+  color: var(--navy);
+  font-size: 16px;
+  line-height: 1.35;
+}
+.timeline-item p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
 footer {
   text-align: center;
   padding: 32px 24px;
@@ -252,6 +332,9 @@ footer .members {
   h1 { font-size: 24px; }
   .grid { grid-template-columns: 1fr; }
   main { padding: 24px 16px 40px; }
+  .timeline-section { padding: 22px 18px; }
+  .timeline-head { align-items: flex-start; flex-direction: column; }
+  .timeline-link { white-space: normal; }
 }
 </style>
 </head>
@@ -597,6 +680,48 @@ footer .members {
       if (t) t.textContent = new Date().toTimeString().split(' ')[0];
     }, 1000);
   </script>
+
+  <section class="timeline-section" aria-labelledby="timeline-title">
+    <div class="timeline-head">
+      <div>
+        <h2 id="timeline-title">날짜별 연구 추진 일정</h2>
+        <p>2026년 3월부터 11월까지 연구 설계, 도구 개발, 공개수업, 검증 및 확산 과정을 시간순으로 정리했습니다.</p>
+      </div>
+      <a class="timeline-link" href="02_최종보고서 요약본/최종보고서 요약본 포스터.pptx">10월 최종보고서 요약 포스터 보기 →</a>
+    </div>
+    <div class="timeline-grid">
+      <article class="timeline-item">
+        <span class="timeline-date">2026.03.~05.</span>
+        <h3>연구 기반 구축</h3>
+        <p>NCS·성취기준을 분석하고 7개 전문교과 공통 3단계 질문·검토 수업 구조를 설계했습니다.</p>
+      </article>
+      <article class="timeline-item">
+        <span class="timeline-date">2026.06.~08.</span>
+        <h3>수업 도구 개발</h3>
+        <p>통합 AI 챗봇, AUTO-NET LAB, 과정안, 활동지, 루브릭을 개발해 교과별 수업 적용 기반을 마련했습니다.</p>
+      </article>
+      <article class="timeline-item">
+        <span class="timeline-date">2026.09.~10.</span>
+        <h3>전문교과 수업 적용</h3>
+        <p>응용SW, 3D프린터, 게임, AI모델링, 네트워크, 시스템운영, 스마트문화앱 수업을 실행했습니다.</p>
+      </article>
+      <article class="timeline-item">
+        <span class="timeline-date">2026.10.19.~10.22.</span>
+        <h3>공개수업 및 참관 기록</h3>
+        <p>7개 교과 공개수업을 운영하고 참관록 48건을 수집해 수업 개선 피드백으로 반영했습니다.</p>
+      </article>
+      <article class="timeline-item">
+        <span class="timeline-date">2026.10.</span>
+        <h3>최종보고서 요약 정리</h3>
+        <p>10월 연구 활동과 공개수업 결과를 바탕으로 최종보고서 요약 포스터와 핵심 성과 자료를 정리했습니다.</p>
+      </article>
+      <article class="timeline-item">
+        <span class="timeline-date">2026.10.~11.</span>
+        <h3>성과 검증 및 확산</h3>
+        <p>238건 설문·루브릭 데이터를 검증하고 교사용 매뉴얼, 학생 가이드, 프롬프트 카드로 확산 자료를 구성했습니다.</p>
+      </article>
+    </div>
+  </section>
 
 
   <div class="section-title">
